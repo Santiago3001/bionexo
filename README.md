@@ -47,15 +47,9 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 
 ## Funcionalidad central
 
-> Filtrar por producto, ordenar por score, comprar o hacer trueque, cotizar rentabilidad y optimizar rutas, con costo, flete y CO2 explicados.
+> Filtrar por producto, ordenar por score, comprar o hacer trueque, cotizar rentabilidad y optimizar rutas, con costo, flete.
 
-## Impacto ambiental
 
-El prototipo estimará emisiones del transporte mediante:
-
-`emisiones = toneladas × distancia en kilómetros × factor de emisión`
-
-El factor de emisión de la demo será **DATO SIMULADO**. Un producto real deberá utilizar factores documentados, declarar la fuente, el tipo de vehículo y los supuestos. El Reporte de Impacto BioNexo será informativo y no una certificación ambiental.
 
 ## Documentación
 
