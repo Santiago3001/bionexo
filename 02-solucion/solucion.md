@@ -2,240 +2,157 @@
 
 ## Idea elegida
 
-BioNexo NEA será, para la Ideathon, un asistente de descubrimiento comercial enfocado en cascarilla de arroz.
+BioNexo NEA conecta vendedores, compradores y transportistas mediante un agente de IA y datos controlados.
 
-Una arrocera describe el material disponible en lenguaje natural. El sistema identifica los datos principales, consulta oportunidades existentes y recomienda compradores compatibles. Cada recomendación explica la coincidencia y muestra las condiciones pendientes de verificar.
+Para la demostración, una arrocera publica cascarilla, una industria busca abastecimiento y un transportista ofrece capacidad. La plataforma encuentra la coincidencia, compara la logística y estima el impacto ambiental del traslado.
 
-La propuesta no reemplaza controles técnicos, contratos ni decisiones humanas.
+## Principios del producto
 
-## Actores y usuarios
+- La IA interpreta solicitudes y explica resultados.
+- La base de datos aporta perfiles, publicaciones y oportunidades.
+- Reglas controladas calculan compatibilidad, rutas, costos y emisiones.
+- Ninguna acción comercial importante se confirma sin intervención humana.
+- Todo perfil, precio y resultado ficticio se identifica como **DATO SIMULADO**.
 
-Una misma organización puede actuar como vendedora y compradora según la operación. Los roles describen lo que cada participante hace dentro de BioNexo.
+## Funcionalidades del vendedor
 
-### Oferentes o vendedores
+### Para mostrar en la demo
 
-Son quienes publican materiales, productos, excedentes, maquinaria o capacidad disponible.
+1. Ingresar con un perfil de arrocera.
+2. Escribir: “Tengo 20 toneladas mensuales de cascarilla disponibles en Corrientes”.
+3. Revisar los datos extraídos por la IA: producto, cantidad, ubicación y frecuencia.
+4. Completar precio y especificaciones pendientes.
+5. Publicar la oferta.
+6. Ver compradores recomendados y la explicación de cada coincidencia.
+7. Elegir una contraparte e iniciar el contacto.
+8. Confirmar un resumen preliminar de cantidad, frecuencia y entrega.
 
-Incluyen:
+### Para etapas posteriores
 
-- Grandes empresas e industrias, como molinos, arroceras, aserraderos, fábricas y plantas procesadoras.
-- Pequeños y medianos productores agropecuarios.
-- Pequeños fabricantes, talleres y emprendimientos.
-- Cooperativas y asociaciones que reúnen la oferta de varios miembros.
-- Comercios y distribuidores.
+- Gestionar varias publicaciones y productos.
+- Recibir solicitudes de cotización.
+- Adjuntar fichas técnicas y certificados.
+- Negociar mediante chat persistente.
+- Crear contratos recurrentes y seguir entregas.
+- Consultar ventas, alertas e informes acumulados.
 
-Sus funciones principales son:
+## Funcionalidades del comprador
 
-- Crear y mantener un perfil productivo.
-- Publicar una oferta en forma manual o con asistencia de IA.
-- Informar producto, cantidad, ubicación, frecuencia, precio y requisitos técnicos.
-- Recibir recomendaciones de compradores y posibles aplicaciones.
-- Comparar alternativas comerciales y logísticas.
-- Negociar mediante el chat formal.
-- Preparar acuerdos recurrentes y seguir las entregas.
--Consultar seguimiento de su venta
+### Para mostrar en la demo
 
-### Demandantes o compradores
+1. Ingresar con un perfil de industria de biomasa.
+2. Escribir: “Necesito 20 toneladas de cascarilla por mes durante 12 meses”.
+3. Revisar la necesidad interpretada por la IA.
+4. Ver proveedores compatibles ordenados por cantidad, distancia y frecuencia.
+5. Comparar costo del material, transporte y costo total estimado.
+6. Revisar condiciones técnicas pendientes.
+7. Seleccionar la oferta de la arrocera.
+8. Preparar un pedido recurrente sujeto a confirmación.
 
-Son industrias, fabricantes, productores, cooperativas, comercios o distribuidores que necesitan materias primas, insumos, subproductos, productos terminados, maquinaria o equipamiento.
+### Para etapas posteriores
 
-Sus funciones principales son:
+- Publicar múltiples necesidades.
+- Solicitar y comparar cotizaciones.
+- Guardar proveedores habituales.
+- Negociar condiciones y adjuntar documentación.
+- Gestionar contratos de 3, 6 o 12 meses.
+- Controlar calendario, entregas e incumplimientos.
 
-- Publicar una necesidad puntual o recurrente.
-- Buscar proveedores mediante lenguaje natural.
-- Comparar opciones por disponibilidad, ubicación, cantidad, precio y condiciones técnicas.
-- Solicitar una cotización e iniciar una conversación comercial.
-- Preparar pedidos y contratos de abastecimiento.
-- Consultar seguimiento de su compra
+## Funcionalidades del transportista
 
-### Transportistas
+### Para mostrar en la demo
 
-Incluye transportistas independientes y empresas logísticas.
+1. Ingresar con un perfil de transportista.
+2. Informar vehículo, capacidad, origen, destino y fecha disponible.
+3. Marcar un viaje como ruta planificada o retorno disponible.
+4. Ver la operación compatible entre arrocera y comprador.
+5. Consultar distancia, peso y restricciones declaradas.
+6. Cargar una tarifa o aceptar una tarifa **DATO SIMULADO**.
+7. Confirmar disponibilidad para el traslado.
+8. Ver la entrega incorporada al resumen de operación.
 
-Sus funciones principales son:
+### Para etapas posteriores
 
-- Crear un perfil con vehículos, capacidad y zonas de cobertura.
-- Informar rutas y disponibilidad.
-- Recibir oportunidades de carga.
-- Participar en viajes de retorno, cargas consolidadas y entregas recurrentes.
-- Cotizar y dar seguimiento al transporte.
+- Publicar rutas y capacidad recurrente.
+- Recibir alertas de cargas compatibles.
+- Participar en cargas consolidadas.
+- Gestionar cotizaciones y estados del viaje.
+- Registrar retiro, tránsito y entrega.
+- Consultar historial, ingresos e indicadores de ocupación.
 
-### Administrador de BioNexo
+## Funcionalidades compartidas
 
-Es un actor operativo necesario para gestionar la plataforma. Este rol es un **SUPUESTO** porque el documento original no define todavía su funcionamiento detallado.
-
-Sus funciones serían:
-
-- Revisar perfiles, publicaciones y reportes.
-- Gestionar permisos y accesos.
-- Moderar contenido y atender incidentes.
-- Mantener reglas de compatibilidad y datos de referencia.
-- Controlar que los datos simulados estén identificados correctamente.
-
-### Especialistas y terceros de verificación
-
-Laboratorios, técnicos, certificadoras, aseguradoras y proveedores de pagos podrían intervenir en operaciones que necesiten validar calidad, identidad, seguridad o impacto ambiental.
-
-No forman parte obligatoria del primer prototipo. Su participación y costos deben validarse antes de incorporarlos.
-
-## Funcionalidades del producto
-
-### 1. Registro y perfiles
-
-- Registro de empresas, productores, cooperativas, compradores y transportistas.
-- Perfiles con actividad, ubicación, capacidad y datos comerciales relevantes.
-- Control de acceso según el rol de cada participante.
-
-### 2. Publicación de ofertas y necesidades
-
-- Carga de materias primas, insumos, subproductos, excedentes, productos, maquinaria y equipamiento.
-- Publicaciones puntuales o recurrentes.
-- Asistencia de IA para completar el formulario y solicitar los datos faltantes.
-
-### 3. Búsqueda y descubrimiento mediante IA
-
+- Registro y perfiles por rol.
+- Ofertas y necesidades puntuales o recurrentes.
 - Búsqueda en lenguaje natural.
-- Interpretación de producto, cantidad, frecuencia y ubicación.
-- Recomendación de compradores y proveedores.
-- Identificación de posibles aplicaciones alternativas de subproductos.
-- Explicación de por qué una coincidencia puede ser conveniente.
+- Recomendaciones comerciales explicadas.
+- Comparador logístico y económico.
+- Mensajería vinculada con la operación.
+- Resumen de condiciones con confirmación de las partes.
+- Panel de operaciones y seguimiento.
+- Borradores de contratos de abastecimiento.
+- Reportes económicos y ambientales.
 
-La IA interpreta y presenta resultados. No debe inventar empresas, precios, productos ni condiciones técnicas.
+## Impacto ambiental
 
-### 4. Matching comercial
+### Función mostrada en la demo
 
-- Comparación de oferta y demanda.
-- Evaluación de disponibilidad, ubicación, cantidad, precio y requisitos declarados.
-- Listado ordenado de coincidencias.
-- Identificación de datos técnicos pendientes de verificación.
+BioNexo comparará dos alternativas de transporte y mostrará:
 
-### 5. Comparador logístico y económico
+- Toneladas transportadas.
+- Distancia por alternativa.
+- Toneladas-kilómetro.
+- Factor de emisión utilizado.
+- Emisiones estimadas en kg de CO₂e.
+- Diferencia absoluta y porcentual entre alternativas.
 
-- Comparación de distancias, rutas, peso, volumen y costo estimado.
-- Oportunidades de cargas consolidadas.
-- Detección de viajes de retorno.
-- Planificación de entregas recurrentes.
+Fórmula inicial:
 
-Los cálculos deben realizarse con módulos controlados y no mediante estimaciones inventadas por la IA.
+`kg CO₂e = toneladas × kilómetros × factor de emisión en kg CO₂e/t-km`
 
-### 6. Chat comercial formal
+Ejemplo **DATO SIMULADO**:
 
-- Mensajes privados vinculados con una publicación, cotización, pedido o contrato.
-- Historial persistente con remitente y fecha.
-- Adjuntos, propuestas de precio y condiciones de entrega.
-- Notificaciones de nuevos mensajes.
-- Resumen de condiciones acordadas y confirmación de ambas partes.
+| Variable | Ruta A | Ruta B |
+|---|---:|---:|
+| Carga | 20 t | 20 t |
+| Distancia | 120 km | 80 km |
+| Factor | 0,09 kg CO₂e/t-km | 0,09 kg CO₂e/t-km |
+| Emisiones | 216 kg CO₂e | 144 kg CO₂e |
 
-El historial documenta la negociación, pero no reemplaza automáticamente un contrato formal.
+En este ejemplo, la Ruta B estima 72 kg CO₂e menos, una reducción del 33%. Todos los valores son **DATO SIMULADO**.
 
-### 7. Pedidos y contratos recurrentes
+### Límites del cálculo
 
-- Preparación de pedidos y cotizaciones.
-- Borradores de acuerdos de 3, 6 o 12 meses.
-- Definición de cantidad, precio, frecuencia, calidad, transporte y entrega.
-- Calendarios, recordatorios y alertas ante posibles incumplimientos.
+- El factor real deberá provenir de una fuente documentada.
+- Se deberá registrar el tipo de vehículo y combustible cuando sea posible.
+- Un viaje de retorno no equivale automáticamente a cero emisiones.
+- El reporte será informativo y no una certificación.
+- No se afirmarán emisiones evitadas por valorización del residuo sin metodología validada.
 
-### 8. Seguimiento de operaciones
+## Flujo integrado de cinco minutos
 
-- Panel de pedidos, contratos y entregas.
-- Registro del estado y cumplimiento de cada operación.
-- Historial comercial organizado.
-- Alertas y recordatorios.
+1. El vendedor publica la oferta con IA.
+2. El comprador expresa su necesidad y obtiene coincidencias.
+3. Ambas partes seleccionan la operación recomendada.
+4. El transportista confirma una ruta compatible.
+5. BioNexo presenta costo total, emisiones y resumen recurrente.
 
-### 9. Impacto ambiental
-
-- Estimación inicial de emisiones asociadas al transporte.
-- Comparación de alternativas logísticas.
-- Reporte de Impacto BioNexo descargable en PDF.
-- Reportes acumulados para operaciones recurrentes.
-
-Los reportes son informativos y no certificaciones ambientales oficiales, salvo que se incorpore una verificación competente.
-
-## Funcionalidad central
-
-> Convertir una oferta escrita en lenguaje natural en una recomendación comercial explicada y accionable.
-
-Ejemplo de entrada de la demo:
-
-> “Tengo 20 toneladas mensuales de cascarilla de arroz disponibles en Corrientes”.
-
-La cantidad, las empresas, los precios, las distancias y los resultados de esta demostración serán **DATO SIMULADO**.
-
-## Flujo de usuario
-
-1. La arrocera escribe qué tiene, cuánto, dónde y con qué frecuencia.
-2. La IA extrae esos datos y pide únicamente la información indispensable que falte.
-3. El backend consulta publicaciones y compradores cargados en la base.
-4. Reglas controladas comparan ubicación, cantidad y requisitos declarados.
-5. BioNexo muestra las mejores coincidencias, explica por qué y permite iniciar contacto.
-
-Las acciones comerciales relevantes requieren confirmación humana.
-
-## Alcance y prioridad del prototipo
-
-### Recorrido central obligatorio
+## Alcance obligatorio del prototipo
 
 - Una consulta real a una API de IA.
-- Entre 8 y 12 perfiles marcados como **DATO SIMULADO**.
-- Publicaciones simuladas de oferta y demanda.
-- Extracción de producto, cantidad, ubicación y frecuencia.
-- Recomendaciones consultadas desde la base de datos.
-- Explicación de la coincidencia.
-- Una acción final demostrable, como preparar un contacto o borrador de consulta.
+- Entre 8 y 12 perfiles identificados como **DATO SIMULADO**.
+- Una oferta, una necesidad y una ruta compatibles.
+- Recomendación consultada desde la base de datos.
+- Cálculos logísticos y ambientales controlados.
+- Una acción final confirmable por el usuario.
 
-### Funciones complementarias para mostrar si el tiempo alcanza
+## Fuera del recorrido principal
 
-- Registro y perfiles simulados.
-- Publicación asistida de ofertas y necesidades.
-- Comparador logístico y económico básico.
-- Chat con mensajes guardados en la base de datos.
-- Borrador demostrativo de contrato recurrente.
-- Estimación ambiental informativa y reporte PDF.
-- Panel simple de operaciones.
-
-Estas funciones complementarias no deben debilitar el recorrido central: interpretar una necesidad, consultar datos y recomendar una oportunidad concreta.
-
-## Funcionalidades postergadas o limitadas en la primera versión
-
-### Marketplace para todo el NEA
-
-Se descarta porque incorpora demasiados sectores, actores y tipos de producto antes de validar un caso concreto.
-
-### Optimizador logístico completo
-
-Se posterga porque exige tarifas, capacidades, restricciones y disponibilidad real de transportistas. La demo puede mostrar distancia y una estimación claramente identificada.
-
-### Contratos recurrentes y pagos
-
-Se postergan porque requieren definiciones comerciales, legales y financieras que no prueban la hipótesis principal.
-
-### Reporte ambiental certificado
-
-Se posterga porque un cálculo informativo no equivale a una certificación y necesita metodología y factores de emisión verificables.
-
-### Blockchain y tokenización
-
-Se descartan para el prototipo porque no mejoran el descubrimiento inicial de compradores.
-
-### Chat comercial completo
-
-Puede mostrarse como continuidad del flujo, pero no debe desplazar el esfuerzo de la recomendación central.
-
-## Qué se va a probar
-
-- Si la arrocera entiende cómo publicar su oferta.
-- Si la información solicitada coincide con los datos disponibles en una operación real.
-- Si la explicación de compatibilidad genera confianza.
-- Si faltan variables técnicas esenciales.
-- Si el usuario contactaría a la contraparte recomendada.
-- Si pagaría por una conexión exitosa y bajo qué condición.
-
-## Con quién se va a probar
-
-- 5 responsables de arroceras. **SUPUESTO: meta inicial**.
-- 5 compradores o usuarios industriales potenciales. **SUPUESTO: meta inicial**.
-- 2 transportistas regionales. **SUPUESTO: meta inicial**.
-- 1 especialista técnico que revise las variables de calidad. **SUPUESTO: meta inicial**.
-
-La prueba debe usar casos reales anonimizados cuando sea posible. Si se usan ejemplos inventados, deben conservar la etiqueta **DATO SIMULADO**.
+- Pagos reales.
+- Contratos legalmente celebrados.
+- Optimización logística avanzada.
+- Certificación ambiental.
+- Verificación automática de calidad.
+- Marketplace nacional para todos los sectores.
+- Blockchain o tokenización.
 
