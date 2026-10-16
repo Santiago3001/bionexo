@@ -48,9 +48,10 @@ Las empresas, cantidades, precios, tarifas y resultados utilizados son **DATO SI
 | Mis publicaciones | Revisa su tabla de publicaciones. | Muestra sus publicaciones o 3 de ejemplo si no tiene. |
 | Chat y negociación | Abre la negociación con un comprador. | Muestra el chat formal simulado y el circuito de compra. |
 | Propuestas de trueque | Recibe y acepta la propuesta o hace una contrapropuesta. | Muestra la equivalencia y el contrato de permuta, y asigna los fletes. |
-| Seguimiento de envíos | Ve el estado de sus envíos. | Muestra solo los envíos de ese vendedor. |
 | Cotizador de rentabilidad (nuevo) | Carga el producto, las toneladas, su costo de manejo, el costo de disponer el residuo y el precio al que piensa vender. | Calcula el margen por tonelada, el ahorro por no disponer, el resultado mensual y anual, y el precio de equilibrio. Muestra el semáforo (verde / amarillo / rojo) y sugiere un precio. |
 | Reporte de impacto | Descarga su reporte ambiental. | Muestra las toneladas desviadas de disposición final. |
+
+## | Comprador / Vendedor | Seguimiento de envíos | Ve el estado de sus envíos 
 
 ## 3. Funcionalidades del transportista
 
