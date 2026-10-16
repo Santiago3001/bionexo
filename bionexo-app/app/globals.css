@@ -1,0 +1,185 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,400..700&display=swap');
+@import "tailwindcss";
+
+/* Design system — réplica del modelo sustainability-platform (EcoTrack) */
+:root {
+  --color-primary: #228b22;
+  --color-secondary: #2e7d32;
+  --color-accent: #8b4513;
+  --color-sky: #87ceeb;
+  --color-sun: #ffb300;
+  --color-leaf: #4caf50;
+
+  --color-bg: #fafaf5;
+  --color-bg-alt: #f5f5e8;
+  --color-card: #ffffff;
+  --color-bg-dark: #1b4332;
+
+  --color-foreground: #1b4332;
+  --color-muted-fg: #52796f;
+  --color-subtle-fg: #84a98c;
+  --color-border: #d8e2dc;
+
+  --color-success: #228b22;
+  --color-success-dark: #1b4332;
+  --color-trueque: #8b4513;
+  --color-warn: #b45309;
+  --color-danger: #b91c1c;
+
+  --gradient-nature: linear-gradient(135deg, #228b22 0%, #4caf50 100%);
+  --gradient-earth: linear-gradient(135deg, #8b4513 0%, #a0522d 100%);
+
+  --font-heading: "Fraunces", serif;
+  --font-body: "DM Sans", sans-serif;
+
+  --shadow-card: 0 20px 40px #228b221a;
+  --shadow-menu: 0 20px 60px #1b433229;
+  --radius-md: 12px;
+  --radius-lg: 24px;
+
+  /* aliases usados por el código existente */
+  --color-background: var(--color-bg);
+  --color-primary-dark: var(--color-bg-dark);
+}
+
+@theme inline {
+  --color-background: var(--color-background);
+  --color-foreground: var(--color-foreground);
+  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-foreground);
+  font-family: var(--font-body);
+  margin: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--color-foreground);
+}
+
+::selection { background: #4caf504d; color: #1b4332; }
+
+a, button { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:disabled { opacity: .4; cursor: not-allowed; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* --- Componentes EcoTrack --- */
+.bn-card {
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  transition: all .3s;
+}
+.bn-card:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-card);
+}
+
+.bn-btn {
+  background: var(--gradient-nature);
+  color: #fff;
+  border: none;
+  border-radius: 50px;
+  padding: 14px 32px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  transition: all .3s;
+  cursor: pointer;
+}
+.bn-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 30px #228b224d; }
+.bn-btn:disabled { transform: none; box-shadow: none; }
+
+.bn-btn--sec {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  padding: 12px 30px;
+}
+.bn-btn--sec:hover:not(:disabled) { background: var(--color-primary); color: #fff; box-shadow: 0 10px 30px #228b2233; }
+
+.bn-btn--warn { background: linear-gradient(135deg, #d97706, #b45309); }
+.bn-btn--warn:hover:not(:disabled) { box-shadow: 0 10px 30px #b453094d; }
+
+.bn-btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border: 2px solid var(--color-border);
+  padding: 12px 30px;
+}
+.bn-btn--ghost:hover:not(:disabled) { border-color: var(--color-primary); box-shadow: none; }
+
+.bn-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: #228b221a;
+  color: var(--color-primary);
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-size: .875rem;
+  font-weight: 500;
+}
+
+.bn-input {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  background: var(--color-card);
+  color: var(--color-foreground);
+  border: 2px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 13px 18px;
+  transition: all .2s;
+}
+.bn-input:focus {
+  border-color: var(--color-primary);
+  outline: none;
+  box-shadow: 0 0 0 4px #228b221a;
+}
+
+.bn-navbar {
+  background: #fafaf5f2;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bn-gradient-text {
+  background: var(--gradient-nature);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.bn-menu-item { transition: background .2s; border-radius: var(--radius-md); }
+.bn-menu-item:hover { background: var(--color-bg-alt) !important; }
+.bn-tab { transition: all .2s; }
+.bn-tab:hover { background: var(--color-bg-alt); }
+
+.bn-mode-btn {
+  border: 2px solid var(--color-primary);
+  border-radius: 50px;
+  padding: 8px 18px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: transparent;
+  color: var(--color-primary);
+  transition: all .2s;
+}
+.bn-mode-btn:hover { background: #228b221a; }
+.bn-mode-btn[data-open="true"] { background: var(--color-primary); color: #fff; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
