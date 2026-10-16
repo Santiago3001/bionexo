@@ -1,91 +1,93 @@
 # Problema
 
-## Actor principal
-
-El actor principal del caso de demostración es una **arrocera del Nordeste Argentino que genera cascarilla de arroz de manera recurrente**.
-
-Actores secundarios:
-
-- Industrias que podrían utilizar la cascarilla como insumo.
-- Cooperativas y asociaciones productivas.
-- Transportistas con capacidad disponible.
-- Especialistas que validen calidad, seguridad y usos técnicos.
-
-La elección de la arrocera como actor principal es un **SUPUESTO** de producto y debe confirmarse mediante entrevistas.
-
 ## Frase del problema
 
-> Las arroceras del NEA necesitan encontrar compradores compatibles para su cascarilla de arroz porque la búsqueda comercial es dispersa y puede dejar material acumulado, desaprovechado o con una salida de bajo valor.
+> Las empresas productivas del NEA necesitan encontrar contrapartes comerciales y transporte compatibles porque la información está dispersa y el costo logístico puede impedir que un subproducto llegue a un uso productivo.
 
-## Dolor
+Esta formulación es un **SUPUESTO** pendiente de validación.
 
-El documento de origen plantea los siguientes dolores, todavía no validados:
+## Problema del vendedor
 
-- **SUPUESTO:** la arrocera desconoce quién podría comprar la cascarilla.
-- **SUPUESTO:** no conoce aplicaciones alternativas ni sus requisitos técnicos.
-- **SUPUESTO:** conseguir una contraparte requiere contactos, mensajes y negociaciones dispersas.
-- **SUPUESTO:** la distancia y el transporte pueden volver inviable una venta.
-- **SUPUESTO:** la falta de demanda recurrente dificulta planificar la salida del material.
-- **SUPUESTO:** almacenar o descartar la cascarilla genera costos o riesgos operativos.
+El vendedor de la demostración es una arrocera que genera cascarilla de manera recurrente.
 
-## Momento exacto
+Dolores propuestos:
 
-El problema aparece cuando la molienda genera cascarilla y la empresa debe decidir rápidamente:
+- **SUPUESTO:** no sabe quién podría comprar el material.
+- **SUPUESTO:** depende de contactos y mensajes dispersos.
+- **SUPUESTO:** desconoce los requisitos técnicos del comprador.
+- **SUPUESTO:** el material puede acumularse o salir a bajo valor.
+- **SUPUESTO:** no puede evaluar rápidamente si el transporte permite hacer el negocio.
 
-1. Cuánto material tiene disponible.
-2. Dónde almacenarlo.
-3. Quién puede recibirlo.
-4. Qué condiciones técnicas debe cumplir.
-5. Si el valor comercial cubre el transporte y los demás costos.
+El problema aparece cuando la arrocera debe decidir qué hacer con una nueva disponibilidad de cascarilla.
 
-La frecuencia, urgencia y cantidad real no están verificadas.
+## Problema del comprador
+
+El comprador de la demostración es una industria que necesita cascarilla como insumo.
+
+Dolores propuestos:
+
+- **SUPUESTO:** no encuentra proveedores con cantidad y frecuencia suficientes.
+- **SUPUESTO:** debe consultar a varias empresas para comparar condiciones.
+- **SUPUESTO:** no conoce el costo total hasta conseguir transporte.
+- **SUPUESTO:** necesita verificar calidad, humedad y otras especificaciones.
+- **SUPUESTO:** no tiene un historial organizado de negociación y abastecimiento.
+
+El problema aparece cuando debe abastecer una necesidad puntual o recurrente.
+
+## Problema del transportista
+
+El transportista puede tener capacidad disponible o regresar sin carga.
+
+Dolores propuestos:
+
+- **SUPUESTO:** no conoce oportunidades compatibles con su ruta.
+- **SUPUESTO:** debe coordinar información repartida entre llamadas y mensajes.
+- **SUPUESTO:** pierde rentabilidad cuando retorna vacío.
+- **SUPUESTO:** no dispone de una planificación clara para entregas recurrentes.
+
+El problema aparece al planificar una ruta o buscar carga para capacidad que quedaría sin utilizar.
+
+## Problema ambiental
+
+Una operación puede elegirse solo por precio sin comparar distancia, tipo de vehículo ni aprovechamiento del viaje.
+
+BioNexo propone hacer visible:
+
+- Material comercializado y potencialmente aprovechado.
+- Distancia estimada del traslado.
+- Toneladas-kilómetro transportadas.
+- Emisiones estimadas de cada alternativa.
+- Diferencia entre una ruta directa y una opción más eficiente.
+
+No se calcularán beneficios por evitar disposición o sustituir materiales sin una metodología técnica validada.
 
 ## Cómo se resuelve hoy
 
-El documento no aporta entrevistas ni evidencia del proceso actual. Las siguientes alternativas son **SUPUESTOS** que deben comprobarse:
+El documento no aporta evidencia directa. Las siguientes alternativas son **SUPUESTO**:
 
 - Contactos comerciales existentes.
-- Llamadas, correo o mensajería instantánea.
+- Llamadas, correo y mensajería instantánea.
 - Intermediarios y transportistas conocidos.
-- Venta directa a usuarios cercanos.
-- Almacenamiento temporal.
-- Entrega a bajo precio o descarte.
+- Planillas o registros separados.
+- Comparación manual de precios y distancias.
 
-## Qué puede tener de malo
+## Qué falta validar
 
-- La información puede estar repartida entre distintas personas y canales.
-- Las oportunidades dependen de la red de contactos de cada empresa.
-- Comparar cantidad, ubicación, calidad y transporte puede llevar tiempo.
-- No queda un historial comercial ordenado.
-- Una coincidencia aparente puede fallar por humedad, granulometría, contaminación, frecuencia o costo logístico.
+- Volumen real de cascarilla sin una salida conveniente.
+- Cantidad de arroceras y compradores afectados.
+- Tiempo necesario para conseguir una contraparte.
+- Costos de almacenamiento, descarte y transporte.
+- Variables técnicas obligatorias para cada uso.
+- Disponibilidad de viajes de retorno.
+- Disposición a pagar de cada usuario.
+- Fuente y factor de emisión apropiados para la región y el vehículo.
 
-Todas estas afirmaciones son **SUPUESTO** hasta observar operaciones reales.
+## Validación mínima
 
-## Datos y validación
-
-### Lo que sabemos por el documento
-
-- BioNexo se propone para el Nordeste Argentino.
-- El caso narrativo utiliza una oferta recurrente de cascarilla de arroz.
-- El prototipo prevé datos simulados y al menos una consulta real a una API de IA.
-- No se requieren blockchain ni tokens para la primera versión.
-
-### Lo que todavía no está validado
-
-- Cantidad de arroceras afectadas.
-- Volumen mensual de cascarilla sin una salida conveniente.
-- Costo de almacenamiento, tratamiento o descarte.
-- Tiempo promedio para conseguir un comprador.
-- Usos admitidos y especificaciones técnicas.
-- Precio de mercado y radio logístico rentable.
-- Disposición a pagar de vendedores y compradores.
-
-### Plan mínimo de validación
-
-- Entrevistar al menos 5 arroceras. **SUPUESTO: objetivo inicial**.
-- Entrevistar al menos 5 compradores o usuarios potenciales. **SUPUESTO: objetivo inicial**.
-- Conversar con 2 transportistas regionales. **SUPUESTO: objetivo inicial**.
-- Registrar volúmenes, frecuencia, destino actual, tiempos, costos y rechazos.
-- Pedir evidencia de una operación reciente y reconstruir su recorrido.
-- Mostrar el prototipo sin explicarlo y observar si el usuario entiende la recomendación.
+- Entrevistar 5 vendedores o arroceras. **SUPUESTO: objetivo inicial**.
+- Entrevistar 5 compradores industriales. **SUPUESTO: objetivo inicial**.
+- Entrevistar 3 transportistas. **SUPUESTO: objetivo inicial**.
+- Reconstruir al menos una operación reciente con tiempos, costos y participantes.
+- Probar la demo y observar si cada actor entiende su siguiente acción.
+- Validar el cálculo ambiental con un especialista o fuente reconocida.
 
