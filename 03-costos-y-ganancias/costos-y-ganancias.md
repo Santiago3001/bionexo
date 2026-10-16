@@ -1,80 +1,86 @@
 # Costos y ganancias
 
-## Alcance de esta estimación
+## Alcance
 
-El documento de origen no incluye cotizaciones ni datos de operaciones reales. Todos los valores de esta página son **SUPUESTO** o **DATO SIMULADO** y sirven únicamente para probar la lógica del negocio.
+El documento de origen no aporta cotizaciones ni operaciones reales. Todos los valores de esta página son **SUPUESTO** o **DATO SIMULADO** y no constituyen una proyección financiera.
 
 ## Costos del prototipo
 
 | Concepto | Estimación mensual | Estado |
 |---|---:|---|
-| Hosting de frontend y backend | USD 0–50 | SUPUESTO |
-| Base de datos | USD 0–25 | SUPUESTO |
-| API de inteligencia artificial | USD 10–50 | SUPUESTO |
+| Frontend, backend y hosting | USD 0–50 | SUPUESTO |
+| Base de datos y archivos | USD 0–25 | SUPUESTO |
+| API de IA | USD 10–50 | SUPUESTO |
 | Mapas y cálculo de rutas | USD 0–25 | SUPUESTO |
-| Dominio y servicios auxiliares | USD 2–15 | SUPUESTO |
-| Total técnico inicial | USD 12–165 | SUPUESTO |
+| Generación de reportes | USD 0–15 | SUPUESTO |
+| Total técnico | USD 10–165 | SUPUESTO |
 
-No se asigna un valor al trabajo del equipo porque no se informó cantidad de integrantes, dedicación ni tarifa.
+No se incluye el trabajo del equipo porque no se informaron integrantes, dedicación ni tarifas.
 
-## Costos de una operación real
+## Costos por funcionalidad
+
+### Vendedor y comprador
 
 - Incorporación y verificación de empresas.
-- Atención a usuarios y resolución de incidentes.
-- Validación de especificaciones del material.
-- Actualización de oferta, demanda y precios.
-- Integración o coordinación con transportistas.
-- Asesoramiento legal, contable y de protección de datos.
-- Comercialización para alcanzar suficiente oferta y demanda.
+- Moderación de publicaciones.
+- Atención comercial y resolución de incidentes.
+- Almacenamiento de mensajes y documentos.
 
-Estos costos pueden superar ampliamente la infraestructura técnica. **SUPUESTO**.
+### Transportista
+
+- Datos de rutas y mapas.
+- Actualización de capacidad y disponibilidad.
+- Soporte para cotizaciones y estados de entrega.
+- Integración futura con operadores logísticos.
+
+### Impacto ambiental
+
+- Selección y actualización de factores de emisión.
+- Revisión metodológica por especialistas.
+- Generación y almacenamiento de reportes.
+- Verificación externa si se ofrece una certificación futura.
 
 ## Terceros necesarios
 
-- Proveedor de inteligencia artificial.
-- Servicio de mapas o rutas.
-- Transportistas independientes o empresas logísticas.
-- Especialistas o laboratorios cuando se necesite validar calidad.
-- Proveedor de pagos, solamente en una etapa posterior.
-- Asesoría legal para contratos, privacidad y responsabilidades.
+- Proveedor de IA.
+- Servicio de mapas y rutas.
+- Transportistas o empresas logísticas.
+- Laboratorios o técnicos para validar calidad.
+- Especialista ambiental para revisar la metodología.
+- Proveedor de pagos en una etapa posterior.
+- Asesoría legal, contable y de privacidad.
 
-BioNexo no debe afirmar que certifica materiales o emisiones si no existe un tercero competente.
+## Modelo de ingresos propuesto
 
-## Modelo de negocio inicial
+- Acceso básico gratuito para publicar y buscar.
+- Comisión por operación concretada. **SUPUESTO**.
+- Tarifa o margen por logística gestionada. **SUPUESTO**.
+- Suscripción para herramientas empresariales y seguimiento. **SUPUESTO**.
+- Gestión de contratos recurrentes. **SUPUESTO**.
+- Reportes especializados y verificaciones de terceros. **SUPUESTO**.
 
-La hipótesis principal es un modelo freemium:
-
-- Publicar y buscar: gratuito.
-- Operación concretada: comisión porcentual.
-- Herramientas avanzadas y seguimiento: suscripción empresarial.
-- Gestión logística: margen o tarifa de coordinación.
-- Verificación técnica: servicio de un tercero trasladado de forma transparente.
-
-El porcentaje, el pagador y el momento de cobro todavía deben validarse.
-
-## Cuenta estimada de una operación
+## Operación demostrativa
 
 Ejemplo **DATO SIMULADO**:
 
-- Cantidad: 20 toneladas.
-- Precio del material: USD 35 por tonelada.
-- Valor de la compraventa: 20 × USD 35 = USD 700.
-- Comisión de BioNexo: 3%.
-- Ingreso de BioNexo: USD 21.
-- Costo variable de software y atención: USD 6. **SUPUESTO**.
-- Margen antes de costos fijos: USD 15. **SUPUESTO**.
+- Material: 20 toneladas de cascarilla.
+- Precio: USD 35 por tonelada.
+- Valor del material: USD 700.
+- Transporte: USD 300.
+- Valor total estimado: USD 1.000.
+- Comisión BioNexo: 3% del material = USD 21.
+- Tarifa de coordinación logística: USD 15.
+- Ingreso estimado de BioNexo: USD 36.
 
-Con un costo técnico mensual de USD 100, serían necesarias aproximadamente 7 operaciones similares para cubrir solamente la infraestructura: USD 100 ÷ USD 15 = 6,67. Este cálculo no cubre salarios, ventas, validación, impuestos ni administración.
+Estos valores solo permiten mostrar el cálculo dentro de la demo. Deben sustituirse por datos reales antes de presentar rentabilidad.
 
-## Preguntas que deciden la rentabilidad
+## Preguntas por validar
 
-- ¿Cuál es el valor real por tonelada?
-- ¿Quién paga normalmente el transporte?
-- ¿Qué ahorro o ingreso adicional genera BioNexo?
-- ¿Cómo se verifica que la operación se concretó?
-- ¿Cuánto cuesta conseguir una empresa activa?
-- ¿Con qué frecuencia repite una operación?
-- ¿La comisión es menor que el valor creado para el usuario?
-
-Sin estas respuestas no puede afirmarse que el modelo sea rentable.
+- ¿Qué actor obtiene mayor valor y debería pagar?
+- ¿Quién contrata normalmente el transporte?
+- ¿Cuánto vale reducir el tiempo de búsqueda?
+- ¿Cómo se verifica que una operación se concretó?
+- ¿Cuánto cuesta incorporar y mantener un usuario activo?
+- ¿Qué frecuencia de repetición tienen las operaciones?
+- ¿Los usuarios pagarían por el reporte ambiental?
 
