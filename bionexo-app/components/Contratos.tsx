@@ -127,7 +127,12 @@ export default function Contratos() {
                   style={{ background: COLOR_ESTADO[contrato.status], color: "#fff" }}
                 >
                   {contrato.status.toUpperCase()}
-                </span>
+                </span>{" "}
+                {contrato.contractType === "futuro" && (
+                  <span className="bn-badge" style={{ background: "#7c3aed", color: "#fff" }}>
+                    FUTURO · SEÑA {contrato.downPaymentPct}%
+                  </span>
+                )}
                 <div style={{ fontSize: 14, color: "var(--color-muted-fg)", marginTop: 4 }}>
                   Comprador: <strong>{contrato.buyerName}</strong> · Vendedor: <strong>{contrato.sellerName}</strong>
                   {role === "vendedor" ? " · (tus condiciones)" : ""}
@@ -161,6 +166,12 @@ export default function Contratos() {
               <div><Muted>Precio</Muted><br /><strong>USD {contrato.unitPrice}/t</strong></div>
               <div><Muted>Duración</Muted><br /><strong>{contrato.durationMonths} meses</strong></div>
               <div><Muted>Inicio</Muted><br /><strong>{fecha(contrato.startDate)}</strong></div>
+              {contrato.contractType === "futuro" && (
+                <>
+                  <div><Muted>Seña</Muted><br /><strong>{contrato.downPaymentPct}% (USD {(contrato.quantityTons * contrato.unitPrice * contrato.durationMonths * contrato.downPaymentPct / 100).toLocaleString("es-AR")})</strong></div>
+                  <div><Muted>Penalidad</Muted><br /><strong>{contrato.penaltyPct}%</strong></div>
+                </>
+              )}
               <div><Muted>Valor estimado</Muted><br /><strong>USD {(contrato.quantityTons * contrato.unitPrice * contrato.durationMonths).toLocaleString("es-AR")}</strong></div>
             </div>
 

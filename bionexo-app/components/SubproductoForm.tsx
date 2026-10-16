@@ -12,6 +12,8 @@ const initialOffer: OfferInput = {
   quantityTons: 20,
   frequency: "Mensual",
   availabilityMonths: 12,
+  offerType: "spot",
+  availableFrom: "",
   city: "Corrientes",
   presentation: "Seca y a granel",
   qualityNotes: "Humedad pendiente de análisis",
@@ -61,6 +63,8 @@ export default function SubproductoForm({ vendedor }: { vendedor: boolean }) {
           <Field label="Cantidad disponible (toneladas)"><input className="bn-input" type="number" min="0.01" step="0.01" required disabled={!vendedor} value={offer.quantityTons} onChange={(event) => setOffer({ ...offer, quantityTons: Number(event.target.value) })} /></Field>
           <Field label="Frecuencia"><select className="bn-input" disabled={!vendedor} value={offer.frequency} onChange={(event) => setOffer({ ...offer, frequency: event.target.value })}><option>Única</option><option>Semanal</option><option>Mensual</option><option>Trimestral</option></select></Field>
           <Field label="Meses disponibles"><input className="bn-input" type="number" min="1" required disabled={!vendedor} value={offer.availabilityMonths} onChange={(event) => setOffer({ ...offer, availabilityMonths: Number(event.target.value) })} /></Field>
+          <Field label="Tipo de oferta"><select className="bn-input" disabled={!vendedor} value={offer.offerType} onChange={(event) => setOffer({ ...offer, offerType: event.target.value as "spot" | "futuro" })}><option value="spot">Spot (disponible ahora)</option><option value="futuro">Futuro (preventa)</option></select></Field>
+          <Field label="Disponible desde"><input className="bn-input" type="date" required={offer.offerType === "futuro"} disabled={!vendedor} value={offer.availableFrom} onChange={(event) => setOffer({ ...offer, availableFrom: event.target.value })} /></Field>
           <Field label="Lugar de retiro"><select className="bn-input" disabled={!vendedor} value={offer.city} onChange={(event) => setOffer({ ...offer, city: event.target.value })}>{Object.keys(CITIES).map((city) => <option key={city}>{city}</option>)}</select></Field>
           <Field label="Estado y presentación"><input className="bn-input" required disabled={!vendedor} value={offer.presentation} onChange={(event) => setOffer({ ...offer, presentation: event.target.value })} /></Field>
           <Field label="Precio de referencia (US$/t)"><input className="bn-input" type="number" min="0" step="0.01" required disabled={!vendedor} value={offer.pricePerTon} onChange={(event) => setOffer({ ...offer, pricePerTon: Number(event.target.value) })} /></Field>

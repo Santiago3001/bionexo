@@ -25,6 +25,10 @@ const CONDICIONES_INICIALES: Condiciones = {
   frequency: "Mensual",
   durationMonths: 6,
   terms: "Retiro a cargo del comprador. Pago a 30 días contra entrega. Análisis de calidad previo a la carga.",
+  startDate: "",
+  contractType: "spot",
+  downPaymentPct: 20,
+  penaltyPct: 10,
 };
 
 function hora(iso: string): string {
@@ -278,6 +282,48 @@ export default function ChatComercial({ conversationId }: { conversationId: stri
               onChange={(event) => setPropuesta({ ...propuesta, durationMonths: Number(event.target.value) })}
             />
           </label>
+          <label style={{ display: "grid", gap: 6 }}>
+            <strong>Tipo</strong>
+            <select
+              className="bn-input"
+              value={propuesta.contractType ?? "spot"}
+              onChange={(event) => setPropuesta({ ...propuesta, contractType: event.target.value as "spot" | "futuro" })}
+            >
+              <option value="spot">Spot</option>
+              <option value="futuro">Futuro (preventa)</option>
+            </select>
+          </label>
+          <label style={{ display: "grid", gap: 6 }}>
+            <strong>Inicio de entregas</strong>
+            <input
+              className="bn-input"
+              type="date"
+              value={propuesta.startDate ?? ""}
+              onChange={(event) => setPropuesta({ ...propuesta, startDate: event.target.value })}
+            />
+          </label>
+          <label style={{ display: "grid", gap: 6 }}>
+            <strong>Seña (%)</strong>
+            <input
+              className="bn-input"
+              type="number"
+              min={0}
+              max={100}
+              value={propuesta.downPaymentPct ?? 0}
+              onChange={(event) => setPropuesta({ ...propuesta, downPaymentPct: Number(event.target.value) })}
+            />
+          </label>
+          <label style={{ display: "grid", gap: 6 }}>
+            <strong>Penalidad (%)</strong>
+            <input
+              className="bn-input"
+              type="number"
+              min={0}
+              max={100}
+              value={propuesta.penaltyPct ?? 0}
+              onChange={(event) => setPropuesta({ ...propuesta, penaltyPct: Number(event.target.value) })}
+            />
+          </label>
           <label style={{ display: "grid", gap: 6, gridColumn: "1 / -1" }}>
             <strong>Condiciones comerciales</strong>
             <textarea
@@ -319,6 +365,8 @@ export default function ChatComercial({ conversationId }: { conversationId: stri
               <strong>
                 {conversacion.proposal.quantityTons} t · USD {conversacion.proposal.unitPrice}/t ·{" "}
                 {conversacion.proposal.frequency} · {conversacion.proposal.durationMonths} meses
+                {conversacion.proposal.contractType === "futuro" ? " · FUTURO" : ""}
+                {conversacion.proposal.startDate ? ` · desde ${conversacion.proposal.startDate}` : ""}
               </strong>
               <span className="bn-badge" style={{ background: acordado ? "#059669" : "#f59e0b", color: "#fff" }}>
                 {acordado ? "ACUERDO CERRADO" : "EN NEGOCIACIÓN"}

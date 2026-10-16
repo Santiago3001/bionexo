@@ -66,6 +66,8 @@ export interface OfferInput {
   quantityTons: number;
   frequency: string;
   availabilityMonths: number;
+  offerType: "spot" | "futuro";
+  availableFrom: string;
   city: string;
   presentation: string;
   qualityNotes: string;
@@ -89,7 +91,7 @@ interface Store {
   authLoading: boolean;
   dataLoading: boolean;
   authConfigured: boolean;
-  need: { product: string; t: number; city: string };
+  need: { product: string; t: number; city: string; requiredFrom?: string };
   sort: string;
   filterCity: string;
   pubs: Pub[];
@@ -102,7 +104,7 @@ interface Store {
   resetPassword: (email: string) => Promise<AuthResult>;
   updatePassword: (newPassword: string) => Promise<AuthResult>;
   setRole: (r: Role) => void;
-  setNeed: (n: { product: string; t: number; city: string }) => void;
+  setNeed: (n: { product: string; t: number; city: string; requiredFrom?: string }) => void;
   setSort: (s: string) => void;
   setFilterCity: (c: string) => void;
   addOffer: (offer: OfferInput) => Promise<AuthResult>;
@@ -154,6 +156,8 @@ function pubFromRow(row: Record<string, unknown>): Pub {
     documentsNotes: String(row.documents_notes ?? ""),
     simulated: Boolean(row.is_simulated),
     ownerId: typeof row.owner_id === "string" ? row.owner_id : null,
+    offerType: row.offer_type === "futuro" ? "futuro" : "spot",
+    availableFrom: String(row.available_from ?? new Date().toISOString().slice(0, 10)),
   };
 }
 
@@ -185,7 +189,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [role, setRoleState] = useState<Role>("comprador");
   const [authLoading, setAuthLoading] = useState(isSupabaseConfigured());
   const [dataLoading, setDataLoading] = useState(false);
-  const [need, setNeedState] = useState({ product: "Cascarilla de arroz", t: 20, city: "Resistencia" });
+  const [need, setNeedState] = useState<{ product: string; t: number; city: string; requiredFrom?: string }>({ product: "Cascarilla de arroz", t: 20, city: "Resistencia", requiredFrom: "" });
   const [sort, setSort] = useState("score");
   const [filterCity, setFilterCity] = useState("");
   const [pubs, setPubs] = useState<Pub[]>(INITIAL_PUBS);
@@ -226,6 +230,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
           product: String(savedNeeds[0].product),
           t: Number(savedNeeds[0].quantity_tons),
           city: String(savedNeeds[0].delivery_city),
+          requiredFrom: String(savedNeeds[0].required_from ?? ""),
         }
       : { ...previous, city: current.city });
     setPubs(offers?.length ? offers.map((row) => pubFromRow(row as Record<string, unknown>)) : INITIAL_PUBS);
@@ -369,7 +374,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     return { ok: true, message: "Contraseña actualizada." };
   }, []);
 
-  const setNeed = useCallback((nextNeed: { product: string; t: number; city: string }) => {
+  const setNeed = useCallback((nextNeed: { product: string; t: number; city: string; requiredFrom?: string }) => {
     setNeedState(nextNeed);
     const supabase = getSupabaseBrowserClient();
     if (!supabase || !user || user.role !== "comprador") return;
@@ -378,6 +383,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       product: nextNeed.product,
       quantity_tons: nextNeed.t,
       delivery_city: nextNeed.city,
+      required_from: nextNeed.requiredFrom || new Date().toISOString().slice(0, 10),
       frequency: "Mensual",
       duration_months: 12,
       max_radius_km: 150,
@@ -399,6 +405,8 @@ export function StoreProvider({ children }: { children: ReactNode }) {
       quantity_tons: offer.quantityTons,
       frequency: offer.frequency,
       availability_months: offer.availabilityMonths,
+      offer_type: offer.offerType,
+      available_from: offer.availableFrom || new Date().toISOString().slice(0, 10),
       city: offer.city,
       presentation: offer.presentation,
       quality_notes: offer.qualityNotes,
