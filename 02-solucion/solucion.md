@@ -82,23 +82,10 @@ Ejemplo **DATO SIMULADO**: Lote A US$760 contra Lote B US$420, diferencia US$340
 
 ## Flujo integrado
 
-1. Comprador se registra y carga requerimiento o usa el Agente IA.
-2. Revisa dashboard, ordena por score y ve TRUEQUE POSIBLE si aplica.
-3. Compra en 5 pasos o propone trueque en 7 pasos.
-4. Vendedor publica, negocia por chat, acepta trueque, cotiza rentabilidad y sigue envíos.
-5. Transportista toma la carga en mapa, compara ruta simple / ida y vuelta / 2 paradas / 2 paradas + vuelta, o usa armado automático.
-6. Se cierra orden con flete asignado y reportes ambiental y de sostenibilidad.
+
 
 ## Alcance obligatorio del prototipo
 
-- Registro por rol con pantallas habilitadas por rol.
-- Filtro por producto y dashboard con score, flete, total y CO2.
-- Circuito de compra en 5 pasos y trueque en 7 pasos con contrato de permuta.
-- Agente IA con detección de intención y top 5.
-- Cotizador de rentabilidad con semáforo y precio de equilibrio.
-- Mapa SVG, ranking con bonus 15% retorno, 4 tipos de ruta, comparador y armado automático.
-- Sostenibilidad ISO 14001 y reporte de impacto por toneladas desviadas.
-- Todos los datos identificados como **DATO SIMULADO**.
 
 ## Fuera del recorrido principal
 
@@ -107,5 +94,4 @@ Ejemplo **DATO SIMULADO**: Lote A US$760 contra Lote B US$420, diferencia US$340
 - Optimización logística avanzada con datos reales de flota.
 - Certificación ambiental ISO auditada.
 - Verificación automática de calidad.
-- Marketplace nacional para todos los sectores.
 - Blockchain o tokenización.
