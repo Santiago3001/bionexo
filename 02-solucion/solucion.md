@@ -33,6 +33,7 @@ Sus funciones principales son:
 - Comparar alternativas comerciales y logísticas.
 - Negociar mediante el chat formal.
 - Preparar acuerdos recurrentes y seguir las entregas.
+-Consultar seguimiento de su venta
 
 ### Demandantes o compradores
 
@@ -45,7 +46,7 @@ Sus funciones principales son:
 - Comparar opciones por disponibilidad, ubicación, cantidad, precio y condiciones técnicas.
 - Solicitar una cotización e iniciar una conversación comercial.
 - Preparar pedidos y contratos de abastecimiento.
-- Registrar entregas y consultar el historial de la operación.
+- Consultar seguimiento de su compra
 
 ### Transportistas
 
