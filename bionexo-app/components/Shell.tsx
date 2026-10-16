@@ -2,9 +2,8 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { homeForRole, type Role, useStore } from "@/lib/store";
-import ModeloNegocioModal from "./ModeloNegocioModal";
 import NotificacionesBell from "./NotificacionesBell";
 
 const NAVS: Record<Role, [string, string][]> = {
@@ -45,7 +44,7 @@ function initials(name: string) {
 }
 
 function routeAllowed(role: Role, path: string) {
-  if (path === "/perfil" || path === "/negocio") return true;
+  if (path === "/perfil") return true;
   if (path === "/mensajes" || path.startsWith("/mensajes/")) return true;
   if (path === "/contratos") return true;
   return path.startsWith(`/${role}`);
@@ -55,7 +54,6 @@ export function Shell({ children }: { children: ReactNode }) {
   const { user, role, authLoading, dataLoading, logout } = useStore();
   const path = usePathname();
   const router = useRouter();
-  const [businessOpen, setBusinessOpen] = useState(false);
 
   useEffect(() => {
     if (authLoading) return;
@@ -106,7 +104,6 @@ export function Shell({ children }: { children: ReactNode }) {
           </span>
         </span>
 
-        <button type="button" className="bn-mode-btn" onClick={() => setBusinessOpen(true)}>Modelo de negocio</button>
         <NotificacionesBell />
         <button type="button" className="bn-mode-btn" onClick={() => void closeSession()}>Cerrar sesión</button>
       </header>
@@ -119,7 +116,6 @@ export function Shell({ children }: { children: ReactNode }) {
       </nav>
 
       <main style={{ padding: "24px 20px", maxWidth: 1200, margin: "auto", width: "100%" }}>{children}</main>
-      <ModeloNegocioModal open={businessOpen} onClose={() => setBusinessOpen(false)} />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { CITIES } from "@/lib/data";
 import { homeForRole, type RegisterInput, type Role, useStore } from "@/lib/store";
 import { Btn } from "@/components/ui";
+import ModeloNegocioModal from "@/components/ModeloNegocioModal";
 
 const STATS: [string, string][] = [
   ["20 t/mes", "excedentes de cascarilla conectados en la demo"],
@@ -24,6 +25,14 @@ const EMPTY_REGISTER: RegisterInput = {
   role: "comprador",
 };
 
+const DEMO_PASSWORD = "Bionexo2026!";
+
+const DEMO_USERS: { email: string; label: string; desc: string; icon: string }[] = [
+  { email: "demo.comprador@bionexo.dev", label: "Comprador", desc: "compra, matching, contrato, reportes", icon: "🛒" },
+  { email: "demo.vendedor@bionexo.dev", label: "Vendedor", desc: "publica ofertas, cotizador, impacto", icon: "🏭" },
+  { email: "demo.transportista@bionexo.dev", label: "Transportista", desc: "mapa de rutas y retornos", icon: "🚚" },
+];
+
 export default function Home() {
   const { user, authLoading, authConfigured, signIn, signUp } = useStore();
   const router = useRouter();
@@ -34,6 +43,7 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
+  const [businessOpen, setBusinessOpen] = useState(false);
 
   useEffect(() => {
     if (user) router.replace(homeForRole(user.role));
@@ -89,6 +99,10 @@ export default function Home() {
             ))}
           </div>
           <p style={{ fontSize: 12, color: "var(--color-subtle-fg)", marginTop: 10 }}>Resultados de demostración identificados como DATO SIMULADO.</p>
+          <div style={{ display: "flex", gap: 12, marginTop: 22, flexWrap: "wrap", alignItems: "center" }}>
+            <button type="button" className="bn-btn bn-btn--sec" onClick={() => setBusinessOpen(true)}>💰 Cómo factura BioNexo</button>
+            <span style={{ fontSize: 13, color: "var(--color-muted-fg)" }}>Modelo de negocio para jurados e inversores. No necesitás cuenta para verlo.</span>
+          </div>
         </section>
 
         <section style={{ padding: "8px 0 64px" }}>
@@ -107,7 +121,36 @@ export default function Home() {
             {mode === "login" ? (
               <form onSubmit={handleLogin}>
                 <h2 style={{ margin: "0 0 6px", fontSize: "1.6rem" }}>Ingresá a tu cuenta</h2>
-                <p style={{ margin: "0 0 22px", color: "var(--color-muted-fg)" }}>Tu perfil determina las pantallas y operaciones disponibles.</p>
+                <p style={{ margin: "0 0 14px", color: "var(--color-muted-fg)" }}>Tu perfil determina las pantallas y operaciones disponibles.</p>
+                <div style={{ background: "var(--color-bg-alt)", border: "1px solid var(--color-border)", borderRadius: 16, padding: 14, marginBottom: 18 }}>
+                  <strong style={{ fontSize: 13 }}>⚡ Acceso rápido demo MVP</strong>
+                  <div style={{ display: "grid", gap: 8, gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))", marginTop: 10 }}>
+                    {DEMO_USERS.map((demo) => {
+                      const active = email === demo.email && password === DEMO_PASSWORD;
+                      return (
+                        <button
+                          key={demo.email}
+                          type="button"
+                          onClick={() => { setEmail(demo.email); setPassword(DEMO_PASSWORD); setMessage(""); }}
+                          aria-pressed={active}
+                          style={{
+                            textAlign: "left",
+                            borderRadius: 12,
+                            padding: "10px 12px",
+                            border: active ? "2px solid var(--color-primary)" : "2px solid var(--color-border)",
+                            background: active ? "#fff" : "var(--color-card)",
+                            cursor: "pointer",
+                          }}
+                        >
+                          <div style={{ fontWeight: 700, fontSize: 14 }}>{demo.icon} {demo.label}</div>
+                          <div style={{ fontSize: 12, color: "var(--color-muted-fg)", marginTop: 2 }}>{demo.desc}</div>
+                          <div style={{ fontSize: 11, color: "var(--color-subtle-fg)", marginTop: 4, wordBreak: "break-all" }}>{demo.email}</div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                  <small style={{ color: "var(--color-muted-fg)" }}>Tocá un perfil y después pulsá Iniciar sesión. Contraseña precargada.</small>
+                </div>
                 <div style={{ display: "grid", gap: 16 }}>
                   <label style={{ display: "grid", gap: 6 }}><strong>Email</strong><input className="bn-input" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} /></label>
                   <label style={{ display: "grid", gap: 6 }}><strong>Contraseña</strong><input className="bn-input" type="password" autoComplete="current-password" required minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} /></label>
@@ -139,6 +182,7 @@ export default function Home() {
           </div>
         </section>
       </main>
+      <ModeloNegocioModal open={businessOpen} onClose={() => setBusinessOpen(false)} />
     </div>
   );
 }

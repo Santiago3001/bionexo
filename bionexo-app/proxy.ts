@@ -38,7 +38,6 @@ export function proxy(request: NextRequest) {
   const role = session!.role as string;
   const permitido =
     pathname === "/perfil" ||
-    pathname === "/negocio" ||
     pathname === "/contratos" ||
     pathname.startsWith("/mensajes") ||
     pathname.startsWith(`/${role}`);
@@ -61,6 +60,5 @@ export const config = {
     "/mensajes/:path*",
     "/contratos",
     "/perfil",
-    "/negocio",
   ],
 };
