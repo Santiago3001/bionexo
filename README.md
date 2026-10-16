@@ -2,7 +2,7 @@
 
 **Plataforma inteligente de conexión productiva, comercial, logística y ambiental**
 
-> Conectamos tus subproductos con quien lo necesita.
+> Lo que una industria descarta, otra lo transforma en valor.
 
 ## Identidad
 
