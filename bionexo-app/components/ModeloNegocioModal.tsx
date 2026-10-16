@@ -88,3 +88,4 @@ export default function ModeloNegocioModal({ open, onClose }: { open: boolean; o
     </Modal>
   );
 }
+

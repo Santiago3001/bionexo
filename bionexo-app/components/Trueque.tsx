@@ -72,3 +72,4 @@ export default function Trueque({ pubId, onClose }: { pubId: number; onClose: ()
     </Modal>
   );
 }
+

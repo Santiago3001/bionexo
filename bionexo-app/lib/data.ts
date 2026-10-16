@@ -39,6 +39,18 @@ export interface Pub {
   flete?: number;
   total?: number;
   co2?: number;
+  category?: string;
+  originProcess?: string;
+  frequency?: string;
+  availabilityMonths?: number;
+  presentation?: string;
+  qualityNotes?: string;
+  minLotTons?: number;
+  pickupTerms?: string;
+  loadingMethod?: string;
+  storageRestrictions?: string;
+  documentsNotes?: string;
+  simulated?: boolean;
 }
 
 export const INITIAL_PUBS: Pub[] = [
@@ -137,3 +149,4 @@ export interface Order {
 }
 
 export const ORDER_STEPS = ["Orden confirmada", "Flete asignado", "Retirado", "En tránsito", "Entregado"];
+

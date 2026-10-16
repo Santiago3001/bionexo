@@ -15,10 +15,13 @@ export default function Page() {
           <tr><th style={{ textAlign: "left" }}>Empresa</th><td>{user.company}</td></tr>
           <tr><th style={{ textAlign: "left" }}>CUIT</th><td>{user.cuit}</td></tr>
           <tr><th style={{ textAlign: "left" }}>Ciudad</th><td>{user.city}</td></tr>
+          <tr><th style={{ textAlign: "left" }}>Email</th><td>{user.email}</td></tr>
+          <tr><th style={{ textAlign: "left" }}>Rubro</th><td>{user.businessType || "Sin completar"}</td></tr>
           <tr><th style={{ textAlign: "left" }}>Rol</th><td><Tag>{role}</Tag></td></tr>
         </tbody></table>
-        <p><Muted>Login mockeado. Backend real mañana: este perfil se reemplaza por sesión + API.</Muted></p>
+        <p><Muted>Sesión autenticada con Supabase. El rol también se valida mediante políticas RLS.</Muted></p>
       </Card>
     </Shell>
   );
 }
+

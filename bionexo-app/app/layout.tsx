@@ -3,8 +3,8 @@ import "./globals.css";
 import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
-  title: "BioNexo NEA - Demo",
-  description: "Conectamos lo que producís con quien lo necesita · demo simulada",
+  title: "BioNexo NEA",
+  description: "Conectamos lo que producís con quien lo necesita",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -16,3 +16,4 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     </html>
   );
 }
+

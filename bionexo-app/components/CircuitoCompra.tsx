@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useId, useState } from "react";
 import { km, RATE, usd } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { Btn, Card, Modal, Muted, Steps } from "./ui";
@@ -8,6 +8,7 @@ const CIRC = ["Seleccionar oferta", "Chat formal", "Condiciones confirmadas", "C
 
 export default function CircuitoCompra({ pubId, onClose }: { pubId: number; onClose: () => void }) {
   const { pubs, need, user, addOrders } = useStore();
+  const orderId = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [step, setStep] = useState(0);
   const pub = pubs.find((p) => p.id === pubId);
   if (!pub || !user) return null;
@@ -20,7 +21,7 @@ export default function CircuitoCompra({ pubId, onClose }: { pubId: number; onCl
   ];
 
   function finish() {
-    addOrders([{ id: "OC-" + (1100 + Math.floor(Math.random() * 800)), kind: "compra", product: pub!.product, t: q, from: pub!.city, to: need.city, buyer: user!.company, seller: pub!.seller, carrier: "Transporte Ávila SRL", st: 0, eta: "7 días", value: q * pub!.price }]);
+    addOrders([{ id: `OC-${pub!.id}-${orderId}`, kind: "compra", product: pub!.product, t: q, from: pub!.city, to: need.city, buyer: user!.company, seller: pub!.seller, carrier: "Transporte Ávila SRL", st: 0, eta: "7 días", value: q * pub!.price }]);
     onClose();
   }
 
@@ -44,3 +45,4 @@ export default function CircuitoCompra({ pubId, onClose }: { pubId: number; onCl
     </Modal>
   );
 }
+

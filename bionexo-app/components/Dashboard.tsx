@@ -7,7 +7,7 @@ import CircuitoCompra from "./CircuitoCompra";
 import Trueque from "./Trueque";
 
 export default function Dashboard() {
-  const { need, setNeed, sort, setSort, filterCity, pubs, user } = useStore();
+  const { need, setNeed, sort, setSort, pubs, user } = useStore();
   const [draft, setDraft] = useState(need);
   const [applied, setApplied] = useState(true);
   const [buyId, setBuyId] = useState<number | null>(null);
@@ -109,3 +109,4 @@ export default function Dashboard() {
     </>
   );
 }
+

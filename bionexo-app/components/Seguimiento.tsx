@@ -38,3 +38,4 @@ export default function Seguimiento({ mode }: { mode: "compra" | "venta" }) {
     </>
   );
 }
+
