@@ -26,8 +26,8 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 
 ## Usuarios
 
-- **Comprador:** carga requerimientos, compara ofertas por score (35% distancia, 30% precio, 20% disponibilidad, 15% calidad), compra en 5 pasos, propone trueque en 7 pasos, usa Agente IA y consulta Sostenibilidad ISO 14001.
-- **Vendedor:** publica subproductos, negocia por chat, acepta trueques, cotiza rentabilidad con semáforo, sigue envíos y descarga reporte de impacto.
+- **Comprador:** carga requerimientos, compara ofertas por score (35% distancia, 30% precio, 20% disponibilidad, 15% calidad), compra en 5 pasos, propone trueque en 7 pasos, usa Agente IA  
+- **Vendedor:** publica subproductos, negocia por chat, acepta trueques, cotiza rentabilidad con semáforo, sigue envíos y descarga reporte de impacto, consulta Sostenibilidad ISO 14001.
 - **Transportista:** opera mapa de cargas SVG, ranking con bonus 15% retorno, 4 tipos de ruta (simple, ida y vuelta, 2 paradas, 2 paradas + vuelta), comparador, armado automático y rutas de trueque.
 - Para la probar la plataforma
 - demo.comprador@bionexo.dev → compra, matching, contrato, reportes
