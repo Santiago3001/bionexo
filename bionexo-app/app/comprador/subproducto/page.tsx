@@ -1,5 +1,5 @@
 "use client";
-import SubproductoForm from "@/components/SubproductoForm";
+import CatalogoComprador from "@/components/CatalogoComprador";
 import { Shell } from "@/components/Shell";
-export default function Page() { return <Shell><SubproductoForm vendedor={false} /></Shell>; }
+export default function Page() { return <Shell><CatalogoComprador /></Shell>; }
 
