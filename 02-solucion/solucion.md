@@ -71,22 +71,13 @@ Las empresas, cantidades, precios, tarifas y resultados utilizados son **DATO SI
 
 ## Cómo hace BioNexo el matching
 
-1. La IA convierte el texto libre en producto, toneladas, ciudad e intención (cerca, barato, trueque).
-2. El backend filtra publicaciones por mismo producto.
-3. Calcula score /100: 35% distancia, 30% precio, 20% disponibilidad, 15% calidad.
-4. Suma km, costo, flete, total y CO2 del transporte. Marca PRIORIDAD 1.
-5. Si el vendedor necesita algo que el comprador genera, marca TRUEQUE POSIBLE.
-6. El comprador elige Comprar (5 pasos) o Proponer trueque (7 pasos con equivalencia y compensación en dinero).
+1. Utilizando un modelo de IA
+2. Calcula score /100: 35% distancia, 30% precio, 20% disponibilidad, 15% calidad.
+ 
+
 
 Ejemplo **DATO SIMULADO**: Lote A US$760 contra Lote B US$420, diferencia US$340, orden doble con 2 fletes.
 
-## Impacto ambiental y sostenibilidad
-
-- Dashboard: CO2 del transporte por oferta.
-- Vendedor: toneladas desviadas de disposición final en Reporte de impacto.
-- Comprador: Sostenibilidad Empresa ISO 14001 con % por cláusula y global, evolución mes anterior / mes actual / meta, brechas y plan de acción. Suma toneladas del trueque. No muestra datos de transporte. Descarga PDF.
-- Fórmula base del prototipo: `kg CO₂e = toneladas × kilómetros × factor de emisión en kg CO₂e/t-km`.
-- El factor de la demo es **DATO SIMULADO**. El reporte es informativo, no certificación.
 
 ## Flujo integrado
 
