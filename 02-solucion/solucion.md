@@ -2,251 +2,118 @@
 
 ## Idea elegida
 
-BioNexo NEA conecta vendedores, compradores y transportistas mediante un agente de IA y datos controlados.
+BioNexo NEA conecta vendedores, compradores y transportistas mediante perfiles por rol, datos controlados y un agente de IA.
 
-Para la demostración, una arrocera publica cascarilla, una industria busca abastecimiento y un transportista ofrece capacidad. La plataforma encuentra la coincidencia, compara la logística y estima el impacto ambiental del traslado.
+Para la demostración, una arrocera publica cascarilla, una industria busca abastecimiento y un transportista ofrece capacidad. La plataforma filtra por producto, calcula score de coincidencias, permite compra en 5 pasos, trueque en 7 pasos, cotiza rentabilidad del vendedor, optimiza rutas del transportista y muestra sostenibilidad ISO 14001.
+
+Fuente de funcionalidades: documento `BioNexo NEA: funcionalidades por usuario`.
 
 ## Principios del producto
 
-- La IA interpreta solicitudes y explica resultados.
+- La IA interpreta texto libre y explica resultados, no publica por su cuenta.
 - La base de datos aporta perfiles, publicaciones y oportunidades.
-- Reglas controladas calculan compatibilidad, rutas, costos y emisiones.
+- Reglas controladas calculan score, costos, fletes, CO2, equivalencias de trueque y pagos de rutas.
 - Ninguna acción comercial importante se confirma sin intervención humana.
 - Todo perfil, precio y resultado ficticio se identifica como **DATO SIMULADO**.
 
-## Funcionalidades del vendedor
+## Usuarios
 
-### Para mostrar en la demo
+- **Comprador:** industria que carga requerimientos, compara ofertas por score, compra o propone trueque, registra su propio subproducto y consulta sostenibilidad.
+- **Vendedor:** arrocera o generador que publica subproductos, negocia por chat, acepta trueques, cotiza rentabilidad y sigue envíos e impacto.
+- **Transportista:** ofrece capacidad en mapa de cargas, toma cargas, consolida, compara 4 tipos de ruta y arma la mejor ruta, incluidas rutas de trueque.
 
-1. Ingresar con un perfil de arrocera.
-2. Responder en lenguaje natural la pregunta: **“¿Qué subproducto querés vender?”**
-3. Escribir: “Tengo 20 toneladas mensuales de cascarilla de arroz disponibles en Corrientes”.
-4. Revisar los campos que la IA pudo extraer de la respuesta.
-5. Completar manualmente los datos comerciales, técnicos y logísticos que falten.
-6. Confirmar y publicar la oferta. La IA no publica ni inventa datos por su cuenta.
-7. Ver compradores cuya necesidad sea compatible con la oferta.
-8. Revisar por qué se produjo cada coincidencia y qué información falta validar.
-9. Elegir una contraparte e iniciar el contacto.
-10. Confirmar un resumen preliminar de cantidad, frecuencia y entrega.
+Las empresas, cantidades, precios, tarifas y resultados utilizados son **DATO SIMULADO**.
 
-### Datos de una oferta de subproducto
+## 1. Funcionalidades del comprador
 
-La publicación del vendedor debe contener estos datos:
+| Funcionalidad | Qué hace el usuario | Qué hace el sistema |
+|---|---|---|
+| Registro y perfil | Carga nombre, empresa, CUIT, ciudad, email y rubro, y elige el rol Comprador. | Crea el perfil simulado y habilita solo las pantallas de ese rol. |
+| Cargar requerimiento | Elige el producto, las toneladas por mes y la ciudad de entrega. | Filtra las publicaciones del mismo producto. |
+| Dashboard de coincidencias | Revisa las ofertas y las ordena por score, precio o distancia. | Calcula el score /100 (35% distancia, 30% precio, 20% disponibilidad, 15% calidad), los km, el costo, el flete, el total y el CO2 del transporte. Marca PRIORIDAD 1. |
+| Circuito de compra (5 pasos) | Pulsa Comprar y recorre los pasos: oferta, chat, condiciones, contrato y orden. | Muestra el chat formal simulado, el resumen de condiciones, el contrato anual borrador (mensual × 12) y la orden confirmada con flete asignado. |
+| Detector de trueque | Ve la etiqueta TRUEQUE POSIBLE en el dashboard o en el Agente IA. | Detecta que el vendedor necesita algo que el comprador genera. |
+| Trueque (7 pasos) | Pulsa Proponer trueque, revisa la tabla de equivalencia, compensa la diferencia en dinero y elige el flete (por tramo o compartido). | Calcula Lote A US$760 contra Lote B US$420 y una diferencia de US$340. Genera el chat de trueque, el contrato de permuta y la orden doble con 2 fletes. |
+| Registrar mi subproducto | Carga producto, toneladas, precio de referencia, ubicación y descripción. | Lo publica con calidad 7/10 y lo deja visible para los matches y para los trueques. |
+| Agente IA | Escribe en texto libre, por ejemplo “20 t de cascarilla, lo más barato” o “quiero hacer un trueque”. | Detecta producto, toneladas, ciudad y la intención (cerca, barato, trueque). Muestra el top 5 con los botones Comprar y Proponer trueque. |
+| Sostenibilidad Empresa (ISO 14001) | Consulta el avance por cláusulas, los indicadores propios, la evolución, las brechas y el plan de acción. Descarga el reporte PDF. | Calcula el % por cláusula y el global, y la comparación mes anterior / mes actual / meta. Suma las toneladas del trueque al indicador. No muestra datos de transporte. |
+| Perfil | Ve sus datos y su rol actual. Cambia de rol. | Cierra la sesión al cambiar de rol. |
 
-| Grupo | Dato | Obligatorio en la demo | Ejemplo |
-|---|---|---|---|
-| Identificación | Nombre del subproducto | Sí | Cascarilla de arroz |
-| Identificación | Categoría | Sí | Subproducto agroindustrial |
-| Origen | Proceso que lo genera | Sí | Molienda de arroz |
-| Disponibilidad | Cantidad y unidad | Sí | 20 toneladas |
-| Disponibilidad | Frecuencia | Sí | Mensual |
-| Disponibilidad | Fecha o período disponible | Sí | Durante 12 meses |
-| Ubicación | Lugar de retiro | Sí | Corrientes, Argentina |
-| Condición | Estado y presentación | Sí | Seco y a granel |
-| Calidad | Humedad, pureza, granulometría u otros parámetros | Si se conocen | Humedad: pendiente de análisis |
-| Comercial | Precio por unidad o “a cotizar” | Sí | Precio por tonelada: a cotizar |
-| Comercial | Lote mínimo | Sí | 10 toneladas |
-| Logística | Quién retira o entrega | Sí | Retiro a cargo del comprador |
-| Logística | Forma y medios de carga | Sí | Carga a granel; medio de carga por confirmar |
-| Seguridad | Restricciones de manipulación o almacenamiento | Sí | Mantener seco |
-| Evidencia | Fotos, ficha técnica o análisis | No | Ficha técnica pendiente |
-| Contacto | Empresa y persona responsable | Sí | Arrocera Corrientes; contacto simulado |
+## 2. Funcionalidades del vendedor
 
-Los requisitos técnicos dependen del material y de su uso. Los ejemplos de esta tabla son **DATO SIMULADO** y deben ser validados antes de una operación real.
+| Funcionalidad | Qué hace el usuario | Qué hace el sistema |
+|---|---|---|
+| Registro y perfil | Se registra con el rol Vendedor. | Habilita sus pantallas. |
+| Publicar subproducto | Carga producto, toneladas, precio, ubicación y descripción. | Lo agrega a las publicaciones. Queda visible para los compradores. |
+| Mis publicaciones | Revisa su tabla de publicaciones. | Muestra sus publicaciones o 3 de ejemplo si no tiene. |
+| Chat y negociación | Abre la negociación con un comprador. | Muestra el chat formal simulado y el circuito de compra. |
+| Propuestas de trueque | Recibe y acepta la propuesta o hace una contrapropuesta. | Muestra la equivalencia y el contrato de permuta, y asigna los fletes. |
+| Seguimiento de envíos | Ve el estado de sus envíos. | Muestra solo los envíos de ese vendedor. |
+| Cotizador de rentabilidad (nuevo) | Carga el producto, las toneladas, su costo de manejo, el costo de disponer el residuo y el precio al que piensa vender. | Calcula el margen por tonelada, el ahorro por no disponer, el resultado mensual y anual, y el precio de equilibrio. Muestra el semáforo (verde / amarillo / rojo) y sugiere un precio. |
+| Reporte de impacto | Descarga su reporte ambiental. | Muestra las toneladas desviadas de disposición final. |
 
-### Ejemplo completo de carga del vendedor
+## 3. Funcionalidades del transportista
 
-> **Pregunta de BioNexo:** ¿Qué subproducto querés vender?
->
-> **Respuesta del vendedor:** “Tengo cascarilla de arroz generada en nuestra planta de Corrientes. Dispongo de 20 toneladas por mes durante los próximos 12 meses. Está seca y a granel. El comprador debe retirarla. El precio es a cotizar”.
-
-La IA propone este borrador para que el vendedor lo revise:
-
-- Subproducto: cascarilla de arroz.
-- Categoría: subproducto agroindustrial.
-- Origen: molienda de arroz.
-- Cantidad: 20 toneladas por mes.
-- Disponibilidad: recurrente durante 12 meses.
-- Ubicación: Corrientes, Argentina.
-- Presentación: seca y a granel.
-- Precio: a cotizar por tonelada.
-- Entrega: retiro a cargo del comprador.
-- Datos pendientes: humedad, granulometría, lote mínimo, medio de carga y ficha técnica.
-
-El vendedor corrige o completa los campos pendientes y recién entonces selecciona **Publicar oferta**. Todo el ejemplo es **DATO SIMULADO**.
-
-### Para etapas posteriores
-
-- Gestionar varias publicaciones y productos.
-- Recibir solicitudes de cotización.
-- Adjuntar fichas técnicas y certificados.
-- Negociar mediante chat persistente.
-- Crear contratos recurrentes y seguir entregas.
-- Consultar ventas, alertas e informes acumulados.
-
-## Funcionalidades del comprador
-
-### Para mostrar en la demo
-
-1. Ingresar con un perfil de industria de biomasa.
-2. Responder en lenguaje natural la pregunta: **“¿Qué material necesitás comprar?”**
-3. Escribir: “Necesito 20 toneladas de cascarilla de arroz por mes durante 12 meses, con retiro en un radio de hasta 150 km”.
-4. Revisar los datos extraídos: material, cantidad, frecuencia, duración, ubicación y requisitos.
-5. Confirmar la búsqueda. Esa necesidad se compara con las ofertas publicadas por vendedores.
-6. Ver ofertas compatibles ordenadas por cantidad, distancia, frecuencia y requisitos técnicos.
-7. Comparar costo del material, transporte y costo total estimado.
-8. Revisar coincidencias, diferencias y datos técnicos pendientes.
-9. Seleccionar la oferta de la arrocera.
-10. Preparar un pedido recurrente sujeto a confirmación de ambas partes.
-
-### Datos de la necesidad del comprador
-
-- Material o categoría buscada.
-- Cantidad y unidad.
-- Frecuencia y duración.
-- Lugar de uso o entrega.
-- Radio máximo de búsqueda.
-- Precio máximo o solicitud de cotización.
-- Requisitos de calidad y uso previsto.
-- Presentación aceptada.
-- Fecha desde la que necesita abastecimiento.
-- Modalidad de retiro o entrega.
-- Documentación exigida.
-
-Si un dato no está en la pregunta, BioNexo lo marca como **pendiente**; no lo inventa.
-
-### Para etapas posteriores
-
-- Publicar múltiples necesidades.
-- Solicitar y comparar cotizaciones.
-- Guardar proveedores habituales.
-- Negociar condiciones y adjuntar documentación.
-- Gestionar contratos de 3, 6 o 12 meses.
-- Controlar calendario, entregas e incumplimientos.
+| Funcionalidad | Qué hace el usuario | Qué hace el sistema |
+|---|---|---|
+| Registro y perfil | Se registra con el rol Transportista. | Habilita el mapa de cargas y rutas. |
+| Mapa de cargas | Mira las cargas y los destinos, y hace clic en una línea para ver la ruta. | Dibuja origen → destino en SVG, con los puntos de cada ciudad. |
+| Ranking de rutas | Revisa el ranking y elige una ruta. | Calcula el pago base más 15% de bonus de retorno, el total y los US$/km. Ordena por pago total. |
+| Tomar carga | Pulsa Tomar carga. | Asigna la carga y notifica al comprador y al vendedor (simulado). |
+| Consolidar | Pulsa Consolidar. | Busca otra carga para el mismo camión (simulado). |
+| Ruta simple (nueva) | Elige un origen → destino. | Muestra el pago de la ruta y deja la vuelta vacía. Es la base de comparación. |
+| Ruta ida y vuelta (nueva) | Elige una ruta con carga a la ida y a la vuelta. | Suma la carga de retorno, baja los km vacíos y muestra el pago mayor. |
+| Ruta de 2 paradas (nueva) | Elige retirar en A, luego en B, y entregar en el destino. | Suma las toneladas de ambas cargas, calcula la ocupación del camión y muestra las paradas numeradas en el mapa. |
+| Ruta de 2 paradas + vuelta (nueva) | Elige dos retiros, la entrega y una carga de retorno. | Calcula el pago total, que es el más alto de los cuatro tipos de ruta. |
+| Comparador de rutas (nuevo) | Compara los tipos de ruta entre sí. | Muestra el pago, los US$/km, los km vacíos, el tiempo y la mejora porcentual frente a la ruta simple. |
+| Armado automático (nuevo) | Pulsa Armar mi mejor ruta. | Busca cargas compatibles en el camino y propone la ruta más rentable. |
+| Rutas de trueque | Toma la ruta que genera un trueque. | Ofrece ida y vuelta cargada como ruta premium. |
 
 ## Cómo hace BioNexo el matching
 
-El sistema no busca una “venta” a partir de una pregunta aislada. Compara una **necesidad de compra confirmada** con las **ofertas publicadas y confirmadas** por los vendedores.
+1. La IA convierte el texto libre en producto, toneladas, ciudad e intención (cerca, barato, trueque).
+2. El backend filtra publicaciones por mismo producto.
+3. Calcula score /100: 35% distancia, 30% precio, 20% disponibilidad, 15% calidad.
+4. Suma km, costo, flete, total y CO2 del transporte. Marca PRIORIDAD 1.
+5. Si el vendedor necesita algo que el comprador genera, marca TRUEQUE POSIBLE.
+6. El comprador elige Comprar (5 pasos) o Proponer trueque (7 pasos con equivalencia y compensación en dinero).
 
-1. La IA convierte el texto del vendedor y del comprador en campos estructurados.
-2. Cada usuario revisa y confirma sus datos.
-3. El backend filtra ofertas incompatibles por material, disponibilidad, cantidad, ubicación o requisitos obligatorios.
-4. Las ofertas restantes reciben un puntaje según cantidad cubierta, frecuencia, distancia, precio y calidad declarada.
-5. BioNexo muestra las mejores coincidencias y explica tanto los puntos compatibles como los datos pendientes.
-6. El comprador selecciona una oferta y el vendedor recibe la solicitud de contacto o cotización.
+Ejemplo **DATO SIMULADO**: Lote A US$760 contra Lote B US$420, diferencia US$340, orden doble con 2 fletes.
 
-Ejemplo de coincidencia **DATO SIMULADO**:
+## Impacto ambiental y sostenibilidad
 
-| Criterio | Oferta del vendedor | Necesidad del comprador | Resultado |
-|---|---|---|---|
-| Material | Cascarilla de arroz | Cascarilla de arroz | Coincide |
-| Cantidad | 20 t/mes | 20 t/mes | Coincide |
-| Duración | 12 meses | 12 meses | Coincide |
-| Distancia | Dentro de 150 km | Máximo 150 km | Coincide |
-| Presentación | Seca y a granel | A granel | Coincide |
-| Humedad | Pendiente | Máximo a definir | Requiere validación |
-| Precio | A cotizar | A cotizar | Requiere cotización |
+- Dashboard: CO2 del transporte por oferta.
+- Vendedor: toneladas desviadas de disposición final en Reporte de impacto.
+- Comprador: Sostenibilidad Empresa ISO 14001 con % por cláusula y global, evolución mes anterior / mes actual / meta, brechas y plan de acción. Suma toneladas del trueque. No muestra datos de transporte. Descarga PDF.
+- Fórmula base del prototipo: `kg CO₂e = toneladas × kilómetros × factor de emisión en kg CO₂e/t-km`.
+- El factor de la demo es **DATO SIMULADO**. El reporte es informativo, no certificación.
 
-Resultado mostrado: **“Coincidencia alta: 5 criterios compatibles y 2 puntos pendientes”**. El puntaje es **DATO SIMULADO** y no reemplaza la evaluación técnica ni la aceptación comercial.
+## Flujo integrado
 
-## Funcionalidades del transportista
-
-### Para mostrar en la demo
-
-1. Ingresar con un perfil de transportista.
-2. Informar vehículo, capacidad, origen, destino y fecha disponible.
-3. Marcar un viaje como ruta planificada o retorno disponible.
-4. Ver la operación compatible entre arrocera y comprador.
-5. Consultar distancia, peso y restricciones declaradas.
-6. Cargar una tarifa o aceptar una tarifa **DATO SIMULADO**.
-7. Confirmar disponibilidad para el traslado.
-8. Ver la entrega incorporada al resumen de operación.
-
-### Para etapas posteriores
-
-- Publicar rutas y capacidad recurrente.
-- Recibir alertas de cargas compatibles.
-- Participar en cargas consolidadas.
-- Gestionar cotizaciones y estados del viaje.
-- Registrar retiro, tránsito y entrega.
-- Consultar historial, ingresos e indicadores de ocupación.
-
-## Funcionalidades compartidas
-
-- Registro y perfiles por rol.
-- Ofertas y necesidades puntuales o recurrentes.
-- Búsqueda en lenguaje natural.
-- Recomendaciones comerciales explicadas.
-- Comparador logístico y económico.
-- Mensajería vinculada con la operación.
-- Resumen de condiciones con confirmación de las partes.
-- Panel de operaciones y seguimiento.
-- Borradores de contratos de abastecimiento.
-- Reportes económicos y ambientales.
-
-## Impacto ambiental
-
-### Función mostrada en la demo
-
-BioNexo comparará dos alternativas de transporte y mostrará:
-
-- Toneladas transportadas.
-- Distancia por alternativa.
-- Toneladas-kilómetro.
-- Factor de emisión utilizado.
-- Emisiones estimadas en kg de CO₂e.
-- Diferencia absoluta y porcentual entre alternativas.
-
-Fórmula inicial:
-
-`kg CO₂e = toneladas × kilómetros × factor de emisión en kg CO₂e/t-km`
-
-Ejemplo **DATO SIMULADO**:
-
-| Variable | Ruta A | Ruta B |
-|---|---:|---:|
-| Carga | 20 t | 20 t |
-| Distancia | 120 km | 80 km |
-| Factor | 0,09 kg CO₂e/t-km | 0,09 kg CO₂e/t-km |
-| Emisiones | 216 kg CO₂e | 144 kg CO₂e |
-
-En este ejemplo, la Ruta B estima 72 kg CO₂e menos, una reducción del 33%. Todos los valores son **DATO SIMULADO**.
-
-### Límites del cálculo
-
-- El factor real deberá provenir de una fuente documentada.
-- Se deberá registrar el tipo de vehículo y combustible cuando sea posible.
-- Un viaje de retorno no equivale automáticamente a cero emisiones.
-- El reporte será informativo y no una certificación.
-- No se afirmarán emisiones evitadas por valorización del residuo sin metodología validada.
-
-## Flujo integrado de cinco minutos
-
-1. BioNexo pregunta al vendedor qué subproducto quiere vender.
-2. La IA completa un borrador; el vendedor corrige los campos y publica la oferta.
-3. BioNexo pregunta al comprador qué material necesita.
-4. La IA estructura la necesidad; el comprador la confirma.
-5. El sistema compara la necesidad confirmada con las ofertas publicadas y explica la mejor coincidencia.
-6. El comprador selecciona la oferta y el vendedor recibe la solicitud.
-7. El transportista confirma una ruta compatible.
-8. BioNexo presenta costo total, emisiones y resumen recurrente.
+1. Comprador se registra y carga requerimiento o usa el Agente IA.
+2. Revisa dashboard, ordena por score y ve TRUEQUE POSIBLE si aplica.
+3. Compra en 5 pasos o propone trueque en 7 pasos.
+4. Vendedor publica, negocia por chat, acepta trueque, cotiza rentabilidad y sigue envíos.
+5. Transportista toma la carga en mapa, compara ruta simple / ida y vuelta / 2 paradas / 2 paradas + vuelta, o usa armado automático.
+6. Se cierra orden con flete asignado y reportes ambiental y de sostenibilidad.
 
 ## Alcance obligatorio del prototipo
 
-- Una consulta real a una API de IA.
-- Entre 8 y 12 perfiles identificados como **DATO SIMULADO**.
-- Una oferta, una necesidad y una ruta compatibles.
-- Recomendación consultada desde la base de datos.
-- Cálculos logísticos y ambientales controlados.
-- Una acción final confirmable por el usuario.
+- Registro por rol con pantallas habilitadas por rol.
+- Filtro por producto y dashboard con score, flete, total y CO2.
+- Circuito de compra en 5 pasos y trueque en 7 pasos con contrato de permuta.
+- Agente IA con detección de intención y top 5.
+- Cotizador de rentabilidad con semáforo y precio de equilibrio.
+- Mapa SVG, ranking con bonus 15% retorno, 4 tipos de ruta, comparador y armado automático.
+- Sostenibilidad ISO 14001 y reporte de impacto por toneladas desviadas.
+- Todos los datos identificados como **DATO SIMULADO**.
 
 ## Fuera del recorrido principal
 
 - Pagos reales.
 - Contratos legalmente celebrados.
-- Optimización logística avanzada.
-- Certificación ambiental.
+- Optimización logística avanzada con datos reales de flota.
+- Certificación ambiental ISO auditada.
 - Verificación automática de calidad.
 - Marketplace nacional para todos los sectores.
 - Blockchain o tokenización.
-

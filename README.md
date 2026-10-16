@@ -24,33 +24,26 @@ Una arrocera puede tener cascarilla disponible y no conocer compradores compatib
 
 La información se encuentra dispersa y el costo logístico puede hacer inviable una operación. Estas afirmaciones son **SUPUESTO** hasta validarlas con actores reales.
 
-## Usuarios de la demostración
+## Usuarios
 
-### Vendedor
+- **Comprador:** carga requerimientos, compara ofertas por score (35% distancia, 30% precio, 20% disponibilidad, 15% calidad), compra en 5 pasos, propone trueque en 7 pasos, usa Agente IA y consulta Sostenibilidad ISO 14001.
+- **Vendedor:** publica subproductos, negocia por chat, acepta trueques, cotiza rentabilidad con semáforo, sigue envíos y descarga reporte de impacto.
+- **Transportista:** opera mapa de cargas SVG, ranking con bonus 15% retorno, 4 tipos de ruta (simple, ida y vuelta, 2 paradas, 2 paradas + vuelta), comparador, armado automático y rutas de trueque.
 
-Una arrocera publica 20 toneladas mensuales de cascarilla, recibe compradores recomendados y confirma las condiciones iniciales de la operación.
+Detalle completo en [Solución, usuarios y funcionalidades](02-solucion/solucion.md). Las empresas, cantidades, precios, tarifas y resultados utilizados en la demostración son **DATO SIMULADO**.
 
-### Comprador
+## Demostración
 
-Una industria de biomasa busca 20 toneladas mensuales durante 12 meses, compara coincidencias y prepara un pedido recurrente.
-
-### Transportista
-
-Un transportista informa capacidad y ruta disponible, recibe la oportunidad y cotiza el traslado.
-
-Las empresas, cantidades, precios, tarifas y resultados utilizados en la demostración son **DATO SIMULADO**.
-
-## Demostración de cinco minutos
-
-1. El vendedor publica la cascarilla con asistencia de IA.
-2. El comprador describe su necesidad en lenguaje natural.
-3. BioNexo recomienda una coincidencia y explica por qué.
-4. El transportista ofrece una ruta o viaje de retorno compatible.
-5. La plataforma compara costo y emisiones, resume la operación y prepara un borrador recurrente.
+1. El comprador carga su requerimiento o usa el Agente IA en lenguaje natural.
+2. BioNexo muestra dashboard con score, costo, flete, total, CO2 y etiqueta TRUEQUE POSIBLE.
+3. El comprador compra en 5 pasos o propone trueque en 7 pasos con equivalencia.
+4. El vendedor publica, cotiza rentabilidad y sigue envíos.
+5. El transportista toma la carga en el mapa y optimiza ruta simple vs ida y vuelta vs 2 paradas.
+6. La plataforma cierra orden con flete asignado y reportes ambiental y de sostenibilidad.
 
 ## Funcionalidad central
 
-> Interpretar una oferta o necesidad, encontrar una contraparte compatible y convertir la coincidencia en una operación comercial y logística explicada.
+> Filtrar por producto, ordenar por score, comprar o hacer trueque, cotizar rentabilidad y optimizar rutas, con costo, flete y CO2 explicados.
 
 ## Impacto ambiental
 
@@ -78,5 +71,5 @@ El factor de emisión de la demo será **DATO SIMULADO**. Un producto real deber
 
 ## Contexto para IA
 
-BioNexo NEA es una plataforma B2B para conectar oferta, demanda y transporte en cadenas productivas del Nordeste Argentino. La demo se concentra en cascarilla de arroz y utiliza tres roles: vendedor, comprador y transportista. Una API real de IA interpreta texto y completa datos; el backend consulta perfiles simulados y aplica reglas controladas para recomendar una operación. El recorrido termina con una comparación logística y una estimación informativa de emisiones. Chat avanzado, pagos, contratos legales, optimización completa, certificaciones y expansión a otros sectores pertenecen a etapas posteriores.
+BioNexo NEA es una plataforma B2B para conectar oferta, demanda y transporte en cadenas productivas del Nordeste Argentino. La demo usa tres roles con funcionalidades definidas en `02-solucion/solucion.md`: comprador (dashboard con score, compra 5 pasos, trueque 7 pasos, Agente IA, ISO 14001), vendedor (publicar, chat, trueque, cotizador de rentabilidad, envíos, impacto) y transportista (mapa SVG, ranking, 4 tipos de ruta, comparador, armado automático). Chat formal simulado, contratos borrador, pagos, certificaciones y expansión pertenecen a etapas posteriores.
 
