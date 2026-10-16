@@ -29,6 +29,36 @@ export interface RegisterInput {
   role: Role;
 }
 
+export interface ProfileInput {
+  name: string;
+  company: string;
+  cuit: string;
+  city: string;
+  businessType: string;
+}
+
+const AUTH_COOKIE = "bionexo_auth";
+const COOKIE_MAX_AGE = 60 * 60 * 24 * 7;
+
+// La cookie la lee proxy.ts para la verificación optimista de rol en el servidor.
+function escribirCookieSesion(role: Role, exp?: number) {
+  if (typeof document === "undefined") return;
+  const expiracion = exp ?? Math.floor(Date.now() / 1000) + COOKIE_MAX_AGE;
+  document.cookie = `${AUTH_COOKIE}=${encodeURIComponent(JSON.stringify({ role, exp: expiracion }))}; path=/; max-age=${COOKIE_MAX_AGE}; samesite=lax`;
+}
+
+function borrarCookieSesion() {
+  if (typeof document === "undefined") return;
+  document.cookie = `${AUTH_COOKIE}=; path=/; max-age=0`;
+}
+
+export async function getAccessToken(): Promise<string | null> {
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) return null;
+  const { data } = await supabase.auth.getSession();
+  return data.session?.access_token ?? null;
+}
+
 export interface OfferInput {
   product: string;
   category: string;
@@ -68,6 +98,9 @@ interface Store {
   signIn: (email: string, password: string) => Promise<AuthResult>;
   signUp: (input: RegisterInput) => Promise<AuthResult>;
   logout: () => Promise<void>;
+  updateProfile: (input: ProfileInput) => Promise<AuthResult>;
+  resetPassword: (email: string) => Promise<AuthResult>;
+  updatePassword: (newPassword: string) => Promise<AuthResult>;
   setRole: (r: Role) => void;
   setNeed: (n: { product: string; t: number; city: string }) => void;
   setSort: (s: string) => void;
@@ -120,6 +153,7 @@ function pubFromRow(row: Record<string, unknown>): Pub {
     storageRestrictions: String(row.storage_restrictions ?? ""),
     documentsNotes: String(row.documents_notes ?? ""),
     simulated: Boolean(row.is_simulated),
+    ownerId: typeof row.owner_id === "string" ? row.owner_id : null,
   };
 }
 
@@ -186,6 +220,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
 
     setUser(current);
     setRoleState(current.role);
+    escribirCookieSesion(current.role);
     setNeedState((previous) => savedNeeds?.[0]
       ? {
           product: String(savedNeeds[0].product),
@@ -203,22 +238,26 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     if (!supabase) return;
 
     let active = true;
-    supabase.auth.getUser().then(({ data }) => {
+    supabase.auth.getUser().then(async ({ data }) => {
       if (!active) return;
-      if (data.user) void loadUserData(data.user);
-      setAuthLoading(false);
+      // Esperamos a que el perfil quede en el store: si apagamos el loading
+      // antes, Shell ve "sin usuario" y redirige al home en el camino.
+      if (data.user) await loadUserData(data.user);
+      if (active) setAuthLoading(false);
     });
 
     const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!active) return;
       if (session?.user) {
-        window.setTimeout(() => void loadUserData(session.user), 0);
+        loadUserData(session.user).finally(() => {
+          if (active) setAuthLoading(false);
+        });
       } else {
         setUser(null);
         setOrders([]);
         setPubs(INITIAL_PUBS);
+        setAuthLoading(false);
       }
-      setAuthLoading(false);
     });
 
     return () => {
@@ -233,6 +272,10 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const { data, error } = await supabase.auth.signInWithPassword({ email: email.trim(), password });
     if (error) return { ok: false, message: error.message };
     if (data.user) await loadUserData(data.user);
+    if (data.session) {
+      const rolSesion = (data.session.user.user_metadata?.role as Role | undefined) ?? "comprador";
+      escribirCookieSesion(rolSesion, data.session.expires_at ?? undefined);
+    }
     return { ok: true, message: "Sesión iniciada." };
   }, [loadUserData]);
 
@@ -270,9 +313,60 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const logout = useCallback(async () => {
     const supabase = getSupabaseBrowserClient();
     if (supabase) await supabase.auth.signOut();
+    borrarCookieSesion();
     setUser(null);
     setOrders([]);
     setTruequeFlag(false);
+  }, []);
+
+  const updateProfile = useCallback(async (input: ProfileInput): Promise<AuthResult> => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase || !user) return { ok: false, message: "Necesitás iniciar sesión." };
+
+    const cambios = {
+      full_name: input.name.trim(),
+      company_name: input.company.trim(),
+      cuit: input.cuit.trim(),
+      city: input.city,
+      business_type: input.businessType.trim(),
+    };
+
+    const { error } = await supabase.from("profiles").update(cambios).eq("id", user.id);
+    if (error) return { ok: false, message: error.message };
+
+    await supabase.auth.updateUser({ data: cambios });
+
+    setUser((previous) => previous
+      ? {
+          ...previous,
+          name: cambios.full_name,
+          company: cambios.company_name,
+          cuit: cambios.cuit,
+          city: cambios.city,
+          businessType: cambios.business_type,
+        }
+      : previous);
+
+    return { ok: true, message: "Perfil actualizado." };
+  }, [user]);
+
+  const resetPassword = useCallback(async (email: string): Promise<AuthResult> => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return { ok: false, message: "Supabase todavía no está configurado." };
+    const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    if (error) return { ok: false, message: error.message };
+    return { ok: true, message: "Te enviamos un correo con el enlace para crear una contraseña nueva." };
+  }, []);
+
+  const updatePassword = useCallback(async (newPassword: string): Promise<AuthResult> => {
+    const supabase = getSupabaseBrowserClient();
+    if (!supabase) return { ok: false, message: "Supabase todavía no está configurado." };
+    if (newPassword.length < 8) return { ok: false, message: "La contraseña debe tener al menos 8 caracteres." };
+    const { error } = await supabase.auth.updateUser({ password: newPassword });
+    if (error) return { ok: false, message: error.message };
+    return { ok: true, message: "Contraseña actualizada." };
   }, []);
 
   const setNeed = useCallback((nextNeed: { product: string; t: number; city: string }) => {
@@ -368,6 +462,9 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     signIn,
     signUp,
     logout,
+    updateProfile,
+    resetPassword,
+    updatePassword,
     setRole: setRoleState,
     setNeed,
     setSort,
@@ -378,7 +475,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     advanceOrder,
     setTruequeDone: () => setTruequeFlag(true),
     myPubs: pubs.filter((publication) => user && publication.seller === user.company),
-  }), [user, role, authLoading, dataLoading, need, sort, filterCity, pubs, orders, truequeDone, signIn, signUp, logout, setNeed, addOffer, addOrders, advanceOrder]);
+  }), [user, role, authLoading, dataLoading, need, sort, filterCity, pubs, orders, truequeDone, signIn, signUp, logout, updateProfile, resetPassword, updatePassword, setNeed, addOffer, addOrders, advanceOrder]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

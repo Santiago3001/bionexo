@@ -2,6 +2,7 @@
 import { useStore } from "@/lib/store";
 import { Btn, Card, Muted } from "./ui";
 import { useState } from "react";
+import ReporteButton from "./ReporteButton";
 
 function isoData(trueque: boolean) {
   const t = trueque ? 10 : 0, gen = 100, val = 40 + t, disp = gen - val;
@@ -54,7 +55,7 @@ export default function Sostenibilidad() {
       <Card>
         <div style={{ display: "flex", gap: 8 }}>
           <Btn onClick={() => setOpen(true)}>Ver tablero ISO 14001</Btn>
-          <Btn kind="sec" onClick={() => alert("Demo: Reporte PDF")}>Descargar Reporte (PDF)</Btn>
+          <ReporteButton tipo="sostenibilidad" label="Descargar Reporte (PDF)" kind="sec" />
         </div>
         <p><Muted>BioNexo organiza evidencia y estima indicadores. La certificación la otorga un organismo acreditado.</Muted></p>
       </Card>

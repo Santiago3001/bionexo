@@ -1,17 +1,32 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import { CITIES, PRODUCTS, Pub, canjeFor, computeMatches, usd } from "@/lib/data";
 import { useStore } from "@/lib/store";
+import { abrirConversacion } from "@/lib/chat";
 import { Btn, Card, Muted, Tag, TruequeTag } from "./ui";
 import CircuitoCompra from "./CircuitoCompra";
 import Trueque from "./Trueque";
 
 export default function Dashboard() {
   const { need, setNeed, sort, setSort, pubs, user } = useStore();
+  const router = useRouter();
   const [draft, setDraft] = useState(need);
   const [applied, setApplied] = useState(true);
   const [buyId, setBuyId] = useState<number | null>(null);
   const [trkId, setTrkId] = useState<number | null>(null);
+  const [chatAbriendo, setChatAbriendo] = useState<number | null>(null);
+
+  async function abrirChat(p: Pub) {
+    if (!user) return;
+    setChatAbriendo(p.id);
+    const id = await abrirConversacion(
+      { id: p.id, ownerId: p.ownerId ?? null, sellerName: p.seller, product: p.product, city: p.city },
+      user.id,
+    );
+    setChatAbriendo(null);
+    if (id) router.push(`/mensajes/${id}`);
+  }
 
   const matches: Pub[] = useMemo(() => {
     if (!user) return [];
@@ -86,6 +101,9 @@ export default function Dashboard() {
                     <td style={{ padding: 8 }}><span style={{ fontSize: 22, fontWeight: 800, color: "#15803d" }}>{p.score}</span><Muted>/100</Muted></td>
                     <td style={{ padding: 8 }}>
                       <Btn onClick={() => setBuyId(p.id)}>Comprar</Btn>{" "}
+                      <Btn kind="sec" onClick={() => void abrirChat(p)} disabled={chatAbriendo === p.id}>
+                        {chatAbriendo === p.id ? "Abriendo…" : "Negociar"}
+                      </Btn>{" "}
                       {cj && <Btn kind="warn" onClick={() => setTrkId(p.id)}>Proponer trueque</Btn>}
                     </td>
                   </tr>

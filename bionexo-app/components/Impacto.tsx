@@ -1,6 +1,7 @@
 "use client";
 import { useStore } from "@/lib/store";
-import { Btn, Card, Muted } from "./ui";
+import { Card, Muted } from "./ui";
+import ReporteButton from "./ReporteButton";
 
 export default function Impacto() {
   const { pubs, orders, user } = useStore();
@@ -17,7 +18,7 @@ export default function Impacto() {
         <Card><Muted>Emisiones evitadas (est.)</Muted><div style={{ fontSize: 26, fontWeight: 800 }}>{(mine * 12 * 0.25).toFixed(0)} tCO2e</div></Card>
       </div>
       <Card>
-        <Btn onClick={() => alert("Demo: Reporte PDF")}>Descargar reporte (PDF)</Btn>
+        <ReporteButton tipo="impacto" />
         <p><Muted>Estimación informativa. No es certificación.</Muted></p>
       </Card>
     </>

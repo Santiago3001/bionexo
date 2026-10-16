@@ -2,6 +2,7 @@
 
 import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { CITIES } from "@/lib/data";
 import { homeForRole, type RegisterInput, type Role, useStore } from "@/lib/store";
 import { Btn } from "@/components/ui";
@@ -110,6 +111,9 @@ export default function Home() {
                 <div style={{ display: "grid", gap: 16 }}>
                   <label style={{ display: "grid", gap: 6 }}><strong>Email</strong><input className="bn-input" type="email" autoComplete="email" required value={email} onChange={(event) => setEmail(event.target.value)} /></label>
                   <label style={{ display: "grid", gap: 6 }}><strong>Contraseña</strong><input className="bn-input" type="password" autoComplete="current-password" required minLength={8} value={password} onChange={(event) => setPassword(event.target.value)} /></label>
+                  <div style={{ marginTop: -6, textAlign: "right" }}>
+                    <Link href="/reset-password" style={{ fontSize: 13, color: "var(--color-primary)", fontWeight: 600 }}>¿Olvidaste tu contraseña?</Link>
+                  </div>
                 </div>
                 <div style={{ marginTop: 24 }}><Btn disabled={submitting || !authConfigured}>{submitting ? "Ingresando…" : "Iniciar sesión"}</Btn></div>
               </form>

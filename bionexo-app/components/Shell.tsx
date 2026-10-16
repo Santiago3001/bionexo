@@ -5,12 +5,15 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState, type ReactNode } from "react";
 import { homeForRole, type Role, useStore } from "@/lib/store";
 import ModeloNegocioModal from "./ModeloNegocioModal";
+import NotificacionesBell from "./NotificacionesBell";
 
 const NAVS: Record<Role, [string, string][]> = {
   comprador: [
     ["/comprador/requerimiento", "Requerimiento"],
     ["/comprador/subproducto", "Material disponible"],
     ["/comprador/agente", "Agente IA"],
+    ["/mensajes", "Mensajes"],
+    ["/contratos", "Contratos"],
     ["/comprador/seguimiento", "Seguimiento"],
     ["/comprador/sostenibilidad", "Sostenibilidad"],
     ["/perfil", "Perfil"],
@@ -19,6 +22,8 @@ const NAVS: Record<Role, [string, string][]> = {
     ["/vendedor/publicaciones", "Mis publicaciones"],
     ["/vendedor/publicar", "Publicar subproducto"],
     ["/vendedor/cotizador", "Cotizador"],
+    ["/mensajes", "Mensajes"],
+    ["/contratos", "Contratos"],
     ["/vendedor/seguimiento", "Seguimiento"],
     ["/vendedor/impacto", "Reporte de impacto"],
     ["/perfil", "Perfil"],
@@ -41,6 +46,8 @@ function initials(name: string) {
 
 function routeAllowed(role: Role, path: string) {
   if (path === "/perfil" || path === "/negocio") return true;
+  if (path === "/mensajes" || path.startsWith("/mensajes/")) return true;
+  if (path === "/contratos") return true;
   return path.startsWith(`/${role}`);
 }
 
@@ -53,6 +60,17 @@ export function Shell({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (authLoading) return;
     if (!user) {
+      // Si hay cookie de sesión vigente todavía se está restaurando la sesión
+      // local: esperamos en lugar de mandar al login (evita el rebote).
+      let cookieVigente = false;
+      try {
+        const cruda = document.cookie.split("; ").find((c) => c.startsWith("bionexo_auth="));
+        if (cruda) {
+          const datos = JSON.parse(decodeURIComponent(cruda.slice("bionexo_auth=".length))) as { exp?: number };
+          cookieVigente = Number(datos.exp ?? 0) * 1000 > Date.now();
+        }
+      } catch { cookieVigente = false; }
+      if (cookieVigente) return;
       router.replace("/");
       return;
     }
@@ -89,6 +107,7 @@ export function Shell({ children }: { children: ReactNode }) {
         </span>
 
         <button type="button" className="bn-mode-btn" onClick={() => setBusinessOpen(true)}>Modelo de negocio</button>
+        <NotificacionesBell />
         <button type="button" className="bn-mode-btn" onClick={() => void closeSession()}>Cerrar sesión</button>
       </header>
 

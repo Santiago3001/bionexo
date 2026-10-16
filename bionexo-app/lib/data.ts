@@ -51,6 +51,7 @@ export interface Pub {
   storageRestrictions?: string;
   documentsNotes?: string;
   simulated?: boolean;
+  ownerId?: string | null;
 }
 
 export const INITIAL_PUBS: Pub[] = [
