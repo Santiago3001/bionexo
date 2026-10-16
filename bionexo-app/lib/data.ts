@@ -52,6 +52,8 @@ export interface Pub {
   documentsNotes?: string;
   simulated?: boolean;
   ownerId?: string | null;
+  offerType?: "spot" | "futuro";
+  availableFrom?: string;
 }
 
 export const INITIAL_PUBS: Pub[] = [
@@ -99,11 +101,17 @@ export interface Need {
   product: string;
   t: number;
   city: string;
+  requiredFrom?: string;
 }
 
 export function computeMatches(pubs: Pub[], need: Need, buyerCompany: string, filterCity: string, sort: string): Pub[] {
   const list = pubs
     .filter((p) => p.product === need.product && p.seller !== buyerCompany && (!filterCity || p.city === filterCity))
+    // Oferta a futuro solo matchea si ya está disponible para la fecha que pide el comprador.
+    .filter((p) => {
+      if (!need.requiredFrom || !p.availableFrom) return true;
+      return p.availableFrom <= need.requiredFrom;
+    })
     .map((p) => ({ ...p }));
   if (!list.length) return list;
   const minP = Math.min(...list.map((p) => p.price), 1);

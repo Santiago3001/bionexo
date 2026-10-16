@@ -32,6 +32,9 @@ export interface Contrato {
   status: EstadoContrato;
   createdBy: string;
   createdAt: string;
+  contractType: "spot" | "futuro";
+  downPaymentPct: number;
+  penaltyPct: number;
   entregas: Entrega[];
   soyComprador: boolean;
 }
@@ -51,6 +54,9 @@ interface ContratoRow {
   status: EstadoContrato;
   created_by: string;
   created_at: string;
+  contract_type: "spot" | "futuro" | null;
+  down_payment_pct: number | null;
+  penalty_pct: number | null;
   contract_deliveries: {
     id: number;
     due_date: string;
@@ -62,7 +68,7 @@ interface ContratoRow {
 }
 
 const SELECT_CONTRATOS =
-  "id, conversation_id, buyer_id, seller_id, product, quantity_tons, unit_price, frequency, duration_months, start_date, terms, status, created_by, created_at, contract_deliveries(id, due_date, quantity_tons, status, delivered_at, notes)";
+  "id, conversation_id, buyer_id, seller_id, product, quantity_tons, unit_price, frequency, duration_months, start_date, terms, status, created_by, created_at, contract_type, down_payment_pct, penalty_pct, contract_deliveries(id, due_date, quantity_tons, status, delivered_at, notes)";
 
 async function nombresDe(ids: string[]): Promise<Record<string, string>> {
   const supabase = getSupabaseBrowserClient();
@@ -104,6 +110,9 @@ function mapearContrato(fila: ContratoRow, nombres: Record<string, string>, user
     status: fila.status,
     createdBy: fila.created_by,
     createdAt: fila.created_at,
+    contractType: fila.contract_type === "futuro" ? "futuro" : "spot",
+    downPaymentPct: Number(fila.down_payment_pct ?? 0),
+    penaltyPct: Number(fila.penalty_pct ?? 0),
     entregas,
     soyComprador: fila.buyer_id === userId,
   };
@@ -146,9 +155,12 @@ export async function crearContrato(
     p_unit_price: condiciones.unitPrice,
     p_frequency: condiciones.frequency,
     p_duration_months: condiciones.durationMonths,
-    p_start_date: new Date().toISOString().slice(0, 10),
+    p_start_date: condiciones.startDate || new Date().toISOString().slice(0, 10),
     p_terms: condiciones.terms,
     p_created_by: userId,
+    p_contract_type: condiciones.contractType ?? "spot",
+    p_down_payment_pct: condiciones.downPaymentPct ?? 0,
+    p_penalty_pct: condiciones.penaltyPct ?? 0,
   });
 
   if (error) return { ok: false, message: error.message };

@@ -20,6 +20,10 @@ export interface Condiciones {
   frequency: string;
   durationMonths: number;
   terms: string;
+  startDate?: string;
+  contractType?: "spot" | "futuro";
+  downPaymentPct?: number;
+  penaltyPct?: number;
 }
 
 export type EstadoAcuerdo = "sin_propuesta" | "propuesto" | "acordado";

@@ -22,8 +22,8 @@ export default function Publicaciones() {
       <div style={{ display: "grid", gap: 14, gridTemplateColumns: "repeat(auto-fit,minmax(280px,1fr))" }}>
         <Card>
           <h3 style={{ marginTop: 0 }}>Mis publicaciones</h3>
-          <table style={{ width: "100%", fontSize: 14 }}><thead><tr><th>Subproducto</th><th>Disponible</th><th>Precio</th><th>Ubicación</th></tr></thead><tbody>
-            {list.map((p) => <tr key={p.id}><td>{p.product}</td><td>{p.t} t/mes</td><td>US$ {p.price}/t</td><td>{p.city}</td></tr>)}
+          <table style={{ width: "100%", fontSize: 14 }}><thead><tr><th>Subproducto</th><th>Disponible</th><th>Precio</th><th>Ubicación</th><th>Tipo</th></tr></thead><tbody>
+            {list.map((p) => <tr key={p.id}><td>{p.product}</td><td>{p.t} t/mes</td><td>US$ {p.price}/t</td><td>{p.city}</td><td>{p.offerType === "futuro" ? `Futuro ${p.availableFrom ?? ""}` : "Spot"}</td></tr>)}
           </tbody></table>
         </Card>
         <div>

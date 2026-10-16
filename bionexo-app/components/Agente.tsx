@@ -141,6 +141,7 @@ export default function Agente() {
           product: it.product || need.product,
           t: it.tons > 0 ? it.tons : need.t,
           city: it.city || need.city,
+          requiredFrom: need.requiredFrom,
         });
       }
 

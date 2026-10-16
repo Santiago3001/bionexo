@@ -58,6 +58,10 @@ export default function Dashboard() {
               {Object.keys(CITIES).map((c) => <option key={c}>{c}</option>)}
             </select>
           </div>
+          <div>
+            <label style={{ fontSize: 13, fontWeight: 600 }}>Necesito desde</label>
+            <input type="date" value={draft.requiredFrom ?? ""} onChange={(e) => { setDraft({ ...draft, requiredFrom: e.target.value }); setApplied(false); }} style={{ width: "100%", padding: 9, borderRadius: 8, border: "1px solid var(--color-border)" }} />
+          </div>
         </div>
         <div style={{ marginTop: 10 }}>
           <Btn onClick={() => { setNeed(draft); setApplied(true); }}>Buscar coincidencias</Btn>{" "}
@@ -92,7 +96,12 @@ export default function Dashboard() {
                   <tr key={p.id} style={{ borderTop: "1px solid var(--color-border)" }}>
                     <td style={{ padding: 8 }}>
                       {i === 0 && <><span style={{ background: "#fef9c3", borderRadius: 6, padding: "2px 6px", fontWeight: 700, fontSize: 12 }}>PRIORIDAD 1</span><br /></>}
-                      <strong>{p.seller}</strong> {cj && <TruequeTag />}<br /><Muted>{p.city}</Muted>
+                      <strong>{p.seller}</strong> {cj && <TruequeTag />}{" "}
+                      {p.offerType === "futuro" && (
+                        <span style={{ background: "#ede9fe", color: "#6d28d9", borderRadius: 6, padding: "2px 6px", fontWeight: 700, fontSize: 12 }}>
+                          FUTURO {p.availableFrom ? `desde ${p.availableFrom}` : ""}
+                        </span>
+                     )}<br /><Muted>{p.city}</Muted>
                     </td>
                     <td style={{ padding: 8 }}>{p.t} t/mes</td>
                     <td style={{ padding: 8 }}>{p.km} km</td>
