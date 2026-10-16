@@ -1,5 +1,4 @@
 "use client";
-import Mapa from "@/components/Mapa";
+import MapaLeaflet from "@/components/MapaLeaflet";
 import { Shell } from "@/components/Shell";
-export default function Page() { return <Shell><Mapa /></Shell>; }
-
+export default function Page() { return <Shell><MapaLeaflet /></Shell>; }
