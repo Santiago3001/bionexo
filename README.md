@@ -45,12 +45,6 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 5. El transportista toma la carga en el mapa y optimiza ruta simple vs ida y vuelta vs 2 paradas.
 6. La plataforma cierra orden con flete asignado y reportes ambiental y de sostenibilidad.
 
-## Funcionalidad central
-
-> Filtrar por producto, ordenar por score, comprar o hacer trueque, cotizar rentabilidad y optimizar rutas, con costo, flete.
-
-
-
 ## Documentación
 
 - [Problema](01-problema/problema.md)
