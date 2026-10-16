@@ -19,13 +19,61 @@ Para la demostración, una arrocera publica cascarilla, una industria busca abas
 ### Para mostrar en la demo
 
 1. Ingresar con un perfil de arrocera.
-2. Escribir: “Tengo 20 toneladas mensuales de cascarilla disponibles en Corrientes”.
-3. Revisar los datos extraídos por la IA: producto, cantidad, ubicación y frecuencia.
-4. Completar precio y especificaciones pendientes.
-5. Publicar la oferta.
-6. Ver compradores recomendados y la explicación de cada coincidencia.
-7. Elegir una contraparte e iniciar el contacto.
-8. Confirmar un resumen preliminar de cantidad, frecuencia y entrega.
+2. Responder en lenguaje natural la pregunta: **“¿Qué subproducto querés vender?”**
+3. Escribir: “Tengo 20 toneladas mensuales de cascarilla de arroz disponibles en Corrientes”.
+4. Revisar los campos que la IA pudo extraer de la respuesta.
+5. Completar manualmente los datos comerciales, técnicos y logísticos que falten.
+6. Confirmar y publicar la oferta. La IA no publica ni inventa datos por su cuenta.
+7. Ver compradores cuya necesidad sea compatible con la oferta.
+8. Revisar por qué se produjo cada coincidencia y qué información falta validar.
+9. Elegir una contraparte e iniciar el contacto.
+10. Confirmar un resumen preliminar de cantidad, frecuencia y entrega.
+
+### Datos de una oferta de subproducto
+
+La publicación del vendedor debe contener estos datos:
+
+| Grupo | Dato | Obligatorio en la demo | Ejemplo |
+|---|---|---|---|
+| Identificación | Nombre del subproducto | Sí | Cascarilla de arroz |
+| Identificación | Categoría | Sí | Subproducto agroindustrial |
+| Origen | Proceso que lo genera | Sí | Molienda de arroz |
+| Disponibilidad | Cantidad y unidad | Sí | 20 toneladas |
+| Disponibilidad | Frecuencia | Sí | Mensual |
+| Disponibilidad | Fecha o período disponible | Sí | Durante 12 meses |
+| Ubicación | Lugar de retiro | Sí | Corrientes, Argentina |
+| Condición | Estado y presentación | Sí | Seco y a granel |
+| Calidad | Humedad, pureza, granulometría u otros parámetros | Si se conocen | Humedad: pendiente de análisis |
+| Comercial | Precio por unidad o “a cotizar” | Sí | Precio por tonelada: a cotizar |
+| Comercial | Lote mínimo | Sí | 10 toneladas |
+| Logística | Quién retira o entrega | Sí | Retiro a cargo del comprador |
+| Logística | Forma y medios de carga | Sí | Carga a granel; medio de carga por confirmar |
+| Seguridad | Restricciones de manipulación o almacenamiento | Sí | Mantener seco |
+| Evidencia | Fotos, ficha técnica o análisis | No | Ficha técnica pendiente |
+| Contacto | Empresa y persona responsable | Sí | Arrocera Corrientes; contacto simulado |
+
+Los requisitos técnicos dependen del material y de su uso. Los ejemplos de esta tabla son **DATO SIMULADO** y deben ser validados antes de una operación real.
+
+### Ejemplo completo de carga del vendedor
+
+> **Pregunta de BioNexo:** ¿Qué subproducto querés vender?
+>
+> **Respuesta del vendedor:** “Tengo cascarilla de arroz generada en nuestra planta de Corrientes. Dispongo de 20 toneladas por mes durante los próximos 12 meses. Está seca y a granel. El comprador debe retirarla. El precio es a cotizar”.
+
+La IA propone este borrador para que el vendedor lo revise:
+
+- Subproducto: cascarilla de arroz.
+- Categoría: subproducto agroindustrial.
+- Origen: molienda de arroz.
+- Cantidad: 20 toneladas por mes.
+- Disponibilidad: recurrente durante 12 meses.
+- Ubicación: Corrientes, Argentina.
+- Presentación: seca y a granel.
+- Precio: a cotizar por tonelada.
+- Entrega: retiro a cargo del comprador.
+- Datos pendientes: humedad, granulometría, lote mínimo, medio de carga y ficha técnica.
+
+El vendedor corrige o completa los campos pendientes y recién entonces selecciona **Publicar oferta**. Todo el ejemplo es **DATO SIMULADO**.
 
 ### Para etapas posteriores
 
@@ -41,13 +89,31 @@ Para la demostración, una arrocera publica cascarilla, una industria busca abas
 ### Para mostrar en la demo
 
 1. Ingresar con un perfil de industria de biomasa.
-2. Escribir: “Necesito 20 toneladas de cascarilla por mes durante 12 meses”.
-3. Revisar la necesidad interpretada por la IA.
-4. Ver proveedores compatibles ordenados por cantidad, distancia y frecuencia.
-5. Comparar costo del material, transporte y costo total estimado.
-6. Revisar condiciones técnicas pendientes.
-7. Seleccionar la oferta de la arrocera.
-8. Preparar un pedido recurrente sujeto a confirmación.
+2. Responder en lenguaje natural la pregunta: **“¿Qué material necesitás comprar?”**
+3. Escribir: “Necesito 20 toneladas de cascarilla de arroz por mes durante 12 meses, con retiro en un radio de hasta 150 km”.
+4. Revisar los datos extraídos: material, cantidad, frecuencia, duración, ubicación y requisitos.
+5. Confirmar la búsqueda. Esa necesidad se compara con las ofertas publicadas por vendedores.
+6. Ver ofertas compatibles ordenadas por cantidad, distancia, frecuencia y requisitos técnicos.
+7. Comparar costo del material, transporte y costo total estimado.
+8. Revisar coincidencias, diferencias y datos técnicos pendientes.
+9. Seleccionar la oferta de la arrocera.
+10. Preparar un pedido recurrente sujeto a confirmación de ambas partes.
+
+### Datos de la necesidad del comprador
+
+- Material o categoría buscada.
+- Cantidad y unidad.
+- Frecuencia y duración.
+- Lugar de uso o entrega.
+- Radio máximo de búsqueda.
+- Precio máximo o solicitud de cotización.
+- Requisitos de calidad y uso previsto.
+- Presentación aceptada.
+- Fecha desde la que necesita abastecimiento.
+- Modalidad de retiro o entrega.
+- Documentación exigida.
+
+Si un dato no está en la pregunta, BioNexo lo marca como **pendiente**; no lo inventa.
 
 ### Para etapas posteriores
 
@@ -57,6 +123,31 @@ Para la demostración, una arrocera publica cascarilla, una industria busca abas
 - Negociar condiciones y adjuntar documentación.
 - Gestionar contratos de 3, 6 o 12 meses.
 - Controlar calendario, entregas e incumplimientos.
+
+## Cómo hace BioNexo el matching
+
+El sistema no busca una “venta” a partir de una pregunta aislada. Compara una **necesidad de compra confirmada** con las **ofertas publicadas y confirmadas** por los vendedores.
+
+1. La IA convierte el texto del vendedor y del comprador en campos estructurados.
+2. Cada usuario revisa y confirma sus datos.
+3. El backend filtra ofertas incompatibles por material, disponibilidad, cantidad, ubicación o requisitos obligatorios.
+4. Las ofertas restantes reciben un puntaje según cantidad cubierta, frecuencia, distancia, precio y calidad declarada.
+5. BioNexo muestra las mejores coincidencias y explica tanto los puntos compatibles como los datos pendientes.
+6. El comprador selecciona una oferta y el vendedor recibe la solicitud de contacto o cotización.
+
+Ejemplo de coincidencia **DATO SIMULADO**:
+
+| Criterio | Oferta del vendedor | Necesidad del comprador | Resultado |
+|---|---|---|---|
+| Material | Cascarilla de arroz | Cascarilla de arroz | Coincide |
+| Cantidad | 20 t/mes | 20 t/mes | Coincide |
+| Duración | 12 meses | 12 meses | Coincide |
+| Distancia | Dentro de 150 km | Máximo 150 km | Coincide |
+| Presentación | Seca y a granel | A granel | Coincide |
+| Humedad | Pendiente | Máximo a definir | Requiere validación |
+| Precio | A cotizar | A cotizar | Requiere cotización |
+
+Resultado mostrado: **“Coincidencia alta: 5 criterios compatibles y 2 puntos pendientes”**. El puntaje es **DATO SIMULADO** y no reemplaza la evaluación técnica ni la aceptación comercial.
 
 ## Funcionalidades del transportista
 
@@ -131,11 +222,14 @@ En este ejemplo, la Ruta B estima 72 kg CO₂e menos, una reducción del 33%. To
 
 ## Flujo integrado de cinco minutos
 
-1. El vendedor publica la oferta con IA.
-2. El comprador expresa su necesidad y obtiene coincidencias.
-3. Ambas partes seleccionan la operación recomendada.
-4. El transportista confirma una ruta compatible.
-5. BioNexo presenta costo total, emisiones y resumen recurrente.
+1. BioNexo pregunta al vendedor qué subproducto quiere vender.
+2. La IA completa un borrador; el vendedor corrige los campos y publica la oferta.
+3. BioNexo pregunta al comprador qué material necesita.
+4. La IA estructura la necesidad; el comprador la confirma.
+5. El sistema compara la necesidad confirmada con las ofertas publicadas y explica la mejor coincidencia.
+6. El comprador selecciona la oferta y el vendedor recibe la solicitud.
+7. El transportista confirma una ruta compatible.
+8. BioNexo presenta costo total, emisiones y resumen recurrente.
 
 ## Alcance obligatorio del prototipo
 
