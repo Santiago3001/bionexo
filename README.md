@@ -58,6 +58,7 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 - [Costos y ganancias](03-costos-y-ganancias/costos-y-ganancias.md)
 - [Decisión sobre blockchain](04-blockchain/blockchain.md)
 - [Producto y guion de demostración](05-producto/producto.md)
+- [Implementación técnica (fases 1 a 4): base de datos, seguridad, chat, condiciones y contratos](06-implementacion/implementacion.md)
 
 ## Estado de validación
 
