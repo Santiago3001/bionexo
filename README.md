@@ -64,5 +64,5 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 
 ## Contexto para IA
 
-BioNexo NEA es una plataforma B2B para conectar oferta, demanda y transporte en cadenas productivas del Nordeste Argentino. La demo usa tres roles con funcionalidades definidas en `02-solucion/solucion.md`: comprador (dashboard con score, compra 5 pasos, trueque 7 pasos, Agente IA, ISO 14001), vendedor (publicar, chat, trueque, cotizador de rentabilidad, envíos, impacto) y transportista (mapa SVG, ranking, 4 tipos de ruta, comparador, armado automático). Chat formal simulado, contratos borrador, pagos, certificaciones y expansión pertenecen a etapas posteriores.
+BioNexo NEA es una plataforma para conectar oferta, demanda y transporte en cadenas productivas del Nordeste Argentino. La demo usa tres roles con funcionalidades definidas en `02-solucion/solucion.md`: comprador (dashboard con score, compra 5 pasos, trueque 7 pasos, Agente IA, ISO 14001), vendedor (publicar, chat, trueque, cotizador de rentabilidad, envíos, impacto) y transportista (mapa SVG, ranking, 4 tipos de ruta, comparador, armado automático). Chat formal simulado, contratos borrador, pagos, certificaciones y expansión pertenecen a etapas posteriores.
 
