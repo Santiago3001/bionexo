@@ -1,57 +1,54 @@
 # Blockchain
 
-## Decisión para el prototipo
+## Decisión
 
-**No se utilizará blockchain ni tokenización en la primera versión de BioNexo.**
+**BioNexo no utilizará blockchain ni tokenización en el prototipo de cinco minutos.**
 
 ## Motivo
 
-La hipótesis principal consiste en comprobar si una arrocera obtiene valor al encontrar compradores compatibles para su cascarilla. Para eso se necesitan:
+El recorrido principal debe demostrar:
 
-- Una interfaz simple.
-- Una base de datos.
-- Una API de inteligencia artificial.
-- Reglas de búsqueda y compatibilidad.
-- Datos comerciales y logísticos.
+1. Una oferta del vendedor.
+2. Una necesidad del comprador.
+3. Una ruta del transportista.
+4. Una coincidencia comercial y logística.
+5. Una estimación informativa de impacto ambiental.
 
-Blockchain no mejora la búsqueda inicial y agregaría tiempo, costo y complejidad sin aumentar la calidad de la demostración.
+Todo esto puede resolverse con una base de datos, una API de IA, reglas controladas y servicios de mapas. Blockchain no mejora la hipótesis central y agregaría complejidad a la presentación.
 
-## Qué se registra en el prototipo
+## Datos guardados fuera de blockchain
 
-Toda la información permanecerá en sistemas tradicionales:
-
-- Perfiles de usuario.
-- Publicaciones.
+- Perfiles de vendedor, comprador y transportista.
 - Ofertas y necesidades.
-- Mensajes.
-- Recomendaciones.
+- Rutas, tarifas y disponibilidad.
+- Mensajes y documentos.
+- Recomendaciones y explicaciones.
+- Cálculos de costos y emisiones.
 - Datos personales y comerciales.
-- Distancias y estimaciones.
 
-Se deben aplicar autenticación, permisos, historial y copias de seguridad. Una base de datos bien administrada es suficiente para esta etapa.
+La plataforma debe aplicar autenticación, permisos, historial, protección de datos y copias de seguridad.
 
-## Cuándo podría reconsiderarse
+## Impacto ambiental y trazabilidad
 
-Blockchain podría evaluarse si una validación real demuestra que:
+El cálculo ambiental no necesita blockchain. Para que sea confiable necesita:
 
-- Varias organizaciones necesitan compartir un registro común.
-- Las partes no confían en un administrador central.
-- Se deben verificar certificados emitidos por terceros.
-- Hace falta demostrar que un registro o documento no fue alterado.
-- Se implementan pagos condicionados a entregas verificadas.
+- Datos de carga, distancia y vehículo.
+- Factor de emisión documentado.
+- Fecha y versión de la metodología.
+- Supuestos visibles.
+- Posibilidad de reconstruir el cálculo.
 
-Estas necesidades son **SUPUESTO** y no están presentes en la evidencia disponible.
+## Posible uso futuro
 
-## Posible distribución futura
+Blockchain solo se reconsiderará si varios actores necesitan compartir registros sin confiar en un administrador central.
 
-Si en el futuro se justifica su incorporación:
-
-| Posible registro on-chain | Información que debe seguir off-chain |
+| Posible dato on-chain | Información que seguiría off-chain |
 |---|---|
-| Hash de un certificado validado | Certificado completo y datos técnicos |
-| Firma o comprobante de aceptación | Contrato completo y datos personales |
-| Identificador de una entrega verificada | Ubicación detallada y documentos logísticos |
+| Hash de un certificado verificado | Certificado completo y datos técnicos |
+| Comprobante de aceptación | Contrato y datos personales |
+| Identificador de entrega | Ruta detallada y documentos logísticos |
+| Hash de un reporte ambiental | Cálculo, factores y archivos completos |
 | Comprobante de pago | Datos bancarios, KYC y facturación |
 
-La red no se elige todavía. Stellar o Hedera solo deberían compararse después de definir un caso de uso verificable, costos, privacidad y responsabilidades.
+La red no se elige todavía. Stellar o Hedera solo deberían compararse después de validar un caso real, costos, privacidad y responsabilidades.
 
