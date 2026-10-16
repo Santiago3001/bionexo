@@ -2,7 +2,7 @@
 
 ## Idea elegida
 
-BioNexo NEA será, para la Ideathon, un asistente de descubrimiento comercial enfocado en cascarilla de arroz.
+BioNexo NEA será, para la Ideathon, un asistente de descubrimiento comercial enfocado en subproductos.
 
 Una arrocera describe el material disponible en lenguaje natural. El sistema identifica los datos principales, consulta oportunidades existentes y recomienda compradores compatibles. Cada recomendación explica la coincidencia y muestra las condiciones pendientes de verificar.
 
