@@ -1,67 +1,151 @@
 # Producto
 
+## Objetivo de la demostración
+
+Mostrar en cinco minutos que BioNexo puede conectar a un vendedor, un comprador y un transportista, y presentar el costo y el impacto ambiental estimado de una operación.
+
+## Datos preparados para la demo
+
+Todos los elementos siguientes son **DATO SIMULADO**:
+
+- Vendedor: Arrocera Corrientes.
+- Oferta: 20 toneladas mensuales de cascarilla.
+- Comprador: Industria Biomasa NEA.
+- Necesidad: 20 toneladas mensuales durante 12 meses.
+- Transportista: Logística Ruta NEA.
+- Ruta A: 120 km.
+- Ruta B o retorno compatible: 80 km.
+- Factor de emisión: 0,09 kg CO₂e/t-km.
+- Precio y tarifa: valores simulados visibles en la interfaz.
+
+## Guion de cinco minutos
+
+### 0:00–0:30 · Problema
+
+Explicar que la arrocera tiene cascarilla, la industria necesita abastecimiento y el transportista posee capacidad disponible, pero los tres actores no cuentan con una conexión organizada.
+
+### 0:30–1:20 · Vendedor
+
+1. Abrir el perfil de la arrocera.
+2. Escribir: “Tengo 20 toneladas mensuales de cascarilla en Corrientes”.
+3. Mostrar cómo la IA extrae producto, cantidad, ubicación y frecuencia.
+4. Confirmar la publicación.
+
+Mensaje clave: la IA reduce el esfuerzo de publicar, pero el vendedor confirma los datos.
+
+### 1:20–2:20 · Comprador
+
+1. Abrir el perfil de la industria.
+2. Escribir: “Necesito 20 toneladas por mes durante 12 meses”.
+3. Mostrar la coincidencia con la arrocera.
+4. Explicar cantidad, distancia, frecuencia y requisitos pendientes.
+5. Seleccionar la oferta.
+
+Mensaje clave: la IA interpreta; la base de datos y las reglas encuentran la coincidencia.
+
+### 2:20–3:15 · Transportista
+
+1. Abrir el perfil del transportista.
+2. Mostrar vehículo, capacidad y ruta disponible.
+3. Marcar el viaje de retorno compatible.
+4. Confirmar disponibilidad y tarifa simulada.
+
+Mensaje clave: BioNexo incorpora el transporte antes de presentar el costo total.
+
+### 3:15–4:20 · Comparación ambiental
+
+1. Comparar una ruta de 120 km con una alternativa de 80 km.
+2. Mostrar toneladas-kilómetro y factor de emisión.
+3. Presentar 216 kg CO₂e frente a 144 kg CO₂e.
+4. Indicar una diferencia estimada de 72 kg CO₂e, equivalente al 33%.
+5. Abrir el Reporte de Impacto BioNexo.
+
+Mensaje clave: el reporte es informativo, declara sus supuestos y no es una certificación.
+
+### 4:20–5:00 · Cierre de operación
+
+1. Mostrar el resumen: vendedor, comprador, transportista, cantidad, frecuencia, costo y emisiones.
+2. Preparar un borrador de abastecimiento recurrente.
+3. Cerrar con el lema: “Conectamos lo que producís con quien lo necesita”.
+
+## Pantallas necesarias
+
+1. Inicio y selector de usuario.
+2. Publicación asistida del vendedor.
+3. Búsqueda del comprador y recomendación.
+4. Selección del transportista.
+5. Comparador económico y ambiental.
+6. Resumen final de la operación.
+
+El chat, el contrato y el panel pueden mostrarse como vistas resumidas. No deben consumir tiempo del recorrido principal.
+
+## Plan de respaldo
+
+Si falla la API de IA:
+
+- Mostrar la solicitud previamente procesada e identificarla como respaldo.
+- Continuar con la consulta a la base de datos.
+- No afirmar que la respuesta fue generada en vivo.
+
+Si falla el servicio de rutas:
+
+- Usar distancias marcadas como **DATO SIMULADO**.
+- Mantener visible la fórmula del cálculo.
+
 ## Pitch de un minuto
 
-En el Nordeste Argentino, una arrocera puede generar cascarilla todos los meses sin conocer fácilmente quién puede aprovecharla, qué requisitos debe cumplir o si el transporte permite hacer un buen negocio. Esta dificultad es una hipótesis que BioNexo necesita validar con empresas reales.
+Una arrocera puede tener cascarilla disponible sin saber quién la necesita. Una industria puede buscar ese material sin encontrar un proveedor cercano. Y un transportista puede volver vacío sin conocer una carga compatible.
 
-BioNexo NEA convierte una descripción simple —por ejemplo, “tengo 20 toneladas mensuales de cascarilla en Corrientes”— en oportunidades comerciales explicadas. La inteligencia artificial interpreta el pedido, pero la plataforma consulta datos controlados para encontrar compradores compatibles por cantidad, ubicación y frecuencia, sin inventar empresas ni precios.
+BioNexo NEA conecta a los tres. La inteligencia artificial interpreta lo que ofrecen o necesitan, mientras la plataforma consulta datos controlados para recomendar una coincidencia, incorporar transporte y mostrar el costo total.
 
-Para la Ideathon mostraremos una consulta real de IA conectada a perfiles simulados y una recomendación concreta. Primero validaremos si esta conexión resuelve un dolor importante; después podremos incorporar logística, contratos recurrentes e impacto ambiental. BioNexo conecta lo que producís con quien lo necesita.
+En nuestra demo, una oferta de cascarilla se convierte en una operación recurrente y comparamos dos alternativas logísticas con sus emisiones estimadas. El reporte declara datos, fórmula y supuestos: informa, pero no certifica.
 
-## Preguntas difíciles del jurado
+BioNexo conecta lo que producís con quien lo necesita y transforma información dispersa en oportunidades productivas para el NEA.
 
-### 1. ¿Cómo saben que las arroceras no pueden vender actualmente su cascarilla?
+## Preguntas del jurado
 
-**Respuesta:** todavía no lo sabemos. Es la hipótesis principal. La validaremos con entrevistas, operaciones recientes y datos de volúmenes, destinos, tiempos y costos. No presentaremos el supuesto como un hecho.
+### ¿Cómo saben que existe el problema?
 
-### 2. ¿Por qué necesitan inteligencia artificial y no un buscador con filtros?
+Todavía es una hipótesis. Debe validarse con entrevistas y operaciones reales de arroceras, compradores y transportistas.
 
-**Respuesta:** los filtros y las reglas harán la búsqueda confiable. La IA se utilizará para interpretar descripciones distintas, extraer datos y explicar resultados. Si las pruebas muestran que no mejora la experiencia, se reducirá o eliminará.
+### ¿Por qué utilizan IA?
 
-### 3. ¿Cómo evitan recomendar un uso técnicamente incorrecto o inseguro?
+Para interpretar descripciones distintas, extraer datos y explicar resultados. La búsqueda y los cálculos se realizan con la base y reglas controladas.
 
-**Respuesta:** la IA no aprobará compatibilidad técnica. Mostrará requisitos pendientes y solo utilizará reglas o fuentes validadas por especialistas. Cualquier perfil, precio o resultado ficticio se marcará como **DATO SIMULADO**.
+### ¿Por qué participa el transportista?
 
-### 4. ¿Cómo consiguen oferta y demanda suficientes al comenzar?
+Porque el costo y la distancia pueden decidir si una coincidencia comercial es viable. Integrarlo permite mostrar costo total y opciones de retorno.
 
-**Respuesta:** el piloto se limitará a una cadena, una región y actores incorporados de manera directa. Antes de escalar se medirá si existe densidad suficiente de operaciones. Esta estrategia es un **SUPUESTO** a validar.
+### ¿Cómo calculan el impacto ambiental?
 
-### 5. ¿Quién paga y por qué no concreta la operación fuera de la plataforma?
+En el prototipo se multiplican toneladas, kilómetros y un factor por tonelada-kilómetro. Los valores son simulados; un piloto deberá usar factores documentados y datos del vehículo.
 
-**Respuesta:** la hipótesis es cobrar por valor adicional —descubrimiento, comparación, seguimiento y recurrencia— y no solo por presentar contactos. El modelo y el mecanismo de cobro se definirán después de medir disposición a pagar y repetición.
+### ¿El reporte es una certificación?
+
+No. Es un informe transparente con metodología y supuestos. Una certificación requeriría una entidad competente.
+
+### ¿Cómo gana dinero BioNexo?
+
+La hipótesis combina comisión por operación, coordinación logística y servicios empresariales. La disposición a pagar todavía debe validarse.
 
 ## Riesgos y mitigación
 
-| Riesgo | Cómo reducirlo |
+| Riesgo | Mitigación |
 |---|---|
-| El problema no es prioritario | Entrevistar actores y observar operaciones antes de construir más funciones |
-| No hay suficientes compradores cercanos | Empezar en una zona con oferta y demanda identificadas |
-| Los datos quedan desactualizados | Confirmar disponibilidad y vencimiento de cada publicación |
-| La IA inventa información | Consultar únicamente datos controlados y separar cálculos determinísticos |
-| Una recomendación no cumple requisitos técnicos | Incorporar variables obligatorias y revisión especializada |
-| El transporte elimina la rentabilidad | Mostrar costo total y radio viable antes de contactar |
-| Las partes evitan la comisión | Crear valor continuo y probar alternativas de suscripción o pago por servicio |
-| Se intenta construir toda la visión | Mantener una sola funcionalidad central para la Ideathon |
-| Riesgos legales y de privacidad | Definir permisos, consentimiento, retención de datos y asesoría legal |
+| No existe suficiente oferta o demanda | Empezar con una cadena y zona concretas |
+| La IA inventa información | Limitarla a interpretar y explicar datos controlados |
+| Faltan requisitos técnicos | Mostrar campos pendientes y exigir validación especializada |
+| El transporte vuelve inviable el negocio | Incorporar costo y distancia antes de confirmar |
+| El factor ambiental es incorrecto | Documentar fuente, versión y supuestos |
+| La demo intenta mostrar demasiado | Mantener seis pantallas y un único recorrido |
+| Los datos simulados parecen reales | Etiquetarlos de forma visible en toda la demo |
 
-## Próximos pasos después de la Ideathon
+## Próximos pasos
 
-1. Entrevistar arroceras, compradores y transportistas.
-2. Sustituir los **DATOS SIMULADOS** por casos anonimizados y autorizados.
-3. Medir tiempo de búsqueda, tasa de contacto y operaciones iniciadas.
-4. Validar requisitos técnicos con especialistas.
-5. Probar una operación piloto acompañada manualmente.
-6. Medir disposición a pagar y costo de adquisición.
-7. Incorporar logística, mensajería o contratos solo si la evidencia lo justifica.
-8. Evaluar impacto ambiental con metodología documentada.
-
-## Indicadores iniciales
-
-- Porcentaje de ofertas que reciben al menos una coincidencia útil.
-- Tiempo hasta el primer contacto.
-- Porcentaje de recomendaciones aceptadas.
-- Porcentaje de contactos que llegan a una cotización.
-- Operaciones repetidas.
-- Valor económico creado para cada parte.
-
-Las metas numéricas están PENDIENTES hasta contar con una línea de base real.
+1. Validar el problema con los tres tipos de usuario.
+2. Reemplazar perfiles simulados por casos anonimizados y autorizados.
+3. Validar requisitos técnicos de la cascarilla.
+4. Incorporar un factor de emisión documentado.
+5. Acompañar manualmente una primera operación piloto.
+6. Medir contactos, cotizaciones, entregas y repetición.
+7. Validar quién paga y cuánto.
