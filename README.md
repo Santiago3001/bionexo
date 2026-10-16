@@ -22,7 +22,7 @@ La inteligencia artificial interpreta lo que cada usuario necesita, pero las coi
 
 Una arrocera puede tener cascarilla disponible y no conocer compradores compatibles. Una industria puede necesitar ese material y no encontrar un proveedor cercano. Un transportista puede tener capacidad o un viaje de retorno sin aprovechar.
 
-La información se encuentra dispersa y el costo logístico puede hacer inviable una operación. Estas afirmaciones son **SUPUESTO** hasta validarlas con actores reales.
+La información se encuentra dispersa y el costo logístico puede hacer inviable una operación. 
 
 ## Usuarios
 
