@@ -32,6 +32,11 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 
 Detalle completo en [Solución, usuarios y funcionalidades](02-solucion/solucion.md). Las empresas, cantidades, precios, tarifas y resultados utilizados en la demostración son **DATO SIMULADO**.
 
+demo.comprador@bionexo.dev → compra, matching, contrato, reportes
+demo.vendedor@bionexo.dev → publica ofertas, cotizador, impacto
+demo.transportista@bionexo.dev → mapa de rutas y retornos
+todas con la misma contraseña Bionexo2026!
+
 ## Demostración
 
 1. El comprador carga su requerimiento o usa el Agente IA en lenguaje natural.
