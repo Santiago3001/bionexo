@@ -2,7 +2,7 @@
 
 **Plataforma inteligente de conexión productiva, comercial, logística y ambiental**
 
-> Conectamos tus subproductos con quien lo necesita.
+> Lo que una industria descarta, otra lo transforma en valor.
 
 ## Identidad
 
@@ -45,12 +45,6 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 5. El transportista toma la carga en el mapa y optimiza ruta simple vs ida y vuelta vs 2 paradas.
 6. La plataforma cierra orden con flete asignado y reportes ambiental y de sostenibilidad.
 
-## Funcionalidad central
-
-> Filtrar por producto, ordenar por score, comprar o hacer trueque, cotizar rentabilidad y optimizar rutas, con costo, flete.
-
-
-
 ## Documentación
 
 - [Problema](01-problema/problema.md)
@@ -58,6 +52,7 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 - [Costos y ganancias](03-costos-y-ganancias/costos-y-ganancias.md)
 - [Decisión sobre blockchain](04-blockchain/blockchain.md)
 - [Producto y guion de demostración](05-producto/producto.md)
+- [Implementación técnica (fases 1 a 4): base de datos, seguridad, chat, condiciones y contratos](06-implementacion/implementacion.md)
 
 ## Estado de validación
 
@@ -69,5 +64,5 @@ La información se encuentra dispersa y el costo logístico puede hacer inviable
 
 ## Contexto para IA
 
-BioNexo NEA es una plataforma B2B para conectar oferta, demanda y transporte en cadenas productivas del Nordeste Argentino. La demo usa tres roles con funcionalidades definidas en `02-solucion/solucion.md`: comprador (dashboard con score, compra 5 pasos, trueque 7 pasos, Agente IA, ISO 14001), vendedor (publicar, chat, trueque, cotizador de rentabilidad, envíos, impacto) y transportista (mapa SVG, ranking, 4 tipos de ruta, comparador, armado automático). Chat formal simulado, contratos borrador, pagos, certificaciones y expansión pertenecen a etapas posteriores.
+BioNexo NEA es una plataforma para conectar oferta, demanda y transporte en cadenas productivas del Nordeste Argentino. La demo usa tres roles con funcionalidades definidas en `02-solucion/solucion.md`: comprador (dashboard con score, compra 5 pasos, trueque 7 pasos, Agente IA, ISO 14001), vendedor (publicar, chat, trueque, cotizador de rentabilidad, envíos, impacto) y transportista (mapa SVG, ranking, 4 tipos de ruta, comparador, armado automático). Chat formal simulado, contratos borrador, pagos, certificaciones y expansión pertenecen a etapas posteriores.
 
