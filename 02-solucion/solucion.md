@@ -71,12 +71,10 @@ Las empresas, cantidades, precios, tarifas y resultados utilizados son **DATO SI
 
 ## Cómo hace BioNexo el matching
 
-1. La IA convierte el texto libre en producto, toneladas, ciudad e intención (cerca, barato, trueque).
-2. El backend filtra publicaciones por mismo producto.
-3. Calcula score /100: 35% distancia, 30% precio, 20% disponibilidad, 15% calidad.
-4. Suma km, costo, flete, total y CO2 del transporte. Marca PRIORIDAD 1.
-5. Si el vendedor necesita algo que el comprador genera, marca TRUEQUE POSIBLE.
-6. El comprador elige Comprar (5 pasos) o Proponer trueque (7 pasos con equivalencia y compensación en dinero).
+1. Utilizando un modelo de IA
+2. Calcula score /100: 35% distancia, 30% precio, 20% disponibilidad, 15% calidad.
+ 
+
 
 Ejemplo **DATO SIMULADO**: Lote A US$760 contra Lote B US$420, diferencia US$340, orden doble con 2 fletes.
 
