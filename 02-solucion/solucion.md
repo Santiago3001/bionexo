@@ -80,13 +80,6 @@ Las empresas, cantidades, precios, tarifas y resultados utilizados son **DATO SI
 
 Ejemplo **DATO SIMULADO**: Lote A US$760 contra Lote B US$420, diferencia US$340, orden doble con 2 fletes.
 
-## Impacto ambiental y sostenibilidad
-
-- Dashboard: CO2 del transporte por oferta.
-- Vendedor: toneladas desviadas de disposición final en Reporte de impacto.
-- Comprador: Sostenibilidad Empresa ISO 14001 con % por cláusula y global, evolución mes anterior / mes actual / meta, brechas y plan de acción. Suma toneladas del trueque. No muestra datos de transporte. Descarga PDF.
-- Fórmula base del prototipo: `kg CO₂e = toneladas × kilómetros × factor de emisión en kg CO₂e/t-km`.
-- El factor de la demo es **DATO SIMULADO**. El reporte es informativo, no certificación.
 
 ## Flujo integrado
 
