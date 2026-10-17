@@ -1,9 +1,9 @@
 "use client";
 import { ORDER_STEPS, Order } from "@/lib/data";
 import { useStore } from "@/lib/store";
-import { Card, Muted } from "./ui";
+import { Btn, Card, Muted } from "./ui";
 
-function OrdCard({ o, buy }: { o: Order; buy: boolean }) {
+function OrdCard({ o, buy, onAdvance }: { o: Order; buy: boolean; onAdvance: () => void }) {
   return (
     <Card>
       <div style={{ display: "flex", justifyContent: "space-between", flexWrap: "wrap", gap: 8 }}>
@@ -16,24 +16,24 @@ function OrdCard({ o, buy }: { o: Order; buy: boolean }) {
       <div style={{ height: 10, background: "#d8e2dc", borderRadius: 6 }}><div style={{ width: `${(o.st / 4) * 100}%`, height: "100%", background: "#228b22" }} /></div>
       <div style={{ display: "flex", justifyContent: "space-between", marginTop: 10, flexWrap: "wrap", gap: 8 }}>
         <Muted>Transportista: {o.carrier} · {o.st === 4 ? "Entregado" : "llegada en " + o.eta}</Muted>
-        {o.st < 4 ? <Muted>El transportista asignado actualiza este estado.</Muted> : <span style={{ color: "#15803d", fontWeight: 700 }}>{buy ? "Recepción confirmada" : "Entrega confirmada"}</span>}
+        {o.st < 4 ? <Btn kind="sec" onClick={onAdvance}>Simular avance</Btn> : <span style={{ color: "#15803d", fontWeight: 700 }}>{buy ? "Recepción confirmada" : "Cobro liberado"}</span>}
       </div>
     </Card>
   );
 }
 
 export default function Seguimiento({ mode }: { mode: "compra" | "venta" }) {
-  const { orders, user } = useStore();
+  const { orders, user, advanceOrder } = useStore();
   if (!user) return null;
   const buy = mode === "compra";
-  const list = orders.filter((o) => (buy ? o.buyerId === user.id : o.sellerId === user.id));
+  const list = orders.filter((o) => (buy ? o.buyer === user.company : o.seller === user.company));
   return (
     <>
       <Card>
         <h2 style={{ margin: 0 }}>{buy ? "Seguimiento de mis compras" : "Seguimiento de mis ventas"}</h2>
         <p><Muted>{buy ? "Seguí cada compra hasta la entrega en tu planta." : "Seguí cada venta hasta la entrega y el cobro."}</Muted></p>
       </Card>
-      {list.map((o) => <OrdCard key={o.id} o={o} buy={buy} />)}
+      {list.map((o) => <OrdCard key={o.id} o={o} buy={buy} onAdvance={() => advanceOrder(o.id)} />)}
       {list.length === 0 && <Card><Muted>Todavía no tenés {buy ? "compras" : "ventas"}.</Muted></Card>}
     </>
   );

@@ -18,7 +18,7 @@ export default function MarketCard({ pub, onBuy, onQuickView }: { pub: Pub; onBu
         <div style={{ fontSize: 13, color: "var(--color-muted-fg)" }}>{pub.t} t/mes · Calidad {pub.q}/10</div>
         <div style={{ display: "flex", gap: 8, marginTop: 8 }}>
           <Link href={`/comprador/subproducto/${pub.id}`} className="bn-btn bn-btn--sec" style={{ flex: 1, textAlign: "center", textDecoration: "none", padding: "10px 12px", fontSize: 14 }}>Ver detalle</Link>
-          <Btn onClick={() => onBuy(pub.id)}>Negociar</Btn>
+          <Btn onClick={() => onBuy(pub.id)}>Comprar</Btn>
         </div>
       </div>
     </article>
