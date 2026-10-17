@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Card, Btn, Muted } from "./ui";
+import { Card, Btn, Muted, DemoTag } from "./ui";
 import ReporteButton from "./ReporteButton";
 import { useStore } from "@/lib/store";
 import { km } from "@/lib/data";
@@ -324,6 +324,7 @@ export default function BioNexoCarbon() {
           <div style={{ minWidth: 260, flex: "1 1 340px" }}>
             <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
               <h2 style={{ margin: 0 }}>BioNexo Carbon</h2>
+              <DemoTag />
               <Badge color="#166534" bg="#dcfce7">Módulo ambiental principal</Badge>
             </div>
             <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.5 }}>

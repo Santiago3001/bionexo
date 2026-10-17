@@ -21,6 +21,30 @@ export function Muted({ children }: { children: ReactNode }) {
   return <span style={{ color: "var(--color-muted-fg)", fontSize: 13 }}>{children}</span>;
 }
 
+/** Etiqueta chica para marcar datos o módulos de demostración. */
+export function DemoTag() {
+  return (
+    <span
+      title="Datos de demostración"
+      style={{
+        display: "inline-block",
+        padding: "2px 8px",
+        borderRadius: 999,
+        fontSize: 10.5,
+        fontWeight: 700,
+        letterSpacing: ".06em",
+        textTransform: "uppercase",
+        color: "#92400e",
+        background: "#fef3c7",
+        border: "1px solid #fde68a",
+        verticalAlign: "middle",
+      }}
+    >
+      Demo
+    </span>
+  );
+}
+
 export function Steps({ items, current }: { items: string[]; current: number }) {
   return (
     <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 12 }}>

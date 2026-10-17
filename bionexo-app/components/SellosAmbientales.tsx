@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Btn, Card } from "./ui";
+import { Btn, Card, DemoTag } from "./ui";
 import {
   alActualizar,
   listarSellosDe,
@@ -34,7 +34,10 @@ export default function SellosAmbientales() {
 
   return (
     <Card>
-      <h3 style={{ margin: 0, fontSize: 17 }}>Sellos y certificaciones ambientales</h3>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <h3 style={{ margin: 0, fontSize: 17 }}>Sellos y certificaciones ambientales</h3>
+        <DemoTag />
+      </div>
       <p style={{ margin: "8px 0 14px", fontSize: 13.5, color: "var(--color-muted-fg)", lineHeight: 1.5 }}>
         BioNexo NEA <strong>no emite ni otorga estos sellos</strong>. Esta sección solo registra la documentación que
         presentás y permite que un administrador de la plataforma la verifique. Ningún sello aparece como{" "}

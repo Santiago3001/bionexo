@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Card } from "./ui";
+import { Card, DemoTag } from "./ui";
 import {
   SELLOS_AMBIENTALES,
   alActualizar,
@@ -32,7 +32,10 @@ export default function SellosPublicos({ sellerId, preview = false }: { sellerId
 
   return (
     <Card style={preview ? { boxShadow: "none", border: "1px dashed var(--color-border)", background: "var(--color-bg-alt)" } : undefined}>
-      <h3 style={{ margin: 0, fontSize: 16 }}>Sellos y certificaciones ambientales</h3>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+        <h3 style={{ margin: 0, fontSize: 16 }}>Sellos y certificaciones ambientales</h3>
+        <DemoTag />
+      </div>
       <p style={{ margin: "8px 0 14px", fontSize: 12.5, color: "var(--color-muted-fg)", lineHeight: 1.5 }}>
         Solo se muestran los sellos cuya documentación fue <strong>verificada por un administrador de BioNexo</strong>.
         BioNexo no emite ni otorga estos sellos: únicamente registra y verifica la documentación presentada.

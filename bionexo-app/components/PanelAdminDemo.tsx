@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import { Btn, Card, Muted } from "./ui";
+import { Btn, Card, DemoTag, Muted } from "./ui";
 import {
   SELLOS_AMBIENTALES,
   alActualizar,
@@ -45,7 +45,10 @@ export default function PanelAdminDemo() {
   return (
     <Card>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 12, flexWrap: "wrap", alignItems: "baseline" }}>
-        <h3 style={{ margin: 0, fontSize: 17 }}>Panel de administrador · revisión de sellos</h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+          <h3 style={{ margin: 0, fontSize: 17 }}>Panel de administrador · revisión de sellos</h3>
+          <DemoTag />
+        </div>
       </div>
       <p style={{ margin: "8px 0 14px", fontSize: 13, color: "var(--color-muted-fg)", lineHeight: 1.5 }}>
         Revisión de la documentación presentada por el vendedor: al aprobarla, el sello pasa a <strong>Verificado</strong>{" "}
