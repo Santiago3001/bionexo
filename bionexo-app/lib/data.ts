@@ -57,13 +57,13 @@ export interface Pub {
 }
 
 export const INITIAL_PUBS: Pub[] = [
-  { id: 1, seller: "Arrocera El Sauce", product: "Cascarilla de arroz", city: "Corrientes", t: 20, price: 38, q: 8 },
+  { id: 1, seller: "Arrocera El Sauce", product: "Cascarilla de arroz", city: "Corrientes", t: 20, price: 15, q: 8 },
   { id: 2, seller: "Aserradero Litoral", product: "Aserrín de pino", city: "Oberá", t: 15, price: 42, q: 7 },
   { id: 3, seller: "Ingenio Cañero Chaco", product: "Bagazo de caña", city: "Roque Sáenz Peña", t: 60, price: 18, q: 6 },
   { id: 4, seller: "Yerbatera Misiones", product: "Residuo de yerba", city: "Posadas", t: 12, price: 25, q: 7 },
   { id: 5, seller: "Molino del Norte", product: "Afrechillo de trigo", city: "Formosa", t: 25, price: 22, q: 7 },
   { id: 6, seller: "Carpintería Reconquista", product: "Viruta de madera dura", city: "Reconquista", t: 8, price: 30, q: 6 },
-  { id: 7, seller: "Arrocera Goya Norte", product: "Cascarilla de arroz", city: "Goya", t: 14, price: 35, q: 7 },
+  { id: 7, seller: "Arrocera Goya Norte", product: "Cascarilla de arroz", city: "Goya", t: 14, price: 14, q: 7 },
   { id: 8, seller: "Aserradero Clorinda", product: "Aserrín de pino", city: "Clorinda", t: 10, price: 40, q: 6 },
   { id: 9, seller: "Biomasa Chaco SA", product: "Aserrín de pino", city: "Resistencia", t: 10, price: 42, q: 7 },
 ];
@@ -93,6 +93,48 @@ export function km(a: string, b: string): number {
 
 export function usd(n: number): string {
   return "US$ " + Math.round(n).toLocaleString("es-AR");
+}
+
+/**
+ * Desglose económico de un suministro mensual (mercadería + flete) con su
+ * proyección anual. Fuente única de verdad para todo el circuito de compra.
+ */
+export interface DesgloseSuministro {
+  toneladasMes: number;
+  toneladasAnio: number;
+  precioTonelada: number;
+  tarifaTkm: number;
+  mercaderiaMes: number;
+  mercaderiaAnio: number;
+  fleteMes: number;
+  fleteAnio: number;
+  totalMes: number;
+  totalAnio: number;
+  co2Mes: number;
+}
+
+export function desgloseSuministro(
+  toneladasMes: number,
+  precioTonelada: number,
+  kmRecorrido: number,
+  tarifa: number = RATE,
+): DesgloseSuministro {
+  const mercaderiaMes = toneladasMes * precioTonelada;
+  const fleteMes = toneladasMes * kmRecorrido * tarifa;
+  const totalMes = mercaderiaMes + fleteMes;
+  return {
+    toneladasMes,
+    toneladasAnio: toneladasMes * 12,
+    precioTonelada,
+    tarifaTkm: tarifa,
+    mercaderiaMes,
+    mercaderiaAnio: mercaderiaMes * 12,
+    fleteMes,
+    fleteAnio: fleteMes * 12,
+    totalMes,
+    totalAnio: totalMes * 12,
+    co2Mes: (toneladasMes * kmRecorrido * CO2_FACTOR) / 1000,
+  };
 }
 
 export function proj(lat: number, lon: number): [number, number] {

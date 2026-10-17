@@ -1,9 +1,9 @@
 "use client";
 
-import { useId, useState } from "react";
-import { CO2_FACTOR, km, RATE, usd } from "@/lib/data";
+import { useId, useState, type CSSProperties } from "react";
+import { desgloseSuministro, km, usd } from "@/lib/data";
 import { useStore } from "@/lib/store";
-import { Btn, Card, Modal, Muted, Steps } from "./ui";
+import { Btn, Card, Modal, Steps } from "./ui";
 
 const CIRC_BASE = [
   "Seleccionar oferta",
@@ -12,6 +12,38 @@ const CIRC_BASE = [
   "Contrato anual",
   "Orden y flete",
 ];
+
+const capLabel: CSSProperties = {
+  fontSize: 11,
+  textTransform: "uppercase",
+  letterSpacing: "0.06em",
+  color: "var(--color-muted-fg)",
+  fontWeight: 700,
+};
+
+function LineaDesglose({
+  etiqueta,
+  detalle,
+  monto,
+  destacado,
+}: {
+  etiqueta: string;
+  detalle: string;
+  monto: string;
+  destacado?: boolean;
+}) {
+  return (
+    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", gap: 12, padding: "10px 0", borderBottom: "1px solid var(--color-border)" }}>
+      <div>
+        <div style={{ fontSize: 13.5, fontWeight: 600 }}>{etiqueta}</div>
+        <div style={{ fontSize: 12, color: "var(--color-muted-fg)" }}>{detalle}</div>
+      </div>
+      <div style={{ fontSize: 14, fontWeight: 700, whiteSpace: "nowrap", color: destacado ? "#047857" : "var(--color-foreground)" }}>
+        {monto}
+      </div>
+    </div>
+  );
+}
 
 export default function CircuitoCompra({
   pubId,
@@ -23,6 +55,7 @@ export default function CircuitoCompra({
   const { pubs, need, user, addOrders } = useStore();
   const orderId = useId().replace(/[^a-zA-Z0-9]/g, "");
   const [step, setStep] = useState(0);
+  const [periodo, setPeriodo] = useState<"mes" | "anio">("mes");
 
   // Estado de firma digital
   const [isSigned, setIsSigned] = useState(false);
@@ -34,20 +67,12 @@ export default function CircuitoCompra({
   const pub = pubs.find((p) => p.id === pubId);
   if (!pub || !user) return null;
 
-  const pkm = pub.km ?? km(need.city, pub.city);
   const q = Math.min(need.t, pub.t);
+  const pkm = pub.km ?? km(need.city, pub.city);
 
-  // Cálculos económicos detallados (Mercadería + Costo de envío / flete)
-  const subtotalBiomasaMensual = q * pub.price;
-  const subtotalBiomasaAnual = subtotalBiomasaMensual * 12;
-
-  const fleteMensual = pub.flete ?? Math.round(q * pkm * RATE);
-  const fleteAnual = fleteMensual * 12;
-
-  const totalMensual = subtotalBiomasaMensual + fleteMensual;
-  const totalAnual = subtotalBiomasaAnual + fleteAnual;
-
-  const co2Mensual = ((q * pkm * CO2_FACTOR) / 1000).toFixed(2);
+  // Cálculos económicos centralizados en lib/data.ts (fuente única de verdad).
+  const d = desgloseSuministro(q, pub.price, pkm);
+  const co2Mensual = d.co2Mes.toFixed(2);
 
   const contractCode = `CTR-2026-${pub.city.slice(0, 3).toUpperCase()}-${String(pub.id).padStart(4, "0")}`;
 
@@ -98,7 +123,7 @@ export default function CircuitoCompra({
         carrier: "Transporte Ávila SRL",
         st: 0,
         eta: "7 días",
-        value: totalMensual,
+        value: d.totalMes,
       },
     ]);
     onClose();
@@ -106,48 +131,107 @@ export default function CircuitoCompra({
 
   let body = null;
 
-  // Paso 0: Resumen inicial de oferta
+  // Paso 0: Resumen inicial de oferta (identidad → composición → total)
   if (step === 0) {
+    const totalActual = periodo === "mes" ? d.totalMes : d.totalAnio;
+    const totalEquivalente = periodo === "mes"
+      ? `≈ ${usd(d.totalAnio)} al año (12 meses)`
+      : `≈ ${usd(d.totalMes)} al mes`;
+
+    const chips = [
+      { k: "Volumen", v: `${q} t/mes (${d.toneladasAnio} t/año)` },
+      { k: "Precio", v: `US$ ${pub.price}/t` },
+      { k: "Vigencia", v: "12 meses" },
+      { k: "Oferta", v: pub.offerType === "futuro" ? "A futuro" : "Spot" },
+    ];
+
     body = (
       <Card style={{ padding: 20 }}>
-        <h4 style={{ margin: "0 0 10px", fontSize: 17, color: "var(--color-foreground)" }}>
+        <h4 style={{ margin: "0 0 4px", fontSize: 17, color: "var(--color-foreground)" }}>
           Propuesta comercial seleccionada
         </h4>
-        <p style={{ margin: "0 0 12px", lineHeight: 1.5 }}>
-          Vas a iniciar la contratación de suministro con <strong>{pub.seller}</strong>:
+        <p style={{ margin: "0 0 16px", fontSize: 13, color: "var(--color-muted-fg)" }}>
+          Revisá la composición del precio antes de iniciar la contratación.
         </p>
-        <div style={{ display: "grid", gap: 10, gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", marginBottom: 14 }}>
-          <div style={{ background: "var(--color-bg-alt)", padding: "12px 14px", borderRadius: 12 }}>
-            <span style={{ fontSize: 12, color: "var(--color-muted-fg)", display: "block" }}>Subproducto</span>
-            <strong style={{ fontSize: 15 }}>{pub.product}</strong>
-            <span style={{ fontSize: 12, display: "block", color: "var(--color-muted-fg)" }}>Calidad {pub.q}/10</span>
+
+        {/* Bloque A · Qué estás comprando */}
+        <div style={{ border: "1px solid var(--color-border)", borderRadius: 14, padding: "14px 16px", marginBottom: 12 }}>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 12, flexWrap: "wrap" }}>
+            <div>
+              <span style={capLabel}>Subproducto</span>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 2 }}>
+                <strong style={{ fontSize: 18 }}>{pub.product}</strong>
+                <span style={{ background: "#dcfce7", color: "#166534", fontSize: 11.5, fontWeight: 700, padding: "2px 8px", borderRadius: 20 }}>
+                  Calidad {pub.q}/10
+                </span>
+              </div>
+            </div>
+            <div style={{ textAlign: "right" }}>
+              <span style={capLabel}>Ruta</span>
+              <div style={{ fontSize: 13.5, fontWeight: 600, marginTop: 2 }}>{pub.city} → {need.city}</div>
+              <div style={{ fontSize: 12, color: "var(--color-muted-fg)" }}>{pkm} km</div>
+            </div>
           </div>
-          <div style={{ background: "var(--color-bg-alt)", padding: "12px 14px", borderRadius: 12 }}>
-            <span style={{ fontSize: 12, color: "var(--color-muted-fg)", display: "block" }}>Volumen mensual</span>
-            <strong style={{ fontSize: 15 }}>{q} t/mes</strong>
-            <span style={{ fontSize: 12, display: "block", color: "var(--color-muted-fg)" }}>({q * 12} t anuales)</span>
-          </div>
-          <div style={{ background: "var(--color-bg-alt)", padding: "12px 14px", borderRadius: 12 }}>
-            <span style={{ fontSize: 12, color: "var(--color-muted-fg)", display: "block" }}>Subtotal mercadería</span>
-            <strong style={{ fontSize: 15 }}>{usd(subtotalBiomasaMensual)}/mes</strong>
-            <span style={{ fontSize: 12, display: "block", color: "var(--color-muted-fg)" }}>US$ {pub.price}/t</span>
-          </div>
-          <div style={{ background: "#ecfdf5", border: "1px solid #a7f3d0", padding: "12px 14px", borderRadius: 12 }}>
-            <span style={{ fontSize: 12, color: "#065f46", display: "block", fontWeight: 600 }}>Costo de envío estimado</span>
-            <strong style={{ fontSize: 15, color: "#047857" }}>{usd(fleteMensual)}/mes</strong>
-            <span style={{ fontSize: 12, display: "block", color: "#065f46" }}>{pkm} km · US$ {RATE}/t·km</span>
+
+          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginTop: 14 }}>
+            {chips.map((c) => (
+              <span key={c.k} style={{ background: "var(--color-bg-alt)", borderRadius: 20, padding: "5px 11px", fontSize: 12 }}>
+                <span style={{ color: "var(--color-muted-fg)" }}>{c.k}: </span>
+                <strong>{c.v}</strong>
+              </span>
+            ))}
           </div>
         </div>
 
-        <div style={{ background: "var(--color-bg-dark)", color: "#fff", padding: "14px 18px", borderRadius: 14, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 10 }}>
+        {/* Bloque B · Cómo se compone el precio */}
+        <div style={{ border: "1px solid var(--color-border)", borderRadius: 14, padding: "12px 16px 4px", marginBottom: 12 }}>
+          <span style={capLabel}>Composición del precio (mensual)</span>
+          <LineaDesglose
+            etiqueta="Mercadería"
+            detalle={`${q} t/mes × US$ ${pub.price}/t`}
+            monto={`${usd(d.mercaderiaMes)}/mes`}
+          />
+          <LineaDesglose
+            etiqueta="Flete"
+            detalle={`${pkm} km × US$ ${d.tarifaTkm}/t·km`}
+            monto={`${usd(d.fleteMes)}/mes`}
+            destacado
+          />
+        </div>
+
+        {/* Bloque C · Total del compromiso */}
+        <div style={{ background: "var(--color-bg-dark)", color: "#fff", padding: "16px 18px", borderRadius: 14, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 12 }}>
           <div>
-            <span style={{ fontSize: 12, opacity: 0.85, display: "block" }}>Inversión mensual estimada (Mercadería + Envío)</span>
-            <strong style={{ fontSize: 22, color: "#a7f3d0" }}>{usd(totalMensual)}</strong>
-            <span style={{ fontSize: 13, opacity: 0.85 }}> / mes</span>
+            <span style={{ fontSize: 12, opacity: 0.85, display: "block" }}>
+              {periodo === "mes" ? "Inversión mensual estimada" : "Inversión anual del contrato"}
+            </span>
+            <div style={{ display: "flex", alignItems: "baseline", gap: 6 }}>
+              <strong style={{ fontSize: 24, color: "#a7f3d0" }}>{usd(totalActual)}</strong>
+              <span style={{ fontSize: 13, opacity: 0.85 }}>/ {periodo === "mes" ? "mes" : "año"}</span>
+            </div>
+            <span style={{ fontSize: 12, opacity: 0.7 }}>{totalEquivalente}</span>
           </div>
-          <div style={{ textAlign: "right" }}>
-            <span style={{ fontSize: 12, opacity: 0.85, display: "block" }}>Total contrato anual (12 meses)</span>
-            <strong style={{ fontSize: 18, color: "#fff" }}>{usd(totalAnual)}</strong>
+
+          <div style={{ display: "flex", background: "rgba(255,255,255,0.12)", borderRadius: 20, padding: 3 }}>
+            {(["mes", "anio"] as const).map((p) => (
+              <button
+                key={p}
+                type="button"
+                onClick={() => setPeriodo(p)}
+                style={{
+                  border: "none",
+                  cursor: "pointer",
+                  borderRadius: 16,
+                  padding: "5px 14px",
+                  fontSize: 12,
+                  fontWeight: 700,
+                  background: periodo === p ? "#fff" : "transparent",
+                  color: periodo === p ? "var(--color-bg-dark)" : "#fff",
+                }}
+              >
+                {p === "mes" ? "Mensual" : "Anual"}
+              </button>
+            ))}
           </div>
         </div>
       </Card>
@@ -226,7 +310,7 @@ export default function CircuitoCompra({
             </tr>
             <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
               <td style={{ padding: "8px 0", color: "var(--color-muted-fg)" }}>Precio base de mercadería</td>
-              <td style={{ padding: "8px 0", textAlign: "right", fontWeight: 600 }}>US$ {pub.price} / t ({usd(subtotalBiomasaMensual)} / mes)</td>
+              <td style={{ padding: "8px 0", textAlign: "right", fontWeight: 600 }}>US$ {pub.price} / t ({usd(d.mercaderiaMes)} / mes)</td>
             </tr>
             <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
               <td style={{ padding: "8px 0", color: "var(--color-muted-fg)" }}>Ruta de envío / Flete</td>
@@ -237,7 +321,7 @@ export default function CircuitoCompra({
                 🚚 Costo de envío / Flete mensual
               </td>
               <td style={{ padding: "10px 8px", textAlign: "right", fontWeight: 700, color: "#166534" }}>
-                {usd(fleteMensual)} / mes <span style={{ fontSize: 11, fontWeight: 400, display: "block" }}>({usd(fleteAnual)} anual · Transporte Ávila SRL)</span>
+                {usd(d.fleteMes)} / mes <span style={{ fontSize: 11, fontWeight: 400, display: "block" }}>({usd(d.fleteAnio)} anual · Transporte Ávila SRL)</span>
               </td>
             </tr>
             <tr style={{ borderBottom: "1px solid var(--color-border)" }}>
@@ -247,7 +331,7 @@ export default function CircuitoCompra({
             <tr>
               <td style={{ padding: "12px 0 0", fontSize: 15, fontWeight: 700 }}>Total mensual consolidado</td>
               <td style={{ padding: "12px 0 0", textAlign: "right", fontSize: 17, fontWeight: 800, color: "var(--color-primary)" }}>
-                {usd(totalMensual)} <span style={{ fontSize: 12, fontWeight: 400, color: "var(--color-muted-fg)" }}>/ mes</span>
+                {usd(d.totalMes)} <span style={{ fontSize: 12, fontWeight: 400, color: "var(--color-muted-fg)" }}>/ mes</span>
               </td>
             </tr>
           </tbody>
@@ -381,7 +465,7 @@ export default function CircuitoCompra({
             </div>
 
             <div>
-              <strong style={{ color: "var(--color-bg-dark)" }}>CLÁUSULA TERCERA (Precio de la Mercadería):</strong> Se establece un valor firme de <strong>US$ {pub.price} por tonelada</strong> de biomasa puesta en planta de origen. El subtotal mensual de mercadería asciende a <strong>{usd(subtotalBiomasaMensual)}</strong>, resultando en un subtotal anual acumulado de <strong>{usd(subtotalBiomasaAnual)}</strong>.
+              <strong style={{ color: "var(--color-bg-dark)" }}>CLÁUSULA TERCERA (Precio de la Mercadería):</strong> Se establece un valor firme de <strong>US$ {pub.price} por tonelada</strong> de biomasa puesta en planta de origen. El subtotal mensual de mercadería asciende a <strong>{usd(d.mercaderiaMes)}</strong>, resultando en un subtotal anual acumulado de <strong>{usd(d.mercaderiaAnio)}</strong>.
             </div>
 
             {/* CLÁUSULA CUARTA: COSTO DE ENVÍO Y LOGÍSTICA (Petición clave) */}
@@ -398,9 +482,9 @@ export default function CircuitoCompra({
               </strong>
               La logística integral de traslado será ejecutada bajo supervisión de BioNexo con el operador oficial <strong>Transporte Ávila SRL</strong>, cubriendo el trayecto desde la planta de origen en <strong>{pub.city}</strong> hasta el establecimiento de destino en <strong>{need.city}</strong> (distancia de <strong>{pkm} km</strong>).
               <div style={{ marginTop: 6, display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: 8, fontSize: 12 }}>
-                <div>• Tarifa de flete: <strong>US$ {RATE.toFixed(2)} / t·km</strong></div>
-                <div>• <strong>Costo de envío mensual:</strong> <strong style={{ color: "#166534" }}>{usd(fleteMensual)} / mes</strong></div>
-                <div>• <strong>Costo de envío anual (12 meses):</strong> <strong style={{ color: "#166534" }}>{usd(fleteAnual)}</strong></div>
+                <div>• Tarifa de flete: <strong>US$ {d.tarifaTkm.toFixed(2)} / t·km</strong></div>
+                <div>• <strong>Costo de envío mensual:</strong> <strong style={{ color: "#166534" }}>{usd(d.fleteMes)} / mes</strong></div>
+                <div>• <strong>Costo de envío anual (12 meses):</strong> <strong style={{ color: "#166534" }}>{usd(d.fleteAnio)}</strong></div>
                 <div>• Emisiones de transporte calculadas: <strong>{co2Mensual} tCO2e/mes</strong></div>
               </div>
             </div>
@@ -430,23 +514,23 @@ export default function CircuitoCompra({
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(190px, 1fr))", gap: 12, alignItems: "center" }}>
               <div>
                 <span style={{ fontSize: 11, opacity: 0.8, display: "block" }}>Subtotal Biomasa ({q * 12} t/año)</span>
-                <strong style={{ fontSize: 16 }}>{usd(subtotalBiomasaAnual)}</strong>
-                <span style={{ fontSize: 11, opacity: 0.8 }}> ({usd(subtotalBiomasaMensual)} / mes)</span>
+                <strong style={{ fontSize: 16 }}>{usd(d.mercaderiaAnio)}</strong>
+                <span style={{ fontSize: 11, opacity: 0.8 }}> ({usd(d.mercaderiaMes)} / mes)</span>
               </div>
               <div>
                 <span style={{ fontSize: 11, color: "#86efac", fontWeight: 700, display: "block" }}>
                   🚚 Costo de Envío / Flete (12 meses)
                 </span>
-                <strong style={{ fontSize: 16, color: "#86efac" }}>{usd(fleteAnual)}</strong>
-                <span style={{ fontSize: 11, color: "#dcfce7" }}> ({usd(fleteMensual)} / mes)</span>
+                <strong style={{ fontSize: 16, color: "#86efac" }}>{usd(d.fleteAnio)}</strong>
+                <span style={{ fontSize: 11, color: "#dcfce7" }}> ({usd(d.fleteMes)} / mes)</span>
               </div>
               <div style={{ borderLeft: "1px solid rgba(255,255,255,0.2)", paddingLeft: 12 }}>
                 <span style={{ fontSize: 11, opacity: 0.9, display: "block", fontWeight: 600 }}>
                   TOTAL CONSOLIDADO ANUAL
                 </span>
-                <strong style={{ fontSize: 22, color: "#ffffff" }}>{usd(totalAnual)}</strong>
+                <strong style={{ fontSize: 22, color: "#ffffff" }}>{usd(d.totalAnio)}</strong>
                 <span style={{ fontSize: 12, opacity: 0.9, display: "block" }}>
-                  Equivalente a <strong>{usd(totalMensual)} / mes</strong>
+                  Equivalente a <strong>{usd(d.totalMes)} / mes</strong>
                 </span>
               </div>
             </div>
@@ -647,15 +731,15 @@ export default function CircuitoCompra({
             <strong>Desglose mensual de la orden:</strong>
             <div style={{ display: "flex", justifyContent: "space-between", marginTop: 4 }}>
               <span>Mercadería ({q} t):</span>
-              <span>{usd(subtotalBiomasaMensual)}</span>
+              <span>{usd(d.mercaderiaMes)}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", color: "#15803d", fontWeight: 600 }}>
               <span>🚚 Costo de envío / Flete ({pkm} km):</span>
-              <span>{usd(fleteMensual)}</span>
+              <span>{usd(d.fleteMes)}</span>
             </div>
             <div style={{ display: "flex", justifyContent: "space-between", borderTop: "1px dashed #cbd5e1", paddingTop: 6, marginTop: 6, fontWeight: 800, fontSize: 15 }}>
               <span>Total mensual:</span>
-              <span>{usd(totalMensual)}</span>
+              <span>{usd(d.totalMes)}</span>
             </div>
           </div>
           <div style={{ color: "#15803d", fontWeight: 600, marginTop: 4 }}>
