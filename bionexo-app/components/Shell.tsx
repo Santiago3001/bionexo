@@ -68,7 +68,16 @@ export function Shell({ children }: { children: ReactNode }) {
           cookieVigente = Number(datos.exp ?? 0) * 1000 > Date.now();
         }
       } catch { cookieVigente = false; }
-      if (cookieVigente) return;
+      if (cookieVigente) {
+        // Si la restauración no llega, la cookie quedó huérfana (por ejemplo la
+        // sesión se revocó en Supabase): la limpiamos y volvemos al ingreso para
+        // no dejar a la persona en una pantalla vacía.
+        const esperar = window.setTimeout(() => {
+          document.cookie = "bionexo_auth=; path=/; max-age=0";
+          router.replace("/");
+        }, 4000);
+        return () => window.clearTimeout(esperar);
+      }
       router.replace("/");
       return;
     }
@@ -84,7 +93,15 @@ export function Shell({ children }: { children: ReactNode }) {
     return <main style={{ minHeight: "70vh", display: "grid", placeItems: "center" }}><p>Cargando tu espacio BioNexo…</p></main>;
   }
 
-  if (!user) return null;
+  // Sin usuario (sesión caída o recién iniciada): mientras redirige, mostramos
+  // un mensaje en vez de una pantalla vacía.
+  if (!user) {
+    return (
+      <main style={{ minHeight: "70vh", display: "grid", placeItems: "center" }}>
+        <p>Verificando tu sesión…</p>
+      </main>
+    );
+  }
 
   return (
     <div>

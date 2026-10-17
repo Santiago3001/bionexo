@@ -121,6 +121,43 @@ function Seccion({
   );
 }
 
+function PanelPlegable({
+  titulo,
+  resumen,
+  children,
+}: {
+  titulo: string;
+  resumen: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <details className="bn-card" style={{ padding: 0, overflow: "hidden" }}>
+      <summary
+        style={{
+          cursor: "pointer",
+          listStyle: "none",
+          padding: "16px 18px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: 12,
+        }}
+      >
+        <span>
+          <strong>{titulo}</strong>
+          <span style={{ display: "block", marginTop: 3, fontSize: 12.5, color: "var(--color-muted-fg)" }}>
+            {resumen}
+          </span>
+        </span>
+        <Badge color="#166534" bg="#dcfce7">Ver detalle</Badge>
+      </summary>
+      <div style={{ borderTop: "1px solid var(--color-border)", padding: "16px 18px", display: "grid", gap: 14 }}>
+        {children}
+      </div>
+    </details>
+  );
+}
+
 export default function BioNexoCarbon() {
   const { pubs, user } = useStore();
 
@@ -289,17 +326,19 @@ export default function BioNexoCarbon() {
               <h2 style={{ margin: 0 }}>BioNexo Carbon</h2>
               <Badge color="#166534" bg="#dcfce7">Módulo ambiental principal</Badge>
             </div>
-            <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.55 }}>
-              Analizá con la IA de la plataforma el potencial ambiental de lo que publicás, compará
-              destinos comerciales y ambientales (biomasa, biochar, construcción), identificá
-              compradores reales y requisitos de certificación, calculá emisiones con factores
-              documentados y registrá acuerdos de reparto con tu comprador.
+            <p style={{ margin: "8px 0 0", fontSize: 14, lineHeight: 1.5 }}>
+              Analizá una publicación, compará destinos y registrá su trazabilidad y potencial de certificación.
             </p>
           </div>
           <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "center" }}>
             <Badge color="#1d4ed8" bg="#dbeafe">1. Impacto estimado</Badge>
             <Badge color="#92400e" bg="#fef3c7">2. Potencial de certificación</Badge>
             <Badge color="#991b1b" bg="#fee2e2">3. Créditos certificados: 0</Badge>
+            <ReporteButton
+              tipo="carbono"
+              archivo="bionexo-carbon.pdf"
+              label="Descargar PDF"
+            />
           </div>
         </div>
         <p
@@ -314,11 +353,8 @@ export default function BioNexoCarbon() {
             padding: "10px 14px",
           }}
         >
-          <strong>Importante:</strong> vender un subproducto <strong>no</strong> genera créditos de
-          carbono automáticamente. Las tres categorías de arriba se muestran separadas todo el
-          tiempo: lo que se estima, lo que faltaría para certificar y lo que está realmente
-          certificado (hoy: ninguno). No se muestran bonos, compradores ni resultados ambientales
-          inventados.
+          <strong>Importante:</strong> vender un subproducto no genera créditos automáticamente.
+          Las estimaciones no son una certificación y sólo se muestran datos verificables de la plataforma.
         </p>
       </Card>
 
@@ -425,7 +461,12 @@ export default function BioNexoCarbon() {
 
             <p style={{ margin: 0, fontSize: 14, lineHeight: 1.6 }}>{analisis.resumen}</p>
 
-            <div>
+            <details style={{ border: "1px solid var(--color-border)", borderRadius: 14, overflow: "hidden" }}>
+              <summary style={{ cursor: "pointer", padding: "12px 14px", fontWeight: 700 }}>
+                Ver destinos, compradores y requisitos de certificación
+              </summary>
+              <div style={{ borderTop: "1px solid var(--color-border)", padding: 14, display: "grid", gap: 16 }}>
+              <div>
               <h4 style={{ margin: "0 0 8px" }}>Destinos comerciales y ambientales comparados</h4>
               <div style={{ overflowX: "auto" }}>
                 <table style={{ width: "100%", borderCollapse: "collapse", minWidth: 620 }}>
@@ -556,12 +597,17 @@ export default function BioNexoCarbon() {
                 ))}
               </div>
             ) : null}
+              </div>
+            </details>
           </div>
         ) : null}
       </Seccion>
 
       {/* -------------------- 2. FACTORES Y EMISIONES -------------------- */}
-      <Seccion n={2} titulo="Emisiones estimadas con factores verificables" hint="cada factor muestra su fuente y su estado">
+      <PanelPlegable
+        titulo="Metodología y factores ambientales"
+        resumen={`${nf(tPublicadas, 1)} t publicadas · ${nf(emisionesTotales)} tCO2e de transporte estimado · créditos certificados: 0`}
+      >
         <div style={{ display: "grid", gap: 12, gridTemplateColumns: "repeat(auto-fit,minmax(200px,1fr))" }}>
           <Kpi label="Toneladas publicadas por vos" value={`${nf(tPublicadas, 1)} t`} hint={`${mias.length} publicación(es)`} />
           <Kpi label="Emisiones de transporte" value={`${nf(emisionesTotales)} tCO2e`} hint="Σ t × km × 0,062 kg CO2e/t·km ÷ 1.000" />
@@ -616,10 +662,13 @@ export default function BioNexoCarbon() {
           el protocolo del esquema elegido. Sin línea base del destino actual no se calcula ninguna
           emisión evitada.
         </p>
-      </Seccion>
+      </PanelPlegable>
 
       {/* --------------------- 3. ACUERDOS DE REPARTO --------------------- */}
-      <Seccion n={3} titulo="Acuerdos de reparto de beneficios" hint="registrados entre comprador y vendedor, integrados al chat y a los contratos">
+      <PanelPlegable
+        titulo="Acuerdos con compradores"
+        resumen={`${acuerdos.length} acuerdo(s) registrado(s) · vinculados al chat y contratos`}
+      >
         {acuerdos.length === 0 ? (
           <p style={{ margin: 0, fontSize: 14 }}>
             <Muted>
@@ -780,10 +829,13 @@ export default function BioNexoCarbon() {
             </div>
           </div>
         ) : null}
-      </Seccion>
+      </PanelPlegable>
 
       {/* --------------------- 4. TRAZABILIDAD GUARDADA --------------------- */}
-      <Seccion n={4} titulo="Trazabilidad del material" hint="análisis guardados, con fecha y fuente">
+      <PanelPlegable
+        titulo="Trazabilidad del material"
+        resumen={`${guardados.length} análisis guardado(s) con fecha, fuente y publicación`}
+      >
         {guardados.length === 0 ? (
           <p style={{ margin: 0, fontSize: 14 }}>
             <Muted>Ningún análisis guardado todavía. Hacé un análisis arriba y guardalo para dejar registro.</Muted>
@@ -828,33 +880,7 @@ export default function BioNexoCarbon() {
             ))}
           </div>
         )}
-      </Seccion>
-
-      {/* ---------------------------- 5. PDF ---------------------------- */}
-      <Card>
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: 14,
-            flexWrap: "wrap",
-            alignItems: "center",
-          }}
-        >
-          <div>
-            <h3 style={{ margin: "0 0 6px" }}>5. Informe PDF de BioNexo Carbon</h3>
-            <Muted>
-              Incluye trazabilidad, análisis guardados, factores con su fuente, compradores, acuerdos
-              de reparto y requisitos de certificación.
-            </Muted>
-          </div>
-          <ReporteButton
-            tipo="carbono"
-            archivo="bionexo-carbon.pdf"
-            label="Descargar análisis BioNexo Carbon (PDF)"
-          />
-        </div>
-      </Card>
+      </PanelPlegable>
     </>
   );
 }

@@ -42,11 +42,20 @@ components/
   NotificacionesBell.tsx    Campana realtime + recordatorios de entregas
   ChatComercial.tsx         Hilo + resumen de condiciones + borrador de contrato
   Contratos.tsx             Estados, progreso y calendario de entregas
+  BioNexoCarbon.tsx         Módulo ambiental del vendedor (análisis, factores, acuerdos, trazabilidad)
+  CarbonChatCard.tsx        Propuesta de acuerdo de reparto desde el chat
+  Impacto.tsx               Reporte de impacto: BioNexo Carbon + indicadores previos
 lib/
   store.tsx                 Sesión Supabase, cookie bionexo_auth, perfil, datos
   chat.ts                   Conversaciones, mensajes, acuerdos, notificaciones
   contracts.ts              Contratos, entregas, recordatorios
   routes.ts                 Rutas de transporte desde la base
+  carbon-core.ts            Núcleo de BioNexo Carbon: factores, destinos, análisis por reglas
+  carbon.ts                 Datos de Carbon en el navegador (análisis y acuerdos)
+app/api/
+  agente/                   Endpoint del agente (IA con fallback por reglas)
+  carbon/                   Endpoint de análisis ambiental (IA con fallback por reglas)
+  reporte/                  Reportes PDF (`tipo=impacto` y `tipo=carbono`)
 proxy.ts                    Protección server-side (cookie optimista; RLS = autoridad)
 supabase/migrations/        Esquema y políticas (aplicadas en orden)
 ```
@@ -70,6 +79,7 @@ Migraciones en `supabase/migrations/`, aplicadas en orden sobre el proyecto Supa
 6. `20261017000000_bionexo_futuros.sql` — ofertas y contratos a futuro.
 7. `20261017090000_bionexo_carbon.sql` — análisis y acuerdos de BioNexo Carbon.
 8. `20261017100000_demo_operacion_integrada.sql` — operación compartida entre comprador, vendedor y transportista.
+9. `20261017113000_compact_carbon_and_recalibrate.sql` — recalibra análisis de Carbon guardados con la fórmula anterior (no borra registros).
 
 ## Flujo único de la demo
 

@@ -1,7 +1,8 @@
-# Implementación técnica — Fases 1 a 4
+# Implementación técnica — Fases 1 a 4 + BioNexo Carbon
 
-> Estado: **completado y probado de punta a punta** (16/10/2026).
-> Alcance de este documento: fases 1 a 4 del plan de implementación de BioNexo NEA.
+> Estado: **completado y probado de punta a punta** (16-17/10/2026).
+> Alcance de este documento: fases 1 a 4 del plan de implementación de BioNexo NEA y el módulo
+> **BioNexo Carbon** dentro de “Reporte de Impacto”.
 > Código en [`bionexo-app/`](../bionexo-app/) (Next.js 16 + Supabase).
 
 ---
@@ -21,7 +22,7 @@ Variables de entorno:
 |---|---|
 | `NEXT_PUBLIC_SUPABASE_URL` | Proyecto Supabase (Settings → API) |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Clave pública; el navegador la usa y el servidor la valida por `auth.getUser()` |
-| `OPENAI_API_KEY` / `OPENAI_MODEL` | **Opcional y fuera de este alcance**: si falta, `/api/agente` responde 503 `ia_no_configurada` y la UI cae al motor por reglas |
+| `GEMINI_API_KEY` / `GEMINI_MODEL` | **Opcional**: si falta o falla, `/api/agente` y `/api/carbon` responden con el motor por reglas (sin 500). Reiniciar el server después de agregarla |
 
 ### Cuentas de prueba (también figuran en el README)
 
@@ -161,7 +162,74 @@ Todo queda protegido por políticas `to authenticated`; el criterio es siempre *
 
 ---
 
-## 6. Verificación E2E realizada (16/10/2026)
+## 6. BioNexo Carbon — módulo ambiental dentro de “Reporte de Impacto”
+
+> Implementado y probado de punta a punta (17/10/2026). Vive en el panel del vendedor,
+> arriba de “Otros indicadores de impacto ambiental”, que quedan intactos y funcionando igual.
+
+### Principios (no negociables)
+
+1. **Vender un subproducto no genera créditos de carbono.** La UI separa siempre tres conceptos:
+   *impacto estimado* → *potencial de certificación* → *créditos realmente certificados* (hoy: **0**).
+2. **Nada inventado:** sin línea base del destino actual la app no calcula emisiones evitadas
+   (`evitacion: null` en todos los destinos); sin rendimiento de pirólisis y análisis de laboratorio
+   el almacenamiento en biochar queda `no calculable`; los compradores y la demanda salen sólo de
+   datos reales de la plataforma, agregados y sin datos personales.
+
+### Base de datos — `20261017090000_bionexo_carbon.sql`
+
+| Objeto | Contenido |
+|---|---|
+| `carbon_analyses` | Análisis guardados (trazabilidad): producto, toneladas, destino, fuente (`ia`/`reglas`), resumen, factores JSON, `co2_stored`/`co2_avoided` (siempre `null`/`0` sin verificación), nivel de certificación. RLS: cada usuario ve/crea sólo los suyos |
+| `carbon_agreements` | Acuerdos comprador/vendedor de reparto de ingresos por créditos: producto, toneladas, porcentajes, estado (`propuesto/aceptado/rechazado/archivado`), enlace a la conversación y al contrato. RLS: sólo las dos partes |
+| `demanda_por_producto()` | RPC `security definer`: demanda **agregada** por producto (compradores activos, toneladas, ciudades). No expone PII |
+| Realtime + 8 políticas | Publicación de `carbon_analyses` y `carbon_agreements` en `supabase_realtime` |
+
+`20261017113000_compact_carbon_and_recalibrate.sql` recalibra registros guardados antes de corregir
+la unidad del factor de transporte y de retirar el cálculo incompleto de biochar: no borra filas,
+fuerza `co2_stored = null`, pone `almacenamiento = null` en cada destino y actualiza el resumen.
+
+### Código
+
+| Archivo | Rol |
+|---|---|
+| `lib/carbon-core.ts` | Núcleo compartido (funciona también en el servidor): factores documentados con fuente y estado, destinos comparados por producto, `analizarPorReglas()` y salida normalizada para el modelo de IA |
+| `lib/carbon.ts` | Capa de datos del navegador: guardar/listar análisis, proponer/responder acuerdos, suscripción realtime, nombres de contraparte vía `ver_perfiles` |
+| `app/api/carbon/route.ts` | Endpoint de análisis: usa la IA si hay clave configurada; si no, responde con el motor por reglas (nunca 500) |
+| `components/BioNexoCarbon.tsx` | Panel principal (ver “Pantalla” abajo) |
+| `components/CarbonChatCard.tsx` + `ChatComercial.tsx` | Tarjeta en el chat para proponer acuerdos de reparto (porcentaje vendedor/comprador, notas) y responderlos; la otra parte recibe notificación |
+| `app/api/reporte/route.ts` (`tipo=carbono`) | PDF con publicaciones, análisis (fecha/fuente/destino), demanda agregada, acuerdos y “Créditos certificados: 0”. Respuestas con `Cache-Control: no-store` |
+
+### Pantalla (compacta, sin perder funcionalidad)
+
+- **Cabecera**: título, los tres badges (impacto estimado · potencial de certificación · créditos
+  certificados: 0) y el botón de PDF.
+- **Análisis (siempre visible)**: selector de publicación, botón de análisis, 4 KPIs
+  (transporte, almacenamiento potencial, emisiones evitadas, potencial de certificación) y el
+  resumen; destinos comparados, compradores y requisitos quedan en un desplegable.
+- **Tres paneles plegables**: “Metodología y factores ambientales” (factores con fuente y estado),
+  “Acuerdos con compradores” (propuestas y estados, integrados al chat y a los contratos) y
+  “Trazabilidad del material” (análisis guardados con fecha, fuente y destino).
+- Debajo, **“Otros indicadores de impacto ambiental”** con todo lo previo sin cambios.
+
+### E2E con base real (17/10/2026)
+
+Análisis guardado en trazabilidad · propuesta de 15 t 60/40 desde el chat · notificación al
+comprador · aceptación → `ACEPTADO` en ambos paneles y en el PDF · demanda agregada
+(“1 comprador activo por 20 t (Resistencia)”) sin PII · `tipo=carbono` verificado con `pdftotext`
+y `tipo=impacto` sin regresión.
+
+### Bugs encontrados y corregidos
+
+1. **PDF servido desde caché** (versión vieja en el navegador): `cache: "no-store"` en el fetch del
+   botón y `Cache-Control: no-store` en la respuesta de `/api/reporte`.
+2. **Pantalla en blanco con cookie huérfana** (sesión revocada en Supabase): `Shell` espera 4 s,
+   limpia la cookie y redirige a `/` mostrando “Verificando tu sesión…”.
+3. **Formato de porcentajes** en los triggers de notificación (`60.00%` → `60%`).
+
+---
+
+## 7. Verificación E2E realizada (16/10/2026)
 
 Ejecutada en el navegador sobre `localhost:3000` con datos reales en Supabase:
 
@@ -191,16 +259,16 @@ Ejecutada en el navegador sobre `localhost:3000` con datos reales en Supabase:
 
 ---
 
-## 7. Pendientes (fuera de este alcance)
+## 8. Pendientes (fuera de este alcance)
 
-- **Fase 5 — Reporte PDF real**: existe `app/api/reporte/route.ts` + `components/ReporteButton.tsx`; requiere `pdf-lib` y `SUPABASE_DB_PASSWORD` no es necesaria (usa el token de sesión).
-- **Fase 6 — Agente con IA real por API**: `app/api/agente/route.ts` está listo, **falta `OPENAI_API_KEY` en `.env.local`**; sin la clave responde 503 `ia_no_configurada` y la UI usa el motor por reglas (verificado).
+- **Fase 5 — Reporte PDF real**: ✅ implementada (`app/api/reporte/route.ts` con `pdf-lib`, tipos `impacto` y `carbono`).
+- **Fase 6 — Agente con IA real por API**: `app/api/agente/route.ts` y `/api/carbon` usan Gemini si hay `GEMINI_API_KEY` en `.env.local` (hoy **vacía**: sin clave responden con el motor por reglas). Reiniciar el server tras agregar la clave.
 - **Fase 7 — Rutas de transporte persistentes + formulario de subproducto para comprador**: `lib/routes.ts` y el panel de rutas existen; el formulario de subproducto sigue deshabilitado para el rol comprador (sólo lectura).
-- **Fase 8 — Build + E2E + push completos**: build y push de fases 1-4 hechos (commit `8a1d0b6`).
+- **Fase 8 — Build + E2E + push completos**: fases 1-4 (commit `8a1d0b6`/`ef2f1f3`) y BioNexo Carbon publicados.
 
 ---
 
-## 8. Seguridad y supuestos
+## 9. Seguridad y supuestos
 
 - La clave anon y la URL son públicas por diseño: **RLS es la única autorización real**; el proxy y la cookie sólo evitan mostrar vistas ajenas.
 - Ninguna vista renderiza datos de tablas sin políticas: si una política falta, la API devuelve 0 filas y la UI muestra estado vacío.
