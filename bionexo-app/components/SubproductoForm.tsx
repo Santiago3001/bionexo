@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { CITIES, PRODUCTS } from "@/lib/data";
 import { type OfferInput, useStore } from "@/lib/store";
+import ProductPicker from "./ProductPicker";
 import { Btn, Card, Muted } from "./ui";
 
 const initialOffer: OfferInput = {
@@ -57,7 +58,15 @@ export default function SubproductoForm({ vendedor }: { vendedor: boolean }) {
 
       <form onSubmit={publish}>
         <div style={{ display: "grid", gap: 16, gridTemplateColumns: "repeat(auto-fit,minmax(250px,1fr))" }}>
-          <Field label="Nombre del subproducto"><select className="bn-input" value={offer.product} disabled={!vendedor} onChange={(event) => setOffer({ ...offer, product: event.target.value })}>{PRODUCTS.map((product) => <option key={product}>{product}</option>)}</select></Field>
+          <div style={{ gridColumn: "1 / -1", display: "grid", gap: 6 }}>
+            <strong style={{ fontSize: 13 }}>Nombre del subproducto</strong>
+            <ProductPicker
+              products={PRODUCTS}
+              value={offer.product}
+              disabled={!vendedor}
+              onChange={(product) => setOffer({ ...offer, product })}
+            />
+          </div>
           <Field label="Categoría"><input className="bn-input" required disabled={!vendedor} value={offer.category} onChange={(event) => setOffer({ ...offer, category: event.target.value })} /></Field>
           <Field label="Proceso que lo genera"><input className="bn-input" required disabled={!vendedor} value={offer.originProcess} onChange={(event) => setOffer({ ...offer, originProcess: event.target.value })} /></Field>
           <Field label="Cantidad disponible (toneladas)"><input className="bn-input" type="number" min="0.01" step="0.01" required disabled={!vendedor} value={offer.quantityTons} onChange={(event) => setOffer({ ...offer, quantityTons: Number(event.target.value) })} /></Field>

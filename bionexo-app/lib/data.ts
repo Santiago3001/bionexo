@@ -17,12 +17,45 @@ export const CITIES: Record<CityName, { lat: number; lon: number }> = {
 };
 
 export const PRODUCTS = [
+  // --- NEA (Corrientes, Misiones, Chaco, Formosa) ---
   "Cascarilla de arroz",
   "Aserrín de pino",
   "Bagazo de caña",
   "Residuo de yerba",
   "Afrechillo de trigo",
   "Viruta de madera dura",
+  "Cáscara de tung",
+  "Cáscara de algodón",
+  "Fibra / Carpelo de algodón",
+  "Harina de algodón",
+  "Polvo de lijado de pino/eucalipto",
+  "Corteza de pino / eucalipto",
+  "Cáscara de citricos",
+
+  // --- Pellets y Densificados ---
+  "Pellet de cascarilla de arroz",
+  "Pellet de madera / biomasa",
+  "Pellet de alfalfa",
+  "Pellet de cáscara de girasol",
+  "Pellet de afrechillo de trigo",
+  "Pellet de soja",
+
+  // --- Centro, Pampeana y Cuyo ---
+  "Cáscara de maní",
+  "Cáscara de girasol",
+  "Expeller de soja",
+  "Expeller de girasol",
+  "Afrecho de maíz",
+  "Marlo / Rastrojo de maíz",
+  "Burlanda de maíz (DDGS seca / húmeda)",
+  "Orujo de uva seco",
+  "Escobajo de uva",
+
+  // --- NOA y Patagonia ---
+  "Malaza de caña de azúcar",
+  "Orujo / Orujillo de oliva",
+  "Carozo de durazno / ciruela",
+  "Pulpas de frutas (manzana/pera)",
 ];
 
 export interface Pub {
