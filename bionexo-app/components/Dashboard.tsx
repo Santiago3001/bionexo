@@ -105,13 +105,6 @@ export default function Dashboard() {
         </div>
       </Card>
 
-      <Card>
-        <strong>Logística de esta compra (simulado)</strong>
-        <div style={{ color: "#6b7f72", fontSize: 13 }}>
-          Mejor match: flete {matches[0] ? usd(matches[0].flete ?? 0) : "—"}/mes · emisiones de transporte {matches[0] ? (matches[0].co2 ?? 0).toFixed(2) + " tCO2e/mes" : "—"}.
-        </div>
-      </Card>
-
       {buyId !== null && <CircuitoCompra pubId={buyId} onClose={() => setBuyId(null)} />}
       {trkId !== null && <Trueque pubId={trkId} onClose={() => setTrkId(null)} />}
       <div style={{ display: "none" }}><Tag>x</Tag></div>
