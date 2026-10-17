@@ -27,13 +27,16 @@ export default function Page() {
 
   useEffect(() => {
     if (!user) return;
-    setForm({
-      name: user.name ?? "",
-      company: user.company ?? "",
-      cuit: user.cuit ?? "",
-      city: user.city ?? "Resistencia",
-      businessType: user.businessType ?? "",
-    });
+    const timer = window.setTimeout(() => {
+      setForm({
+        name: user.name ?? "",
+        company: user.company ?? "",
+        cuit: user.cuit ?? "",
+        city: user.city ?? "Resistencia",
+        businessType: user.businessType ?? "",
+      });
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [user]);
 
   if (!user) return null;

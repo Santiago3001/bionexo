@@ -73,7 +73,9 @@ export const NEEDS: Record<string, { product: string; t: number }> = {
 };
 
 export const RATE = 0.09;
-export const CO2_FACTOR = 0.062;
+/** Factor demo documentado en kg CO2e por tonelada-kilómetro. */
+export const CO2_FACTOR_KG_PER_TKM = 0.062;
+export const CO2_FACTOR = CO2_FACTOR_KG_PER_TKM;
 
 export function km(a: string, b: string): number {
   const A = CITIES[a as CityName];
@@ -114,19 +116,20 @@ export function computeMatches(pubs: Pub[], need: Need, buyerCompany: string, fi
     })
     .map((p) => ({ ...p }));
   if (!list.length) return list;
-  const minP = Math.min(...list.map((p) => p.price), 1);
+  const minP = Math.min(...list.map((p) => p.price));
   list.forEach((p) => {
     const pkm = km(need.city, p.city);
+    const quotedTons = Math.min(Math.max(need.t, 0), p.t);
     p.km = pkm;
     const dist = Math.max(0, 1 - pkm / 1000);
     const price = minP / p.price;
     const avail = Math.min(1, p.t / need.t);
     const qual = p.q / 10;
     p.score = Math.round((0.35 * dist + 0.3 * price + 0.2 * avail + 0.15 * qual) * 100);
-    p.cost = p.t * p.price;
-    p.flete = p.t * pkm * RATE;
+    p.cost = quotedTons * p.price;
+    p.flete = quotedTons * pkm * RATE;
     p.total = p.cost + p.flete;
-    p.co2 = (p.t * pkm * CO2_FACTOR) / 1000;
+    p.co2 = (quotedTons * pkm * CO2_FACTOR_KG_PER_TKM) / 1000;
   });
   const sorters: Record<string, (a: Pub, b: Pub) => number> = {
     score: (a, b) => (b.score ?? 0) - (a.score ?? 0),
@@ -155,6 +158,10 @@ export interface Order {
   st: number;
   eta: string;
   value: number;
+  buyerId?: string | null;
+  sellerId?: string | null;
+  carrierId?: string | null;
+  contractId?: string | null;
 }
 
 export const ORDER_STEPS = ["Orden confirmada", "Flete asignado", "Retirado", "En tránsito", "Entregado"];

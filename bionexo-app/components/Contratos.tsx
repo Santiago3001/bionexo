@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Card, Muted, Tag, Btn } from "@/components/ui";
 import { useStore } from "@/lib/store";
 import {
+  activarContratoConOperacion,
   cambiarEstadoContrato,
   listarContratos,
   marcarEntrega,
@@ -46,11 +47,12 @@ export default function Contratos() {
 
   useEffect(() => {
     if (!user) return;
-    void refrescar();
+    const timer = window.setTimeout(() => void refrescar(), 0);
+    return () => window.clearTimeout(timer);
   }, [user, refrescar]);
 
   async function activar(contrato: Contrato) {
-    const result = await cambiarEstadoContrato(contrato.id, "activo");
+    const result = await activarContratoConOperacion(contrato.id);
     setMensaje(result.message);
     setEsError(!result.ok);
     await refrescar();

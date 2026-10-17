@@ -48,19 +48,22 @@ export default function Mapa() {
   // Sin rutas en la base: usamos las cargas locales como ruta simulada.
   useEffect(() => {
     if (!simuladas || rutas.length > 0 || loads.length === 0) return;
-    setRutas(loads.map((l, i): RutaTransporte => ({
-      id: i + 1,
-      vehicleType: l.t > 20 ? "Semirremolque" : l.t > 10 ? "Camión 20 t" : "Camión 10 t",
-      capacityTons: l.t > 20 ? 28 : l.t > 10 ? 20 : 12,
-      originCity: l.from,
-      destinationCity: D0,
-      availableDate: new Date().toISOString().slice(0, 10),
-      routeType: l.from === "Corrientes" ? "retorno" : "planificada",
-      pricePerKm: Math.round(l.perKm * 100) / 100,
-      status: "available",
-      takenBy: null,
-      takenAt: null,
-    })));
+    const timer = window.setTimeout(() => {
+      setRutas(loads.map((l, i): RutaTransporte => ({
+        id: i + 1,
+        vehicleType: l.t > 20 ? "Semirremolque" : l.t > 10 ? "Camión 20 t" : "Camión 10 t",
+        capacityTons: l.t > 20 ? 28 : l.t > 10 ? 20 : 12,
+        originCity: l.from,
+        destinationCity: D0,
+        availableDate: new Date().toISOString().slice(0, 10),
+        routeType: l.from === "Corrientes" ? "retorno" : "planificada",
+        pricePerKm: Math.round(l.perKm * 100) / 100,
+        status: "available",
+        takenBy: null,
+        takenAt: null,
+      })));
+    }, 0);
+    return () => window.clearTimeout(timer);
   }, [simuladas, rutas, loads]);
 
   const sel = loads.find((r) => r.id === selId) ?? loads[0];

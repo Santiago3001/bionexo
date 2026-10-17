@@ -67,6 +67,30 @@ Migraciones en `supabase/migrations/`, aplicadas en orden sobre el proyecto Supa
 3. `20261016140000_bionexo_chat_realtime.sql` — realtime + RPC `crear_contrato`.
 4. `20261016150000_bionexo_ver_perfiles.sql` — RPC `ver_perfiles`.
 5. `20261016160000_bionexo_notifications_insert.sql` — política de inserción propia para recordatorios.
+6. `20261017000000_bionexo_futuros.sql` — ofertas y contratos a futuro.
+7. `20261017090000_bionexo_carbon.sql` — análisis y acuerdos de BioNexo Carbon.
+8. `20261017100000_demo_operacion_integrada.sql` — operación compartida entre comprador, vendedor y transportista.
+
+## Flujo único de la demo
+
+1. El comprador carga cantidad, producto y destino; el matching calcula sobre la cantidad solicitada o disponible, la menor.
+2. El comprador abre una negociación real desde una oferta con vendedor registrado.
+3. Ambas partes confirman las condiciones y generan el contrato.
+4. Al activar el contrato se publica una sola operación logística compartida.
+5. El transportista toma la operación y es el único que puede avanzar el estado; comprador y vendedor ven el mismo seguimiento.
+
+Para verificar el flujo con las tres cuentas demo: `npm run verify:demo`.
+
+## IA con Gemini
+
+Configurá en `.env.local` una clave nueva y privada:
+
+```env
+GEMINI_API_KEY=tu_clave_nueva
+GEMINI_MODEL=gemini-3.8-flash
+```
+
+El agente usa el catálogo real de Supabase y nunca expone la clave al navegador.
 
 ## Cuentas de prueba
 

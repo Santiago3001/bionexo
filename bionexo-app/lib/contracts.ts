@@ -178,6 +178,19 @@ export async function cambiarEstadoContrato(
   return { ok: true, message: status === "activo" ? "Contrato activado." : "Estado actualizado." };
 }
 
+/** Activa el contrato y crea exactamente una operación logística compartida. */
+export async function activarContratoConOperacion(
+  contractId: string,
+): Promise<{ ok: boolean; message: string }> {
+  const supabase = getSupabaseBrowserClient();
+  if (!supabase) return { ok: false, message: "Sin conexión." };
+  const { data, error } = await supabase.rpc("activar_contrato_y_crear_operacion", {
+    p_contract_id: contractId,
+  });
+  if (error) return { ok: false, message: error.message };
+  return { ok: true, message: `Contrato activado. Operación ${String(data)} publicada para transporte.` };
+}
+
 export async function marcarEntrega(entregaId: number): Promise<{ ok: boolean; message: string }> {
   const supabase = getSupabaseBrowserClient();
   if (!supabase) return { ok: false, message: "Sin conexión." };

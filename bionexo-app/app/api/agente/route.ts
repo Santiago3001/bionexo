@@ -110,6 +110,8 @@ export async function POST(request: Request) {
       .from("offers")
       .select("*")
       .eq("status", "active")
+      .eq("is_simulated", false)
+      .not("owner_id", "is", null)
       .order("created_at", { ascending: false })
       .limit(20),
     supabase
@@ -153,15 +155,15 @@ export async function POST(request: Request) {
     };
   });
 
-  const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
-  if (!OPENAI_API_KEY) {
+  const geminiApiKey = process.env.GEMINI_API_KEY;
+  if (!geminiApiKey) {
     return Response.json(
-      { error: "ia_no_configurada", message: "Falta OPENAI_API_KEY en .env.local" },
+      { error: "ia_no_configurada", message: "Falta GEMINI_API_KEY en .env.local" },
       { status: 503 },
     );
   }
 
-  const model = process.env.OPENAI_MODEL || "gpt-4.1-mini";
+  const model = process.env.GEMINI_MODEL || "gemini-3.8-flash";
 
   const systemPrompt = [
     "Sos el asistente comercial de BioNexo NEA, un marketplace B2B de biomasa residual del Litoral argentino (Chaco, Corrientes, Misiones, Formosa y Santa Fe). Respondés SIEMPRE en español rioplatense, concreto y breve.",
@@ -194,11 +196,11 @@ export async function POST(request: Request) {
   const timeout = setTimeout(() => controller.abort(), 25_000);
 
   try {
-    const respuesta = await fetch("https://api.openai.com/v1/chat/completions", {
+    const respuesta = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${OPENAI_API_KEY}`,
+        Authorization: `Bearer ${geminiApiKey}`,
       },
       body: JSON.stringify({
         model,
@@ -216,7 +218,7 @@ export async function POST(request: Request) {
     if (!respuesta.ok) {
       const detalle = await respuesta.text().catch(() => "");
       return Response.json(
-        { error: "openai_error", message: `OpenAI respondió ${respuesta.status}. ${detalle.slice(0, 300)}` },
+        { error: "gemini_error", message: `Gemini respondió ${respuesta.status}. ${detalle.slice(0, 300)}` },
         { status: 502 },
       );
     }
@@ -227,7 +229,7 @@ export async function POST(request: Request) {
     const content = completion.choices?.[0]?.message?.content;
     if (!content) {
       return Response.json(
-        { error: "respuesta_vacia", message: "OpenAI devolvió una respuesta vacía." },
+        { error: "respuesta_vacia", message: "Gemini devolvió una respuesta vacía." },
         { status: 502 },
       );
     }
@@ -251,7 +253,7 @@ export async function POST(request: Request) {
       );
     }
     return Response.json(
-      { error: "openai_error", message: `No se pudo consultar la IA: ${err instanceof Error ? err.message : "error desconocido"}` },
+      { error: "gemini_error", message: `No se pudo consultar Gemini: ${err instanceof Error ? err.message : "error desconocido"}` },
       { status: 502 },
     );
   } finally {

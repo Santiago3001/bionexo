@@ -138,20 +138,23 @@ export default function MapaCargas() {
   useEffect(() => {
     if (!ok) return;
     let cancelado = false;
-    setTrazando(true);
-    setFoco(null);
-    setEstado("idle");
-    setToast(null);
-    setTramos(sel.tramos.map(([a, b, tipo]) => ({ tipo, ...directo(a, b) })));
-    void Promise.all(sel.tramos.map(async ([a, b, tipo]): Promise<TramoInfo> => ({ tipo, ...(await porCalles(a, b)) })))
-      .then((finales) => {
-        if (!cancelado) setTramos(finales);
-      })
-      .finally(() => {
-        if (!cancelado) setTrazando(false);
-      });
+    const timer = window.setTimeout(() => {
+      setTrazando(true);
+      setFoco(null);
+      setEstado("idle");
+      setToast(null);
+      setTramos(sel.tramos.map(([a, b, tipo]) => ({ tipo, ...directo(a, b) })));
+      void Promise.all(sel.tramos.map(async ([a, b, tipo]): Promise<TramoInfo> => ({ tipo, ...(await porCalles(a, b)) })))
+        .then((finales) => {
+          if (!cancelado) setTramos(finales);
+        })
+        .finally(() => {
+          if (!cancelado) setTrazando(false);
+        });
+    }, 0);
     return () => {
       cancelado = true;
+      window.clearTimeout(timer);
     };
   }, [sel, ok]);
 

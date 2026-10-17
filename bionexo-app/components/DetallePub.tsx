@@ -33,7 +33,7 @@ export default function DetallePub({ pub, onBuy, compact = false }: { pub: Pub; 
         {pub.frequency ? <Row k="Frecuencia" v={pub.frequency} /> : null}
 
         <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
-          {onBuy ? <Btn onClick={() => onBuy(pub.id)}>Comprar ahora</Btn> : null}
+          {onBuy ? <Btn onClick={() => onBuy(pub.id)}>Negociar compra</Btn> : null}
           {compact ? (
             <Link href={`/comprador/subproducto/${pub.id}`} className="bn-btn bn-btn--sec" style={{ textDecoration: "none", padding: "12px 20px", fontSize: 14 }}>Abrir página completa</Link>
           ) : (

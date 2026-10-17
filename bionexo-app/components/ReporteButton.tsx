@@ -5,12 +5,14 @@ import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 type Estado = "idle" | "cargando" | "error";
 
 interface ReporteButtonProps {
-  tipo: "impacto" | "sostenibilidad";
+  tipo: "impacto" | "sostenibilidad" | "carbono";
   label?: string;
   kind?: "sec" | "warn" | "ghost";
+  /** Nombre del archivo descargado. */
+  archivo?: string;
 }
 
-export default function ReporteButton({ tipo, label = "Descargar reporte (PDF)", kind }: ReporteButtonProps) {
+export default function ReporteButton({ tipo, label = "Descargar reporte (PDF)", kind, archivo = "reporte-bionexo.pdf" }: ReporteButtonProps) {
   const [estado, setEstado] = useState<Estado>("idle");
   const [mensajeError, setMensajeError] = useState<string | null>(null);
 
@@ -28,6 +30,8 @@ export default function ReporteButton({ tipo, label = "Descargar reporte (PDF)",
 
       const res = await fetch(`/api/reporte?tipo=${encodeURIComponent(tipo)}`, {
         headers: { Authorization: `Bearer ${token}` },
+        // El reporte siempre se genera recién: nada de PDFs viejos en caché.
+        cache: "no-store",
       });
 
       if (!res.ok) {
@@ -45,7 +49,7 @@ export default function ReporteButton({ tipo, label = "Descargar reporte (PDF)",
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "reporte-bionexo.pdf";
+      a.download = archivo;
       document.body.appendChild(a);
       a.click();
       a.remove();

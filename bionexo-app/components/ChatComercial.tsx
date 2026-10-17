@@ -16,6 +16,7 @@ import {
   type Mensaje,
 } from "@/lib/chat";
 import { crearContrato } from "@/lib/contracts";
+import CarbonChatCard from "@/components/CarbonChatCard";
 
 const FRECUENCIAS = ["Semanal", "Quincenal", "Mensual"];
 
@@ -67,11 +68,12 @@ export default function ChatComercial({ conversationId }: { conversationId: stri
 
   useEffect(() => {
     if (!userId) return;
-    void refrescar();
+    const initial = window.setTimeout(() => void refrescar(), 0);
     const suscripcion = suscribirseAHilos(conversationId, () => void refrescar());
     const polling = window.setInterval(() => void refrescar(), 8000);
     return () => {
       suscripcion.close();
+      window.clearTimeout(initial);
       window.clearInterval(polling);
     };
   }, [conversationId, userId, refrescar]);
@@ -149,10 +151,6 @@ export default function ChatComercial({ conversationId }: { conversationId: stri
   const confirmoYo = Boolean(
     conversacion.soyComprador ? conversacion.buyerConfirmedAt : conversacion.sellerConfirmedAt,
   );
-  const confirmoOtro = Boolean(
-    conversacion.soyComprador ? conversacion.sellerConfirmedAt : conversacion.buyerConfirmedAt,
-  );
-
   return (
     <div style={{ display: "grid", gap: 16, gridTemplateColumns: "minmax(0,1fr)", maxWidth: 940 }}>
       {/* ------------------------------ Hilo ------------------------------ */}
@@ -401,6 +399,9 @@ export default function ChatComercial({ conversationId }: { conversationId: stri
           <p><Muted>No participás de este acuerdo comercial.</Muted></p>
         )}
       </Card>
+
+      {/* ------------- BioNexo Carbon: acuerdo de reparto de beneficios ------------- */}
+      <CarbonChatCard conversacion={conversacion} userId={userId} />
     </div>
   );
 }

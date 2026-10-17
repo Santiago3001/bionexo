@@ -1,12 +1,13 @@
 import { createClient } from "@supabase/supabase-js";
 import { PDFDocument, StandardFonts, rgb, type PDFFont, type PDFPage, type RGB } from "pdf-lib";
 import { CITIES, CO2_FACTOR, km } from "@/lib/data";
+import { FACTORES, REQUISITOS_BASE } from "@/lib/carbon-core";
 
 /* ------------------------------------------------------------------ */
 /*  Tipos                                                              */
 /* ------------------------------------------------------------------ */
 
-type TipoReporte = "impacto" | "sostenibilidad";
+type TipoReporte = "impacto" | "sostenibilidad" | "carbono";
 
 interface PerfilRow {
   id: string;
@@ -70,6 +71,61 @@ interface DatosReporte {
   kpis: Kpis;
   fecha: string;
   ciudadesRed: number;
+}
+
+/* --- Datos exclusivos del reporte BioNexo Carbon ------------------- */
+
+interface OfertaCarbonRow {
+  id: number;
+  product: string;
+  city: string;
+  quantity_tons: number | string;
+}
+
+interface AnalisisCarbonRow {
+  id: number;
+  product: string;
+  tons: number | string;
+  source: string;
+  summary: string;
+  pathway: string;
+  co2_avoided: number | string | null;
+  co2_stored: number | string | null;
+  certification_level: string;
+  certification_requirements: unknown;
+  created_at: string;
+}
+
+interface AcuerdoCarbonRow {
+  id: number;
+  seller_id: string;
+  buyer_id: string;
+  product: string;
+  tons: number | string;
+  seller_share_pct: number | string;
+  buyer_share_pct: number | string;
+  status: string;
+  notes: string;
+  created_at: string;
+}
+
+interface DemandaFila {
+  product: string;
+  compradores: number;
+  toneladas: number | string;
+  ciudades: string[];
+}
+
+interface DatosCarbono {
+  perfil: PerfilRow;
+  fecha: string;
+  ciudadesRed: number;
+  kpis: Kpis;
+  ofertas: OfertaCarbonRow[];
+  analisis: AnalisisCarbonRow[];
+  acuerdos: AcuerdoCarbonRow[];
+  demanda: DemandaFila[];
+  nombres: Record<string, string>;
 }
 
 /* ------------------------------------------------------------------ */
@@ -362,7 +418,7 @@ async function generarPdf(datos: DatosReporte): Promise<Uint8Array> {
   const parrafos: string[] = [];
   if (tipo === "impacto") {
     parrafos.push(
-      `Las emisiones de transporte se estiman con un factor de ${factorTxt} tCO2e por tonelada transportada por kilometro (transporte rodado, carga completa). La distancia se calcula con la formula haversine entre la ciudad del usuario y la ciudad de cada oferta, sobre las ${ciudadesRed} localidades de la red NEA, con un factor de correccion de ruta de 1,25 (radio terrestre de 6.371 km). Formula: emisiones = toneladas x distancia (km) x ${factorTxt} tCO2e/t*km. El total es la suma sobre las ofertas del usuario; el promedio se divide entre la cantidad de ofertas. Para las ordenes se aplica el mismo factor entre la ciudad de origen y la de destino.`,
+      `Las emisiones de transporte se estiman con un factor de ${factorTxt} kg CO2e por tonelada transportada por kilometro. La distancia se calcula con la formula haversine entre la ciudad del usuario y la ciudad de cada oferta, sobre las ${ciudadesRed} localidades de la red NEA, con un factor de correccion de ruta de 1,25 (radio terrestre de 6.371 km). Formula: emisiones (tCO2e) = toneladas x distancia (km) x ${factorTxt} kg CO2e/t*km / 1.000. El total es la suma sobre las ofertas del usuario; el promedio se divide entre la cantidad de ofertas. Para las ordenes se aplica el mismo factor entre la ciudad de origen y la de destino.`,
     );
   } else {
     parrafos.push(
@@ -407,6 +463,316 @@ async function generarPdf(datos: DatosReporte): Promise<Uint8Array> {
   const paginas = doc.getPages();
   paginas.forEach((p, i) => {
     const txt = ascii(`BioNexo NEA · Reporte informativo · Pagina ${i + 1} de ${paginas.length}`);
+    const w = regular.widthOfTextAtSize(txt, 8);
+    p.drawText(txt, { x: (ANCHO - w) / 2, y: 28, size: 8, font: regular, color: GRIS });
+  });
+
+  return doc.save();
+}
+
+/* ------------------------------------------------------------------ */
+/*  PDF BioNexo Carbon (tipo=carbono)                                  */
+/* ------------------------------------------------------------------ */
+
+async function generarPdfCarbono(d: DatosCarbono): Promise<Uint8Array> {
+  const doc = await PDFDocument.create();
+  const regular = await doc.embedFont(StandardFonts.Helvetica);
+  const negrita = await doc.embedFont(StandardFonts.HelveticaBold);
+
+  const ROTULO = "BioNexo Carbon";
+  let page = doc.addPage(A4);
+  dibujarEncabezado(page, regular, negrita, ROTULO);
+  const contenidoW = ANCHO - 2 * M;
+  let y = ALTO - ENC_H - 34;
+
+  const asegurar = (alto: number): void => {
+    if (y - alto < 52) {
+      page = doc.addPage(A4);
+      dibujarEncabezado(page, regular, negrita, ROTULO);
+      y = ALTO - ENC_H - 30;
+    }
+  };
+
+  const seccion = (texto: string): void => {
+    asegurar(48);
+    page.drawText(ascii(texto), { x: M, y, size: 11.5, font: negrita, color: VERDE });
+    y -= 8;
+    page.drawRectangle({ x: M, y: y - 2.5, width: Math.min(260, contenidoW), height: 2.5, color: VERDE });
+    y -= 20;
+  };
+
+  const parrafo = (
+    texto: string,
+    opts?: { bold?: boolean; size?: number; color?: RGB; despues?: number },
+  ): void => {
+    const size = opts?.size ?? 9;
+    const font = opts?.bold ? negrita : regular;
+    const lineas = partirLineas(texto, font, size, contenidoW);
+    if (lineas.length === 0) return;
+    asegurar(lineas.length * (size + 3) + 14);
+    y = dibujarParrafo(page, lineas, M, y, size, size + 3, font, opts?.color ?? OSCURO) - (opts?.despues ?? 8);
+  };
+
+  const item = (texto: string): void => {
+    const size = 9;
+    const lineas = partirLineas(texto, regular, size, contenidoW - 18);
+    if (lineas.length === 0) return;
+    asegurar(lineas.length * 12 + 8);
+    let ly = y;
+    page.drawText(ascii("-"), { x: M + 6, y: ly, size, font: negrita, color: VERDE });
+    for (const l of lineas) {
+      page.drawText(l, { x: M + 18, y: ly, size, font: regular, color: OSCURO });
+      ly -= 12;
+    }
+    y = ly - 4;
+  };
+
+  const tabla = (cols: { label: string; w: number }[], filas: string[][]): void => {
+    if (filas.length === 0) return;
+    const filaAlto = 16;
+    const cabAlto = 18;
+    const encabezado = (): void => {
+      page.drawRectangle({ x: M, y: y - cabAlto, width: contenidoW, height: cabAlto, color: VERDE });
+      let cx = M + 8;
+      for (const c of cols) {
+        page.drawText(ascii(c.label), { x: cx, y: y - cabAlto + 5.5, size: 9, font: negrita, color: BLANCO });
+        cx += c.w;
+      }
+    };
+
+    asegurar(cabAlto + filaAlto + 8);
+    let tablaTop = y;
+    encabezado();
+    let ry = y - cabAlto;
+
+    for (let i = 0; i < filas.length; i++) {
+      const fila = filas[i];
+      if (ry - filaAlto < 52) {
+        page.drawRectangle({ x: M, y: ry, width: contenidoW, height: tablaTop - ry, borderColor: LINEA, borderWidth: 1 });
+        asegurar(cabAlto + filaAlto + 8);
+        tablaTop = y;
+        encabezado();
+        ry = y - cabAlto;
+      }
+      if (i % 2 === 1) {
+        page.drawRectangle({ x: M, y: ry - filaAlto, width: contenidoW, height: filaAlto, color: FONDO });
+      }
+      let fx = M + 8;
+      fila.forEach((celda, j) => {
+        const col = cols[j];
+        if (!col) return;
+        dibujarAjustado(page, celda, {
+          x: fx,
+          y: ry - filaAlto + 5.5,
+          size: 8.5,
+          font: regular,
+          color: OSCURO,
+          max: col.w - 8,
+        });
+        fx += col.w;
+      });
+      ry -= filaAlto;
+    }
+
+    page.drawRectangle({ x: M, y: ry, width: contenidoW, height: tablaTop - ry, borderColor: LINEA, borderWidth: 1 });
+    y = ry - 22;
+  };
+
+  const aviso = (titulo: string, texto: string): void => {
+    const lineas = partirLineas(texto, negrita, 9, contenidoW - 24);
+    const alto = lineas.length * 12 + 34;
+    asegurar(alto + 30);
+    page.drawText(ascii(titulo), { x: M, y: y - 12, size: 9.5, font: negrita, color: VERDE });
+    y -= 18;
+    page.drawRectangle({ x: M, y: y - alto, width: contenidoW, height: alto, color: rgb(1, 0.976, 0.929), borderColor: VERDE, borderWidth: 1.5 });
+    let dy = y - 17;
+    for (const l of lineas) {
+      page.drawText(l, { x: M + 12, y: dy, size: 9, font: negrita, color: OSCURO });
+      dy -= 12;
+    }
+    y -= alto;
+  };
+
+  /* ------------------------------ Contenido ------------------------------ */
+
+  asegurar(90);
+  page.drawText(ascii("Analisis ambiental y potencial de certificacion"), {
+    x: M,
+    y,
+    size: 16,
+    font: negrita,
+    color: OSCURO,
+  });
+  y -= 19;
+  page.drawText(
+    ascii(
+      `${d.perfil.company_name || d.perfil.full_name || "Empresa"} · ${d.perfil.city || "-"} · ${d.kpis.ofertas} publicacion(es)`,
+    ),
+    { x: M, y, size: 9.5, font: regular, color: GRIS },
+  );
+  y -= 13;
+  page.drawText(ascii(`Generado el ${d.fecha}`), { x: M, y, size: 9, font: regular, color: GRIS });
+  y -= 24;
+
+  aviso(
+    "Las tres categorias de este informe",
+    "Impacto estimado: calculado con los factores documentados de la plataforma (seccion 3), es una estimacion informativa y NO una medicion certificada. Potencial de certificacion: describe que faltaria para certificar un proyecto (linea base, laboratorio, trazabilidad, verificador y registro). Creditos certificados: 0 - ni una publicacion ni un acuerdo registrado generan creditos de carbono por si solos.",
+  );
+  y -= 10;
+
+  // 1. Material publicado y trazabilidad.
+  seccion("1. Material publicado y trazabilidad");
+  if (d.ofertas.length > 0) {
+    tabla(
+      [
+        { label: "Producto / subproducto", w: 220 },
+        { label: "Ciudad", w: 150 },
+        { label: "Toneladas", w: 117 },
+      ],
+      d.ofertas.map((o) => [o.product, o.city, `${n1(num(o.quantity_tons))} t`]),
+    );
+  } else {
+    parrafo("No hay publicaciones propias registradas en este periodo.");
+  }
+  parrafo(
+    `Cada analisis guardado quedo asociado al material publicado (producto, toneladas y fecha) y puede reutilizarse en el chat comercial y en los contratos existentes. Distancia promedio de tu red: ${n1(d.kpis.distPromedio)} km.`,
+  );
+
+  // 2. Análisis ambientales guardados.
+  seccion("2. Análisis ambientales guardados");
+  if (d.analisis.length === 0) {
+    parrafo(
+      "Todavia no hay analisis guardados en la trazabilidad. Desde el panel de Reporte de Impacto se genera el analisis de cada publicacion y se guarda con su fecha, destino evaluado y factores aplicados.",
+    );
+  } else {
+    d.analisis.forEach((a, idx) => {
+      const fecha = new Date(a.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
+      const fuente = a.source === "ia" ? "IA asistida" : "reglas documentadas";
+      parrafo(`${idx + 1}) ${fecha} · ${a.product} · ${n1(num(a.tons))} t · fuente: ${fuente}`, {
+        bold: true,
+        size: 9.5,
+        despues: 4,
+      });
+      if (a.pathway) parrafo(`Destino evaluado principal: ${a.pathway}.`);
+      const almacenado = a.co2_stored === null ? "no calculable" : `${n2(num(a.co2_stored))} tCO2e (potencial teorico)`;
+      const evitado =
+        a.co2_avoided === null ? "sin linea base: no se calculan" : `${n2(num(a.co2_avoided))} tCO2e`;
+      parrafo(`Almacenamiento: ${almacenado}. Emisiones evitadas: ${evitado}. Nivel de certificacion: ${a.certification_level} (sin verificador externo).`);
+      if (a.summary) parrafo(a.summary, { size: 8.5, color: GRIS });
+      const requisitos = Array.isArray(a.certification_requirements)
+        ? (a.certification_requirements as unknown[]).filter((r): r is string => typeof r === "string").slice(0, 6)
+        : [];
+      requisitos.forEach((r) => item(r));
+      y -= 6;
+    });
+  }
+
+  // 3. Factores.
+  seccion("3. Factores de calculo y emisiones estimadas");
+  tabla(
+    [
+      { label: "Factor", w: 240 },
+      { label: "Valor y unidad", w: 130 },
+      { label: "Estado", w: 117 },
+    ],
+    FACTORES.map((f) => [
+      f.nombre,
+      f.valor === null ? `no calculable · ${f.unidad}` : `${String(f.valor).replace(".", ",")} · ${f.unidad}`,
+      f.estado === "requiere_verificacion"
+        ? "requiere verificacion"
+        : f.estado === "pendiente_dato"
+          ? "pendiente de dato"
+          : "referencia",
+    ]),
+  );
+  FACTORES.forEach((f) => parrafo(`${f.nombre}: ${f.fuente}`, { size: 8.5, color: GRIS, despues: 5 }));
+  parrafo(
+    `Emisiones de transporte de tus publicaciones con el factor interno de ${String(CO2_FACTOR).replace(".", ",")} kg CO2e/t*km: ${n2(d.kpis.co2Ofertas)} tCO2e en total y ${n2(d.kpis.co2PromedioOferta)} tCO2e en promedio por publicacion.`,
+    { bold: true },
+  );
+
+  // 4. Compradores disponibles.
+  seccion("4. Compradores disponibles y requisitos");
+  if (d.demanda.length > 0) {
+    tabla(
+      [
+        { label: "Producto demandado", w: 180 },
+        { label: "Compradores", w: 100 },
+        { label: "Toneladas", w: 100 },
+        { label: "Ciudades", w: 107 },
+      ],
+      d.demanda.map((x) => [
+        x.product,
+        String(x.compradores),
+        `${n1(num(x.toneladas))} t`,
+        x.ciudades.slice(0, 4).join(", ") || "-",
+      ]),
+    );
+    parrafo(
+      "La demanda se muestra agregada (conteo y volumen) para no exponer datos personales de los compradores. Los nombres propios aparecen unicamente cuando ya existe una conversacion comercial en la plataforma.",
+      { size: 8.5, color: GRIS },
+    );
+  } else {
+    parrafo("Hoy no hay necesidades de compra activas publicadas en la plataforma para estos productos.");
+  }
+
+  // 5. Acuerdos de reparto.
+  seccion("5. Acuerdos de reparto de beneficios por creditos");
+  if (d.acuerdos.length === 0) {
+    parrafo(
+      "No hay acuerdos de reparto registrados. Se proponen desde el chat comercial o desde el panel de BioNexo Carbon y la otra parte debe aceptarlos para quedar en estado 'aceptado'.",
+    );
+  } else {
+    tabla(
+      [
+        { label: "Fecha", w: 62 },
+        { label: "Material", w: 138 },
+        { label: "Vendedor / Comprador", w: 150 },
+        { label: "Reparto", w: 75 },
+        { label: "Estado", w: 62 },
+      ],
+      d.acuerdos.map((a) => [
+        new Date(a.created_at).toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "2-digit" }),
+        `${a.product} · ${n1(num(a.tons))} t`,
+        `${d.nombres[a.seller_id] ?? "Vendedor"} / ${d.nombres[a.buyer_id] ?? "Comprador"}`,
+        `${n1(num(a.seller_share_pct))}% / ${n1(num(a.buyer_share_pct))}%`,
+        a.status,
+      ]),
+    );
+    d.acuerdos
+      .filter((a) => a.notes && a.notes.trim())
+      .forEach((a) => parrafo(`Nota (${a.product}): ${a.notes}`, { size: 8.5, color: GRIS, despues: 5 }));
+    parrafo(
+      "Un acuerdo de reparto no genera creditos: fija por anticipado como se repartiria el ingreso si el proyecto llega a certificarse.",
+      { size: 8.5, color: GRIS },
+    );
+  }
+
+  // 6. Requisitos de certificación.
+  seccion("6. Requisitos para una posible certificacion");
+  parrafo(
+    "Esquemas habituales de referencia (verificar vigencia y elegibilidad con un verificador antes de invertir): Verra VCS, Gold Standard, Plan Vivo y CAM - Contribucion de Argentina a la Mitigacion Climatica.",
+  );
+  REQUISITOS_BASE.forEach((r) => item(r));
+
+  // 7. Metodología.
+  seccion("7. Metodologia y limites");
+  parrafo(
+    "El almacenamiento potencial en biochar no se cuantifica hasta contar con rendimiento de pirolisis, contenido de carbono, humedad y estabilidad medidos bajo el protocolo elegido. Las emisiones evitadas tampoco se calculan: dependen de la linea base real del destino actual del material, dato que debe aportar el productor.",
+  );
+  parrafo(
+    "Las cifras son estimaciones informativas y comparativas: no constituyen una medicion conforme a la GHG Protocol, una verificacion de terceros ni una certificacion ambiental. Vender un subproducto no genera creditos de carbono automaticamente.",
+  );
+
+  aviso(
+    "Aviso importante",
+    "Documento informativo generado por BioNexo NEA. No constituye una certificacion ambiental, una evaluacion de conformidad ni una oferta de venta de creditos de carbono. Los creditos certificados informados en este documento son 0.",
+  );
+
+  // Pie de página.
+  const paginas = doc.getPages();
+  paginas.forEach((p, i) => {
+    const txt = ascii(`BioNexo NEA · BioNexo Carbon · Pagina ${i + 1} de ${paginas.length}`);
     const w = regular.widthOfTextAtSize(txt, 8);
     p.drawText(txt, { x: (ANCHO - w) / 2, y: 28, size: 8, font: regular, color: GRIS });
   });
@@ -483,11 +849,11 @@ export async function GET(request: Request): Promise<Response> {
     for (const o of ofertas) {
       const d = km(perfil.city, o.city);
       distTotal += d;
-      co2Ofertas += num(o.quantity_tons) * d * CO2_FACTOR;
+      co2Ofertas += (num(o.quantity_tons) * d * CO2_FACTOR) / 1000;
     }
     let co2Ordenes = 0;
     for (const o of ordenes) {
-      co2Ordenes += num(o.quantity_tons) * km(o.origin_city, o.destination_city) * CO2_FACTOR;
+      co2Ordenes += (num(o.quantity_tons) * km(o.origin_city, o.destination_city) * CO2_FACTOR) / 1000;
     }
 
     const kpis: Kpis = {
@@ -508,24 +874,91 @@ export async function GET(request: Request): Promise<Response> {
       distPromedio: ofertas.length ? distTotal / ofertas.length : 0,
     };
 
+    const tipoParam = new URL(request.url).searchParams.get("tipo");
     const tipo: TipoReporte =
-      new URL(request.url).searchParams.get("tipo") === "sostenibilidad" ? "sostenibilidad" : "impacto";
+      tipoParam === "sostenibilidad" ? "sostenibilidad" : tipoParam === "carbono" ? "carbono" : "impacto";
+
+    const fecha = new Date().toLocaleString("es-AR", { dateStyle: "medium", timeStyle: "short" });
+
+    // 5) PDF BioNexo Carbon (análisis + potencial de certificación).
+    if (tipo === "carbono") {
+      const [ofertasRes, analisisRes, acuerdosRes, demandaRes] = await Promise.all([
+        supabase.from("offers").select("id, product, city, quantity_tons").eq("owner_id", userId),
+        supabase
+          .from("carbon_analyses")
+          .select(
+            "id, product, tons, source, summary, pathway, co2_avoided, co2_stored, certification_level, certification_requirements, created_at",
+          )
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(25),
+        supabase
+          .from("carbon_agreements")
+          .select("id, seller_id, buyer_id, product, tons, seller_share_pct, buyer_share_pct, status, notes, created_at")
+          .or(`seller_id.eq.${userId},buyer_id.eq.${userId}`)
+          .order("created_at", { ascending: false })
+          .limit(25),
+        supabase.rpc("demanda_por_producto"),
+      ]);
+
+      // Si alguna consulta falla, el PDF lo informa como "sin datos" en vez de romper la descarga.
+      if (ofertasRes.error) console.error("[reporte carbono] ofertas:", ofertasRes.error.message);
+      if (analisisRes.error) console.error("[reporte carbono] analisis:", analisisRes.error.message);
+      if (acuerdosRes.error) console.error("[reporte carbono] acuerdos:", acuerdosRes.error.message);
+      if (demandaRes.error) console.error("[reporte carbono] demanda:", demandaRes.error.message);
+
+      const analisis = analisisRes.error ? [] : ((analisisRes.data ?? []) as AnalisisCarbonRow[]);
+      const acuerdos = acuerdosRes.error ? [] : ((acuerdosRes.data ?? []) as AcuerdoCarbonRow[]);
+      const demanda = demandaRes.error ? [] : ((demandaRes.data ?? []) as DemandaFila[]);
+
+      // Nombres de las partes de cada acuerdo (sólo contrapartes visibles por RLS).
+      const nombres: Record<string, string> = {};
+      const idsPartes = [...new Set(acuerdos.flatMap((a) => [a.seller_id, a.buyer_id]).filter(Boolean))];
+      if (idsPartes.length > 0) {
+        const { data: perfiles } = await supabase.rpc("ver_perfiles", { p_ids: idsPartes });
+        for (const p of (perfiles ?? []) as { id: string; company_name?: string; full_name?: string }[]) {
+          nombres[p.id] = p.company_name || p.full_name || "Empresa";
+        }
+      }
+
+      const pdf = await generarPdfCarbono({
+        perfil,
+        fecha,
+        ciudadesRed: Object.keys(CITIES).length,
+        kpis,
+        ofertas: ((ofertasRes.data ?? []) as OfertaCarbonRow[]) ?? [],
+        analisis,
+        acuerdos,
+        demanda,
+        nombres,
+      });
+
+      return new Response(pdf as unknown as BodyInit, {
+        headers: {
+          "Content-Type": "application/pdf",
+          "Content-Disposition": 'attachment; filename="bionexo-carbon.pdf"',
+          // Nunca servir un PDF viejo desde la caché del navegador.
+          "Cache-Control": "no-store, must-revalidate",
+        },
+      });
+    }
 
     const datos: DatosReporte = {
       tipo,
       perfil,
       kpis,
-      fecha: new Date().toLocaleString("es-AR", { dateStyle: "medium", timeStyle: "short" }),
+      fecha,
       ciudadesRed: Object.keys(CITIES).length,
     };
 
-    // 5) PDF.
+    // 6) PDF.
     const pdf = await generarPdf(datos);
 
     return new Response(pdf as unknown as BodyInit, {
       headers: {
         "Content-Type": "application/pdf",
         "Content-Disposition": 'attachment; filename="reporte-bionexo.pdf"',
+        "Cache-Control": "no-store, must-revalidate",
       },
     });
   } catch (e) {

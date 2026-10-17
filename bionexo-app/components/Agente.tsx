@@ -1,11 +1,11 @@
 "use client";
 import { useMemo, useState } from "react";
-import { CITIES, PRODUCTS, Pub, RATE, canjeFor, computeMatches, km, usd } from "@/lib/data";
+import { useRouter } from "next/navigation";
+import { CITIES, PRODUCTS, Pub, RATE, computeMatches, km, usd } from "@/lib/data";
 import { useStore } from "@/lib/store";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { abrirConversacion } from "@/lib/chat";
 import { Btn, Card, Muted } from "./ui";
-import CircuitoCompra from "./CircuitoCompra";
-import Trueque from "./Trueque";
 
 interface IAMatch {
   offer_id: number;
@@ -33,21 +33,22 @@ interface CoincidenciaIA {
   reason: string;
 }
 
-function enriquecer(p: Pub, desdeCiudad: string): Pub {
+function enriquecer(p: Pub, desdeCiudad: string, requestedTons: number): Pub {
   const pkm = km(desdeCiudad, p.city);
-  const cost = p.t * p.price;
-  const flete = p.t * pkm * RATE;
+  const quotedTons = Math.min(Math.max(requestedTons, 0), p.t);
+  const cost = quotedTons * p.price;
+  const flete = quotedTons * pkm * RATE;
   return { ...p, km: pkm, cost, flete, total: cost + flete };
 }
 
 export default function Agente() {
   const { pubs, need, setNeed, user, sort, setSort, setFilterCity } = useStore();
+  const router = useRouter();
   const [msgs, setMsgs] = useState<Msg[]>([
     { who: "b", txt: 'Hola, soy el agente de BioNexo. Probá: "Necesito 20 t de cascarilla de arroz, lo más barato" o "quiero hacer un trueque".' },
   ]);
   const [input, setInput] = useState("");
-  const [buyId, setBuyId] = useState<number | null>(null);
-  const [trkId, setTrkId] = useState<number | null>(null);
+  const [openingId, setOpeningId] = useState<number | null>(null);
   const [useIA, setUseIA] = useState(true);
   const [origen, setOrigen] = useState<"ia" | "reglas" | "error">("reglas");
   const [pensando, setPensando] = useState(false);
@@ -56,10 +57,8 @@ export default function Agente() {
 
   const matches = useMemo(() => {
     if (!user) return [];
-    return computeMatches(pubs, need, user.company, "", sort).slice(0, 5);
+    return computeMatches(pubs.filter((p) => p.ownerId && !p.simulated), need, user.company, "", sort).slice(0, 5);
   }, [pubs, need, user, sort]);
-
-  const myPubs = useMemo(() => pubs.filter((p) => user && p.seller === user.company), [pubs, user]);
 
   /** Fallback original: parser por regex (sin red). Devuelve la respuesta para el chat. */
   function resolverConReglas(txt: string): string {
@@ -121,7 +120,7 @@ export default function Agente() {
       });
 
       if (res.status === 503) {
-        caerARelas(next, txt, "IA no configurada — mostrando respuesta por reglas. Configurá OPENAI_API_KEY en .env.local");
+        caerARelas(next, txt, "IA no configurada — mostrando respuesta por reglas. Configurá GEMINI_API_KEY en .env.local");
         return;
       }
       if (!res.ok) {
@@ -149,16 +148,27 @@ export default function Agente() {
       const coincidencias: CoincidenciaIA[] = [];
       for (const m of data.matches) {
         const pub = pubs.find((p) => p.id === m.offer_id);
-        if (pub) coincidencias.push({ pub: enriquecer(pub, ciudadOrigen), reason: m.reason });
+        if (pub?.ownerId && !pub.simulated) coincidencias.push({ pub: enriquecer(pub, ciudadOrigen, it?.tons || need.t), reason: m.reason });
       }
       setCoincidenciasIA(coincidencias);
       setOrigen("ia");
-      setMsgs([...next, { who: "b", txt: data.reply, raw: true, tag: `Respuesta de IA real (${data.model ?? "gpt-4.1-mini"})` }]);
+      setMsgs([...next, { who: "b", txt: data.reply, raw: true, tag: `Respuesta de IA real (${data.model ?? "gemini-3.8-flash"})` }]);
     } catch {
       caerARelas(next, txt, "No se pudo consultar la IA (error de red) — mostrando respuesta por reglas.");
     } finally {
       setPensando(false);
     }
+  }
+
+  async function negociar(pub: Pub) {
+    if (!user) return;
+    setOpeningId(pub.id);
+    const id = await abrirConversacion(
+      { id: pub.id, ownerId: pub.ownerId ?? null, sellerName: pub.seller, product: pub.product, city: pub.city },
+      user.id,
+    );
+    setOpeningId(null);
+    if (id) router.push(`/mensajes/${id}`);
   }
 
   return (
@@ -199,7 +209,7 @@ export default function Agente() {
           <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 8, flexWrap: "wrap" }}>
             <label style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, cursor: "pointer" }}>
               <input type="checkbox" checked={useIA} onChange={(e) => setUseIA(e.target.checked)} disabled={pensando} />
-              Usar IA real (OpenAI)
+              Usar IA real (Gemini Flash)
             </label>
             <Muted>
               {!useIA
@@ -230,8 +240,7 @@ export default function Agente() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
                     <span style={{ fontWeight: 800, color: "#15803d" }}>{p.score != null ? p.score : `Calidad ${p.q}/10`}</span>
                     <span style={{ display: "flex", gap: 6 }}>
-                      <Btn onClick={() => setBuyId(p.id)}>Comprar</Btn>
-                      {user && canjeFor(p, myPubs) && <Btn kind="warn" onClick={() => setTrkId(p.id)}>Trueque</Btn>}
+                      <Btn onClick={() => void negociar(p)} disabled={openingId === p.id}>{openingId === p.id ? "Abriendo…" : "Negociar"}</Btn>
                     </span>
                   </div>
                   <div style={{ fontSize: 12, color: "#6b7f72" }}>{usd(p.total ?? 0)} total</div>
@@ -249,8 +258,7 @@ export default function Agente() {
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: 6 }}>
                     <span style={{ fontWeight: 800, color: "#15803d" }}>{p.score}</span>
                     <span style={{ display: "flex", gap: 6 }}>
-                      <Btn onClick={() => setBuyId(p.id)}>Comprar</Btn>
-                      {user && canjeFor(p, myPubs) && <Btn kind="warn" onClick={() => setTrkId(p.id)}>Trueque</Btn>}
+                      <Btn onClick={() => void negociar(p)} disabled={openingId === p.id}>{openingId === p.id ? "Abriendo…" : "Negociar"}</Btn>
                     </span>
                   </div>
                   <div style={{ fontSize: 12, color: "#6b7f72" }}>{usd(p.total ?? 0)} total</div>
@@ -261,8 +269,6 @@ export default function Agente() {
           )}
         </Card>
       </div>
-      {buyId !== null && <CircuitoCompra pubId={buyId} onClose={() => setBuyId(null)} />}
-      {trkId !== null && <Trueque pubId={trkId} onClose={() => setTrkId(null)} />}
     </>
   );
 }

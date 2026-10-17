@@ -175,6 +175,10 @@ function orderFromRow(row: Record<string, unknown>): Order {
     st: Number(row.status_step),
     eta: String(row.eta ?? ""),
     value: Number(row.value_usd),
+    buyerId: typeof row.buyer_id === "string" ? row.buyer_id : null,
+    sellerId: typeof row.seller_id === "string" ? row.seller_id : null,
+    carrierId: typeof row.carrier_id === "string" ? row.carrier_id : null,
+    contractId: typeof row.contract_id === "string" ? row.contract_id : null,
   };
 }
 
@@ -205,7 +209,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     const [{ data: profile }, { data: offers }, { data: savedOrders }, { data: savedNeeds }] = await Promise.all([
       supabase.from("profiles").select("*").eq("id", authUser.id).maybeSingle(),
       supabase.from("offers").select("*").order("created_at", { ascending: false }),
-      supabase.from("orders").select("*").eq("created_by", authUser.id).order("created_at", { ascending: false }),
+      supabase.from("orders").select("*").order("created_at", { ascending: false }),
       supabase.from("purchase_needs").select("*").eq("buyer_id", authUser.id).eq("status", "active").order("created_at", { ascending: false }).limit(1),
     ]);
 
