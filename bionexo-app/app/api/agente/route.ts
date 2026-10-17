@@ -206,7 +206,12 @@ export async function POST(request: Request) {
         model,
         response_format: { type: "json_object" },
         temperature: 0.2,
-        max_tokens: 700,
+        // Gemini Flash (3.x) es un modelo con "thinking": los tokens de
+        // razonamiento se descuentan de max_tokens. Con 700 el JSON quedaba
+        // truncado (finish_reason "length") y este endpoint devolvía 502.
+        // Damos headroom y limitamos el esfuerzo de razonamiento de la tarea.
+        max_tokens: 2048,
+        reasoning_effort: "low",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: message },
@@ -224,9 +229,19 @@ export async function POST(request: Request) {
     }
 
     const completion = (await respuesta.json()) as {
-      choices?: { message?: { content?: string } }[];
+      choices?: { message?: { content?: string }; finish_reason?: string }[];
     };
-    const content = completion.choices?.[0]?.message?.content;
+    const choice = completion.choices?.[0];
+    const content = choice?.message?.content;
+    if (choice?.finish_reason === "length") {
+      return Response.json(
+        {
+          error: "respuesta_truncada",
+          message: "Gemini cortó la respuesta por falta de tokens (finish_reason: length). Reintentá el pedido.",
+        },
+        { status: 502 },
+      );
+    }
     if (!content) {
       return Response.json(
         { error: "respuesta_vacia", message: "Gemini devolvió una respuesta vacía." },

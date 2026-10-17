@@ -147,7 +147,10 @@ async function llamarIA(
         model,
         response_format: { type: "json_object" },
         temperature: 0.2,
-        max_tokens: 1200,
+        // Gemini Flash (3.x) descuenta los tokens de "thinking" del presupuesto
+        // de max_tokens: con 1200 el JSON salía truncado y siempre caía a reglas.
+        max_tokens: 2048,
+        reasoning_effort: "low",
         messages: [
           { role: "system", content: construirPromptCarbono({ insumo, base }) },
           {
@@ -166,7 +169,12 @@ async function llamarIA(
       return { ok: false, detalle: `Gemini respondió ${respuesta.status}. ${detalle.slice(0, 200)}` };
     }
 
-    const completion = (await respuesta.json()) as { choices?: { message?: { content?: string } }[] };
+    const completion = (await respuesta.json()) as {
+      choices?: { message?: { content?: string }; finish_reason?: string }[];
+    };
+    if (completion.choices?.[0]?.finish_reason === "length") {
+      return { ok: false, detalle: "Gemini cortó la respuesta por falta de tokens (finish_reason: length)." };
+    }
     const content = completion.choices?.[0]?.message?.content;
     if (!content) return { ok: false, detalle: "Gemini devolvió una respuesta vacía." };
 
