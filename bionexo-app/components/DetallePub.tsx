@@ -5,6 +5,7 @@ import type { Pub } from "@/lib/data";
 import { usd } from "@/lib/data";
 import { Btn, Muted } from "./ui";
 import ProductImage from "./ProductImage";
+import SellosPublicos from "./SellosPublicos";
 
 function Row({ k, v }: { k: string; v: string }) {
   return (
@@ -31,6 +32,8 @@ export default function DetallePub({ pub, onBuy, compact = false }: { pub: Pub; 
         <Row k="Retiro" v={pub.pickupTerms || "A convenir"} />
         {pub.qualityNotes ? <Row k="Análisis" v={pub.qualityNotes} /> : null}
         {pub.frequency ? <Row k="Frecuencia" v={pub.frequency} /> : null}
+
+        {pub.ownerId ? <div style={{ marginTop: 16 }}><SellosPublicos sellerId={pub.ownerId} /></div> : null}
 
         <div style={{ display: "flex", gap: 8, marginTop: 16, flexWrap: "wrap" }}>
           {onBuy ? <Btn onClick={() => onBuy(pub.id)}>Comprar ahora</Btn> : null}

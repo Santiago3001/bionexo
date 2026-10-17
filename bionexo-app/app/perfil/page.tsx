@@ -3,6 +3,8 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Card, Muted, Tag, Btn } from "@/components/ui";
 import { Shell } from "@/components/Shell";
+import SellosAmbientales from "@/components/SellosAmbientales";
+import PanelAdminDemo from "@/components/PanelAdminDemo";
 import { CITIES } from "@/lib/data";
 import { useStore, type ProfileInput } from "@/lib/store";
 
@@ -146,6 +148,9 @@ export default function Page() {
           <Muted>¿No recordás la contraseña actual? Pedí el enlace de recuperación en el login.</Muted>
         </p>
       </Card>
+
+      {role === "vendedor" && <SellosAmbientales />}
+      <PanelAdminDemo />
     </Shell>
   );
 }
