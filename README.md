@@ -7,7 +7,7 @@
 ## Identidad
 
 - **Proyecto:** Ideathon NEA Tech 2026.
-- **Vertical:** NEA Productivo Digital.
+- **Vertical:** Agro.
 - **Desafío:** Del subproducto al mercado.
 - **Caso de demostración:** comercialización recurrente de cascarilla de arroz en el Nordeste Argentino.
 - **Equipo:** PENDIENTE.
