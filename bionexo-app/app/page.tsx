@@ -7,6 +7,7 @@ import { CITIES } from "@/lib/data";
 import { homeForRole, type RegisterInput, type Role, useStore } from "@/lib/store";
 import { Btn } from "@/components/ui";
 import ModeloNegocioModal from "@/components/ModeloNegocioModal";
+import CotizacionBolsaModal from "@/components/CotizacionBolsaModal";
 
 const STATS: [string, string][] = [
   ["20 t/mes", "excedentes de cascarilla conectados en la demo"],
@@ -44,6 +45,7 @@ export default function Home() {
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [businessOpen, setBusinessOpen] = useState(false);
+  const [bolsaOpen, setBolsaOpen] = useState(false);
 
   useEffect(() => {
     if (user) router.replace(homeForRole(user.role));
@@ -75,9 +77,12 @@ export default function Home() {
   return (
     <div style={{ minHeight: "100vh" }}>
       <header className="bn-navbar" style={{ padding: "14px 20px", position: "sticky", top: 0, zIndex: 40 }}>
-        <div style={{ maxWidth: 1100, margin: "auto", display: "flex", alignItems: "baseline", gap: 12, flexWrap: "wrap" }}>
+        <div style={{ maxWidth: 1100, margin: "auto", display: "flex", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
           <span style={{ fontFamily: "var(--font-heading)", fontSize: 22, fontWeight: 600, color: "var(--color-foreground)" }}>BioNexo NEA</span>
           <small style={{ color: "var(--color-muted-fg)" }}>Conectamos lo que producís con quien lo necesita</small>
+          <button type="button" className="bn-btn bn-btn--sec" style={{ marginLeft: "auto", padding: "8px 18px", fontSize: 13 }} onClick={() => setBolsaOpen(true)}>
+            📈 Cotización en la bolsa
+          </button>
         </div>
       </header>
 
@@ -183,6 +188,7 @@ export default function Home() {
         </section>
       </main>
       <ModeloNegocioModal open={businessOpen} onClose={() => setBusinessOpen(false)} />
+      <CotizacionBolsaModal open={bolsaOpen} onClose={() => setBolsaOpen(false)} />
     </div>
   );
 }

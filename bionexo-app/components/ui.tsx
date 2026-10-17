@@ -42,11 +42,11 @@ export function Btn({ children, onClick, kind, disabled }: { children: ReactNode
   );
 }
 
-export function Modal({ open, onClose, children }: { open: boolean; onClose: () => void; children: ReactNode }) {
+export function Modal({ open, onClose, children, maxWidth = 680 }: { open: boolean; onClose: () => void; children: ReactNode; maxWidth?: number | string }) {
   if (!open) return null;
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, background: "#1b4332b3", display: "flex", alignItems: "center", justifyContent: "center", padding: 16, zIndex: 50 }}>
-      <div onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" style={{ background: "#fff", borderRadius: 24, maxWidth: 680, width: "100%", padding: 24, maxHeight: "90vh", overflow: "auto", boxShadow: "var(--shadow-menu)" }}>
+      <div onClick={(e) => e.stopPropagation()} role="dialog" aria-modal="true" style={{ background: "#fff", borderRadius: 24, maxWidth, width: "100%", padding: 24, maxHeight: "90vh", overflow: "auto", boxShadow: "var(--shadow-menu)" }}>
         {children}
       </div>
     </div>
