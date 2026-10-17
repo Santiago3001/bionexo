@@ -168,7 +168,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 .bn-mode-btn {
   border: 2px solid var(--color-primary);
   border-radius: 50px;
-  padding: 8px 18px;
+  padding: 7px 16px;
+  font-size: 14px;
   font-weight: 600;
   display: inline-flex;
   align-items: center;
@@ -179,6 +180,39 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 }
 .bn-mode-btn:hover { background: #228b221a; }
 .bn-mode-btn[data-open="true"] { background: var(--color-primary); color: #fff; }
+
+/* --- Carrusel de alianzas (marquee continuo) --- */
+.bn-marquee {
+  overflow: hidden;
+  position: relative;
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 7%, #000 93%, transparent);
+}
+.bn-marquee__track {
+  display: flex;
+  gap: 14px;
+  width: max-content;
+  animation: bn-scroll 34s linear infinite;
+}
+.bn-marquee:hover .bn-marquee__track { animation-play-state: paused; }
+@keyframes bn-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.bn-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  background: var(--color-card);
+  border: 1px solid var(--color-border);
+  border-radius: 50px;
+  padding: 8px 16px;
+  font-weight: 600;
+  color: var(--color-muted-fg);
+  font-size: 13.5px;
+}
+.bn-logo span { font-size: 15px; }
 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
