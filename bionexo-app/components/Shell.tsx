@@ -14,7 +14,6 @@ const NAVS: Record<Role, [string, string][]> = {
     ["/mensajes", "Mensajes"],
     ["/contratos", "Contratos"],
     ["/comprador/seguimiento", "Seguimiento"],
-    ["/comprador/sostenibilidad", "Sostenibilidad"],
     ["/perfil", "Perfil"],
   ],
   vendedor: [

@@ -63,7 +63,7 @@ export default function MensajesPage() {
           <p style={{ margin: "0 0 8px" }}><strong>Todavía no tenés conversaciones.</strong></p>
           <Muted>
             {role === "comprador"
-              ? "Entrá a Requerimiento y elegí “Negociar” en una proveedora para abrir el chat."
+              ? "Entrá a Agente IA y elegí “Negociar” en una proveedora para abrir el chat."
               : role === "vendedor"
                 ? "Cuando un comprador abra una negociación sobre tu publicación, va a aparecer acá."
                 : "El chat comercial está disponible para compradores y vendedores."}
